@@ -6,6 +6,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ro.fils.smarthome.service.HelloService;
 
 public class FXMLController implements Initializable {
     
@@ -20,6 +22,6 @@ public class FXMLController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        
+    }
 }
