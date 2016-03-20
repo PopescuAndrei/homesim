@@ -22,6 +22,7 @@ import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.model.Person;
 import ro.fils.smarthome.service.NeedService;
 import ro.fils.smarthome.service.PersonService;
+import ro.fils.smarthome.util.TaskEnum;
 
 /**
  *
@@ -76,7 +77,7 @@ public class PersonServiceImpl implements PersonService {
     public Person setCurrentTask(ITask task, Person p) {
         p.setCurrentTask(task);
         if (task != null) {
-            if (task.getType().equals("Automatic")) {
+            if (task.getType().equals(TaskEnum.Automatic.name())) {
                 p.setRemainingTaskDuration(60 * new Random().nextInt(3));
             } else {
                 p.setRemainingTaskDuration(task.getDurationSeconds() + (60 * new Random().nextInt(4)));
