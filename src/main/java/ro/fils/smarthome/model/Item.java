@@ -12,9 +12,9 @@ package ro.fils.smarthome.model;
 public class Item {
 
     private String name;
-    private String location;
+    private Node location;
 
-    public Item(String name, String location) {
+    public Item(String name, Node location) {
         this.name = name;
         this.location = location;
     }
@@ -27,11 +27,11 @@ public class Item {
         this.name = name;
     }
 
-    public String getLocation() {
+    public Node getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Node location) {
         this.location = location;
     }
 

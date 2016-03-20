@@ -10,7 +10,6 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import javafx.scene.Node;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 

@@ -5,7 +5,7 @@
  */
 package ro.fils.smarthome.service;
 
-import java.util.ArrayList;
+import java.util.List;
 import ro.fils.smarthome.model.Node;
 
 /**
@@ -15,7 +15,7 @@ import ro.fils.smarthome.model.Node;
 public interface NodeService {
     
     Node findNodeById(Long nodeId);
-    ArrayList<Node> getNodes();
+    List<Node> getNodes();
     Node createNewNode(Node node);
     void updateNode(Node node);
     

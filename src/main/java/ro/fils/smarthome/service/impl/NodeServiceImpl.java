@@ -5,10 +5,8 @@
  */
 package ro.fils.smarthome.service.impl;
 
-import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.service.NodeService;
@@ -17,21 +15,19 @@ import ro.fils.smarthome.service.NodeService;
  *
  * @author andre
  */
-@Service
-@Transactional
-public class NodeServiceImpl implements NodeService {
+public class NodeServiceImpl implements NodeService{
 
     @Autowired
-    private NodeRepository nodeRepository;
-
+    NodeRepository nodeRepository;
+    
     @Override
     public Node findNodeById(Long nodeId) {
         return nodeRepository.findOne(nodeId);
     }
 
     @Override
-    public ArrayList<Node> getNodes() {
-        return (ArrayList<Node>) nodeRepository.findAll();
+    public List<Node> getNodes() {
+        return nodeRepository.findAll();
     }
 
     @Override
@@ -43,5 +39,5 @@ public class NodeServiceImpl implements NodeService {
     public void updateNode(Node node) {
         nodeRepository.save(node);
     }
-
+    
 }
