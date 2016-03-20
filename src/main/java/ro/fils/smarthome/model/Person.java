@@ -8,11 +8,10 @@ package ro.fils.smarthome.model;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javafx.scene.Node;
-import javafx.scene.effect.Light.Point;
+import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 
 /**
@@ -26,7 +25,7 @@ public class Person {
     private int personType;
     private double pauseTime;
     
-    private Point currentLocation;
+    private Point2D currentLocation;
     private Deque<Node> route;
     private List<Need> needs;
     private ITask currentTask;  
@@ -36,9 +35,9 @@ public class Person {
     private Set<String> state;
     private HashMap<String, Integer> inventory;    
     private ITask goalTask;
-    private Gadget usingGadget;
+    private Gadget gadget;
 
-    public Person(String name, String avatarImg, Point currentLocation, List<Need> needs, int type) {
+    public Person(String name, String avatarImg, Point2D currentLocation, List<Need> needs, int type) {
         this.name = name;
         // not sure if this works - 
         // in swing: new ImageIcon(getClass().getResource(avatarImage)).getImage();
@@ -73,11 +72,11 @@ public class Person {
         this.pauseTime = pauseTime;
     }
 
-    public Point getCurrentLocation() {
+    public Point2D getCurrentLocation() {
         return currentLocation;
     }
 
-    public void setCurrentLocation(Point currentLocation) {
+    public void setCurrentLocation(Point2D currentLocation) {
         this.currentLocation = currentLocation;
     }
 
@@ -137,12 +136,12 @@ public class Person {
         this.goalTask = goalTask;
     }
 
-    public Gadget getUsingGadget() {
-        return usingGadget;
+    public Gadget getGadget() {
+        return gadget;
     }
 
-    public void setUsingGadget(Gadget usingGadget) {
-        this.usingGadget = usingGadget;
+    public void setGadget(Gadget gadget) {
+        this.gadget = gadget;
     }
 
     public Set<String> getState() {
@@ -163,7 +162,7 @@ public class Person {
 
     @Override
     public String toString() {
-        return "Person{" + "name=" + name + ", personType=" + personType + ", pauseTime=" + pauseTime + ", currentLocation=" + currentLocation + ", route=" + route + ", needs=" + needs + ", currentTask=" + currentTask + ", fetchTime=" + fetchTime + ", remainingTaskDuration=" + remainingTaskDuration + ", targetItem=" + targetItem + ", state=" + state + ", inventory=" + inventory + ", goalTask=" + goalTask + ", usingGadget=" + usingGadget + '}';
+        return "Person{" + "name=" + name + ", personType=" + personType + ", pauseTime=" + pauseTime + ", currentLocation=" + currentLocation + ", route=" + route + ", needs=" + needs + ", currentTask=" + currentTask + ", fetchTime=" + fetchTime + ", remainingTaskDuration=" + remainingTaskDuration + ", targetItem=" + targetItem + ", state=" + state + ", inventory=" + inventory + ", goalTask=" + goalTask + ", usingGadget=" + gadget + '}';
     }
 
 }

@@ -5,10 +5,23 @@
  */
 package ro.fils.smarthome.model;
 
+import java.util.Set;
+
 /**
  *
  * @author Silvia
  */
-public class ITask {
-    
+public interface ITask {
+
+    public String fulfilledNeed();
+
+    public boolean available(double time);
+
+    public String getType();
+
+    public double getDurationSeconds();
+
+    public Set<String> getPoses();
+
+//    TODO: to be added methods
 }

@@ -6,7 +6,7 @@
 package ro.fils.smarthome.service;
 
 import java.util.Set;
-import javafx.scene.effect.Light.Point;
+import javafx.geometry.Point2D;
 import ro.fils.smarthome.model.Gadget;
 import ro.fils.smarthome.model.ITask;
 import ro.fils.smarthome.model.Item;
@@ -25,17 +25,17 @@ public interface PersonService {
 
     public boolean hasItem(Person p, String item, int amount);
 
-    public Person setLocation(Person p, Point newLocation);
+    public Person setLocation(Person p, Point2D newLocation);
 
-    public Person setCurrentTask(ITask task);
+    public Person setCurrentTask(ITask task, Person p);
 
-    public Person setCurrentTaskAndGadget(ITask task, Gadget gadget);
+    public Person setCurrentTaskAndGadget(ITask task, Gadget gadget, Person p);
 
     public Person progressTask(Person p, double seconds);
 
     public Person setTargetItemAndFetchTime(Person p, String itemName);
 
-    public Person progressFetch(double seconds);
+    public Person progressFetch(double seconds, Person p);
     
     public Person passTime(Person p, double seconds);
     
