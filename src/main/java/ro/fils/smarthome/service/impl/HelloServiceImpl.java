@@ -8,8 +8,8 @@ package ro.fils.smarthome.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ro.fils.smarthome.repository.ModelForTestRepository;
 import ro.fils.smarthome.service.HelloService;
-import ro.fils.smarthome.service.ServiceToBeAutowired;
 
 /**
  *
@@ -20,11 +20,11 @@ import ro.fils.smarthome.service.ServiceToBeAutowired;
 public class HelloServiceImpl implements HelloService {
     
     @Autowired
-    ServiceToBeAutowired serviceToBeAutowired;
+    ModelForTestRepository modelForTestRepository;
     
     @Override
-    public void hello(){
+    public void hello() {
         System.out.println("YiipeeKayYeey Motherfuckers");
-        serviceToBeAutowired.works();
+        modelForTestRepository.findAll().stream().forEach(System.out::println);
     }
 }

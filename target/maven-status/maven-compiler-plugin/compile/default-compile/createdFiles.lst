@@ -1,0 +1,16 @@
+ro\fils\smarthome\model\GlobalModel.class
+ro\fils\smarthome\views\View2Controller.class
+ro\fils\smarthome\service\impl\HelloServiceImpl.class
+ro\fils\smarthome\common\FXMLController.class
+ro\fils\smarthome\common\SpringFXMLLoader.class
+ro\fils\smarthome\components\MyLabelComponent.class
+ro\fils\smarthome\views\View1Controller.class
+ro\fils\smarthome\Config.class
+ro\fils\smarthome\model\ModelForTest.class
+ro\fils\smarthome\views\MainController.class
+ro\fils\smarthome\components\MenuComponent.class
+ro\fils\smarthome\repository\ModelForTestRepository.class
+ro\fils\smarthome\service\HelloService.class
+ro\fils\smarthome\common\SpringJavaFXBuilderFactory.class
+ro\fils\smarthome\Config$Window.class
+ro\fils\smarthome\Application.class
