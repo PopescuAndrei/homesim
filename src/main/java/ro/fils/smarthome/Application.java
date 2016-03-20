@@ -13,9 +13,11 @@ import org.springframework.context.annotation.ImportResource;
 @SpringBootApplication
 @ImportResource("classpath:applicationContext.xml")
 public class Application extends javafx.application.Application {
-	@Autowired Config config;
-	@Autowired MainController mainController;
 
+    @Autowired
+    Config config;
+    @Autowired
+    MainController mainController;
 
     private static String[] savedArgs;
     private ConfigurableApplicationContext applicationContext;
@@ -33,7 +35,7 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-    	stage.setTitle(config.getWindow().getTitle());
+        stage.setTitle(config.getWindow().getTitle());
         stage.setScene(new Scene(mainController.getView(), 640, 480));
         stage.show();
     }
