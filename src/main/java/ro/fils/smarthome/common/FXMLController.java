@@ -9,22 +9,23 @@ import javafx.scene.Parent;
 @Component
 public abstract class FXMLController implements InitializingBean {
 
-	@Autowired SpringFXMLLoader fxmlLoader;
-	
-	private final String fxml;
-	private Parent view;
+    @Autowired
+    SpringFXMLLoader fxmlLoader;
 
-	public FXMLController(String fxml) {
-		this.fxml = fxml;
-	}
+    private final String fxml;
+    private Parent view;
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		this.view = fxmlLoader.load(getClass().getResource(fxml), this);
-	}
+    public FXMLController(String fxml) {
+        this.fxml = fxml;
+    }
 
-	public Parent getView() {
-		return view;
-	}
-	
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.view = fxmlLoader.load(getClass().getResource(fxml), this);
+    }
+
+    public Parent getView() {
+        return view;
+    }
+
 }

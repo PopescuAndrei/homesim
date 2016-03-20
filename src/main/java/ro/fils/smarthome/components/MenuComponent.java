@@ -12,20 +12,22 @@ import javafx.scene.control.MenuBar;
 
 @Component
 public class MenuComponent extends MenuBar implements InitializingBean {
-	@Autowired SpringFXMLLoader fxmlLoader;
-	
-	public MenuComponent() {
-		super();
-	}
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		fxmlLoader.load(getClass().getResource("menu.fxml"), this, this);
-	}
-	
-	@FXML
-	public void quit(Event event) {
-		Platform.exit();
-	}
-		
+
+    @Autowired
+    SpringFXMLLoader fxmlLoader;
+
+    public MenuComponent() {
+        super();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        fxmlLoader.load(getClass().getResource("menu.fxml"), this, this);
+    }
+
+    @FXML
+    public void quit(Event event) {
+        Platform.exit();
+    }
+
 }

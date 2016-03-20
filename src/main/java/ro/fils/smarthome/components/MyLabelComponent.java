@@ -15,20 +15,22 @@ import javafx.scene.control.Label;
 @Component
 @Scope("prototype")
 public class MyLabelComponent extends Label implements InitializingBean, Initializable {
-	@Autowired SpringFXMLLoader fxmlLoader;
-	
-	public MyLabelComponent() {
-		super();
-	}
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		fxmlLoader.load(getClass().getResource("label.fxml"), this, this);
-	}
-	
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		setText(this.hashCode()+"");
-	}
-	
+
+    @Autowired
+    SpringFXMLLoader fxmlLoader;
+
+    public MyLabelComponent() {
+        super();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        fxmlLoader.load(getClass().getResource("label.fxml"), this, this);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        setText(this.hashCode() + "");
+    }
+
 }
