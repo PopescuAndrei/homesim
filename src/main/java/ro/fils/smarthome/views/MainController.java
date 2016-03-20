@@ -13,14 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
-import ro.fils.smarthome.service.HelloService;
 
 @Component
 public class MainController extends FXMLController implements Initializable {
 	@Autowired View1Controller view1;
 	@Autowired View2Controller view2;
 	@Autowired GlobalModel model;
-	@Autowired HelloService helloService;
         
 	@FXML Pane content;
 	@FXML TextField text;
@@ -43,7 +41,6 @@ public class MainController extends FXMLController implements Initializable {
 	
 	@FXML
 	public void showView2(Event event) {
-                helloService.hello();
 		content.getChildren().clear();
 		content.getChildren().add(view2.getView());
 	}

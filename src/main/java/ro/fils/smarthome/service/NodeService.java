@@ -5,11 +5,18 @@
  */
 package ro.fils.smarthome.service;
 
+import java.util.ArrayList;
+import ro.fils.smarthome.model.Node;
+
 /**
  *
  * @author andre
  */
-public interface HelloService {
-
-    void hello();
+public interface NodeService {
+    
+    Node findNodeById(Long nodeId);
+    ArrayList<Node> getNodes();
+    Node createNewNode(Node node);
+    void updateNode(Node node);
+    
 }
