@@ -8,43 +8,44 @@ package ro.fils.smarthome.model;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
+import ro.fils.smarthome.util.TaskEnum;
 
 /**
  *
  * @author Silvia
  */
 public class Person {
-    
+
     private String name;
     private Image avatarImg;
     private int personType;
     private double pauseTime;
-    
+
     private Point2D currentLocation;
     private Deque<Node> route;
     private List<Need> needs;
-    private ITask currentTask;  
+    private ITask currentTask;
     private double fetchTime;
     private double remainingTaskDuration;
-    private String targetItem;   
-    private Set<String> state;
-    private HashMap<String, Integer> inventory;    
+    private String targetItem;
+    private Set<String> state = new HashSet<>();
+    private HashMap<String, Integer> inventory = new HashMap<>();
     private ITask goalTask;
     private Gadget gadget;
 
-    public Person(String name, String avatarImg, Point2D currentLocation, List<Need> needs, int type) {
+    public Person(String name, String avatarImg, int personType, Point2D currentLocation, List<Need> needs) {
         this.name = name;
-        // not sure if this works - 
-        // in swing: new ImageIcon(getClass().getResource(avatarImage)).getImage();
         this.avatarImg = new Image(getClass().getResourceAsStream(avatarImg));
+        this.personType = personType;
         this.currentLocation = currentLocation;
-        this.needs = needs != null? new ArrayList<>() : null;
-        this.personType = type;
-        this.pauseTime = 0.0;
+        this.needs = needs != null ? new ArrayList<>(needs) : null;
+        this.pauseTime = 0;
     }
 
     public String getName() {
@@ -77,9 +78,17 @@ public class Person {
 
     public void setCurrentLocation(Point2D currentLocation) {
         this.currentLocation = currentLocation;
+        if (route != null && !route.isEmpty()) {
+            if (currentLocation.distance(route.peek().getLocation()) == 0) {
+                route.remove();
+            }
+        }
     }
 
     public Deque<Node> getRoute() {
+        if (route == null || route.isEmpty()) {
+            return null;
+        }
         return route;
     }
 
@@ -95,12 +104,29 @@ public class Person {
         this.needs = needs;
     }
 
+    public void addNeed(Need need) {
+        needs.add(need);
+    }
+
     public ITask getCurrentTask() {
         return currentTask;
     }
 
     public void setCurrentTask(ITask currentTask) {
         this.currentTask = currentTask;
+
+        if (currentTask != null) {
+            if (currentTask.getType().equals(TaskEnum.Automatic.name())) {
+                this.remainingTaskDuration = 60 * new Random().nextInt(3);
+            } else {
+                this.remainingTaskDuration = currentTask.getDurationSeconds() + (60 * new Random().nextInt(4));
+            }
+        }
+    }
+
+    public void setCurrentTask(ITask task, Gadget gadget) {
+        this.setCurrentTask(currentTask);
+        this.setGadget(gadget);
     }
 
     public double getFetchTime() {
@@ -125,6 +151,7 @@ public class Person {
 
     public void setTargetItem(String targetItem) {
         this.targetItem = targetItem;
+        this.fetchTime = 2.0;
     }
 
     public ITask getGoalTask() {
@@ -159,9 +186,65 @@ public class Person {
         this.inventory = inventory;
     }
 
-    @Override
-    public String toString() {
-        return "Person{" + "name=" + name + ", personType=" + personType + ", pauseTime=" + pauseTime + ", currentLocation=" + currentLocation + ", route=" + route + ", needs=" + needs + ", currentTask=" + currentTask + ", fetchTime=" + fetchTime + ", remainingTaskDuration=" + remainingTaskDuration + ", targetItem=" + targetItem + ", state=" + state + ", inventory=" + inventory + ", goalTask=" + goalTask + ", usingGadget=" + gadget + '}';
+    public void addItem(Item item) {
+        inventory.put(item.getName(), (inventory.get(item.getName()) != null ? inventory.get(item.getName()) : 0) + 1);
+    }
+
+    public void removeItem(String itemName, int amount) {
+        inventory.remove(itemName);
+    }
+
+    public boolean hasItem(String item, int amount) {
+        return (inventory.containsKey(item) && inventory.get(item) >= amount);
+    }
+
+    public void progressTask(double seconds) {
+        this.remainingTaskDuration = this.remainingTaskDuration - seconds;
+    }
+
+    public void progressFetch(double seconds) {
+        this.fetchTime = this.fetchTime - seconds;
+    }
+
+    public void passTime(double seconds) {
+
+        this.needs.stream().forEach((n) -> {
+            n.deteriorateNeed(seconds);
+        });
+
+        if (this.pauseTime > 0) {
+            this.pauseTime = this.pauseTime - seconds;
+        }
+    }
+
+    public Set<String> getPoseData() {
+
+        Set<String> poses = new HashSet<>();
+        if (this.currentTask != null) {
+            poses.addAll(this.currentTask.getPoses());
+        }
+        if (this.gadget != null) {
+            poses.addAll(this.gadget.getPoses());
+        }
+
+        Set<String> filtered = new HashSet<>();
+
+        poses.stream().filter((pose) -> (!pose.trim().isEmpty())).forEach((pose) -> {
+            filtered.add(pose);
+        });
+        return filtered;
+    }
+
+    public boolean isMoving() {
+        return (route != null && route.size() > 0);
+    }
+
+    public void addState(String stateString) {
+        if (stateString.charAt(0) == '+') {
+            state.add(stateString.substring(1));
+        } else {
+            state.remove(stateString.substring(1));
+        }
     }
 
 }
