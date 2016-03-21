@@ -17,7 +17,7 @@ import ro.fils.smarthome.model.Gadget;
 import ro.fils.smarthome.model.ITask;
 import ro.fils.smarthome.model.Item;
 import ro.fils.smarthome.model.Node;
-import ro.fils.smarthome.model.Person;
+import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.service.NodeService;
 import ro.fils.smarthome.util.Const;
 
@@ -33,7 +33,7 @@ public class SimulationMap {
     private final int dotsPerMeter;
 
     private ArrayList<Node> nodes;
-    private final Collection<Person> people;
+    private final Collection<Agent> people;
     private ArrayList<Gadget> objects;
     private Collection<Item> items;
     //TODO private Collection<Sensor> sensors;
@@ -43,7 +43,7 @@ public class SimulationMap {
     @Autowired
     private NodeService nodeService;
 
-    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Person> people, int dotsPerMeter) {
+    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter) {
         this.mapName = mapName;
         this.people = people;
         //this.sensors = sensors
@@ -68,11 +68,11 @@ public class SimulationMap {
         return smallestNode;
     }
 
-    public Collection<Person> getPeople() {
+    public Collection<Agent> getPeople() {
         return people;
     }
 
-    public Point2D moveActor(Person person, int simulationsPerSec) {
+    public Point2D moveActor(Agent person, int simulationsPerSec) {
         int walkingSpeed = (int) (walkingSpeedPerSec / simulationsPerSec);
         Point2D p = new Point2D(person.getCurrentLocation().getX(), person.getCurrentLocation().getY());
         Node targetNode = person.getRoute().peek();

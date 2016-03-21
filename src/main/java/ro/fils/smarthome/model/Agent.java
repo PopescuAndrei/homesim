@@ -20,7 +20,7 @@ import ro.fils.smarthome.util.TaskEnum;
  *
  * @author Silvia
  */
-public class Person {
+public class Agent {
 
     private String name;
     private Image avatarImg;
@@ -39,7 +39,7 @@ public class Person {
     private ITask goalTask;
     private Gadget gadget;
 
-    public Person(String name, String avatarImg, int personType, Point2D currentLocation, List<Need> needs) {
+    public Agent(String name, String avatarImg, int personType, Point2D currentLocation, List<Need> needs) {
         this.name = name;
         this.avatarImg = new Image(getClass().getResourceAsStream(avatarImg));
         this.personType = personType;
