@@ -22,7 +22,7 @@ public interface ITask {
 
     boolean itemsExist(Agent p, SimulationMap map);
 
-    public boolean personMeetsRequirements(Agent person);
+    public boolean agentMeetsRequirements(Agent agent);
 
     Collection<Appliance> getViableAppliances(Collection<Appliance> allGadges);
 
@@ -54,7 +54,7 @@ public interface ITask {
 
     public String getType();
 
-    boolean itemExists(Agent person, SimulationMap map);
+    boolean itemExists(Agent agent, SimulationMap map);
 
     public void recentlyCompleted();
 

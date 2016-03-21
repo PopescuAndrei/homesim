@@ -58,7 +58,7 @@ public class Need implements Comparable<Need> {
         }
     }
 
-    public void improveNeed(Need need, double amount) {
+    public void improveNeed(int amount) {
 
         this.value = this.value + amount;
         if (this.value > 100) {

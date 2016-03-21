@@ -29,31 +29,31 @@ public class Time {
         this.startTime = startTime;
     }
 
-    public int getSeconds(double currentTime) {
+    public static int getSeconds(double currentTime) {
         return (int) (currentTime) % 60;
     }
 
-    public String getNumberFormatted(int number) {
+    public static String getNumberFormatted(int number) {
         return (number < 10 ? "0" + number : "" + number);
     }
 
-    public int getMinutes(double currentTime) {
+    public static int getMinutes(double currentTime) {
         return (int) (currentTime / 60) % 60;
     }
 
-    public int getHours(double currentTime) {
+    public static int getHours(double currentTime) {
         return (int) (currentTime / (60 * 60)) % 24;
     }
 
-    public int getDay(double currentTime) {
+    public static int getDay(double currentTime) {
         return 1 + (int) (currentTime / (60 * 60 * 24));
     }
 
-    public int getDayOfWeek(double currentTime) {
+    public static int getDayOfWeek(double currentTime) {
         return 1 + (int) (currentTime / (60 * 60 * 24)) % 7;
     }
 
-    public String getDayName(double currentTime) {
+    public static String getDayName(double currentTime) {
         String dayName = "";
         int day = getDay(currentTime);
         switch (day) {
@@ -82,7 +82,7 @@ public class Time {
         return dayName;
     }
 
-    public int getWeek(double currentTime) {
+    public static int getWeek(double currentTime) {
         return 1 + ((int) currentTime / (60 * 60 * 24 * 7));
     }
 

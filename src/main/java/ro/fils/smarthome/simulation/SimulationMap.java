@@ -56,6 +56,10 @@ public class SimulationMap {
         this.runningTasks = new ArrayList<>();
     }
 
+    public Collection<Item> getItems() {
+        return items;
+    }
+
     public Node getClosesNode(Point2D start) {
         double smallestDistance = Const.MAX_DISTANCE;
         Node smallestNode = null;
