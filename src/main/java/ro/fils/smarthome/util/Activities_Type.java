@@ -9,7 +9,7 @@ package ro.fils.smarthome.util;
  *
  * @author Silvia
  */
-public enum TaskEnum {
+public enum Activities_Type {
 
     Automatic,
     Finite,

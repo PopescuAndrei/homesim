@@ -13,7 +13,7 @@ import java.util.Objects;
 import java.util.Random;
 import javafx.geometry.Point2D;
 import org.springframework.beans.factory.annotation.Autowired;
-import ro.fils.smarthome.model.Gadget;
+import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.model.ITask;
 import ro.fils.smarthome.model.Item;
 import ro.fils.smarthome.model.Node;
@@ -34,7 +34,7 @@ public class SimulationMap {
 
     private ArrayList<Node> nodes;
     private final Collection<Agent> people;
-    private ArrayList<Gadget> objects;
+    private ArrayList<Appliance> objects;
     private Collection<Item> items;
     //TODO private Collection<Sensor> sensors;
     private final Node startNode;
@@ -110,17 +110,17 @@ public class SimulationMap {
         return count >= amount;
     }
 
-    public Collection<Node> getLocationOfGadgets(Collection<String> gadgetTypes) {
+    public Collection<Node> getLocationOfAppliances(Collection<String> applianceTypes) {
         Collection<Node> locations = new ArrayList<>();
         objects.stream().forEach((g) -> {
-            gadgetTypes.stream().filter((gType) -> (g.getType().equals(gType))).forEach((_item) -> {
+            applianceTypes.stream().filter((gType) -> (g.getType().equals(gType))).forEach((_item) -> {
                 locations.add(g.getNode());
             });
         });
         return locations;
     }
 
-    public Collection<Gadget> getGadgets() {
+    public Collection<Appliance> applianceTypes() {
         return objects;
     }
 
@@ -129,8 +129,8 @@ public class SimulationMap {
         if (nodePool.isEmpty()) {
             return null;
         }
-        objects.stream().forEach((gadget) -> {
-            nodePool.remove(gadget.getNode());
+        objects.stream().forEach((appliance) -> {
+            nodePool.remove(appliance.getNode());
         });
         Random rand = new Random();
         return nodePool.get(rand.nextInt(nodePool.size()));

@@ -23,8 +23,8 @@ import javax.persistence.Transient;
  * @author Silvia
  */
 @Entity
-@Table(name = "gadgets")
-public class Gadget extends BaseEntity {
+@Table(name = "appliances")
+public class Appliance extends BaseEntity {
 
     @Transient
     private Map<String, Integer> inventory;
@@ -39,19 +39,19 @@ public class Gadget extends BaseEntity {
     @Transient
     private Set<String> poses;
 
-    public Gadget(){
+    public Appliance(){
         
     }
     
-    public Gadget(String gadgetType, Node node) {
-        this.type = gadgetType;
+    public Appliance(String applianceType, Node node) {
+        this.type = applianceType;
         this.node = node;
         this.inventory = new HashMap<>();
         this.poses = new HashSet<>();
     }
 
-    public Gadget(String gadgetType, Node node, Set<String> poses) {
-        this(gadgetType, node);
+    public Appliance(String applianceType, Node node, Set<String> poses) {
+        this(applianceType, node);
         this.poses = poses;
     }
 
@@ -131,7 +131,7 @@ public class Gadget extends BaseEntity {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final Gadget other = (Gadget) obj;
+        final Appliance other = (Appliance) obj;
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }
@@ -143,8 +143,10 @@ public class Gadget extends BaseEntity {
 
     @Override
     public String toString() {
-        return "Gadget{" + "inventory=" + inventory + ", type=" + type + ", node=" + node + ", poses=" + poses + '}';
+        return "Appliance{" + "inventory=" + inventory + ", type=" + type + ", node=" + node + ", poses=" + poses + '}';
     }
+
+
 
     
 }

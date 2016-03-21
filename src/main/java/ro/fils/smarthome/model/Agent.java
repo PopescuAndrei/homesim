@@ -5,6 +5,7 @@
  */
 package ro.fils.smarthome.model;
 
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
@@ -13,8 +14,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
-import ro.fils.smarthome.util.TaskEnum;
+import javax.swing.ImageIcon;
+import ro.fils.smarthome.util.Activities_Type;
 
 /**
  *
@@ -37,11 +38,11 @@ public class Agent {
     private Set<String> state = new HashSet<>();
     private HashMap<String, Integer> inventory = new HashMap<>();
     private ITask goalTask;
-    private Gadget gadget;
+    private Appliance applianceInUse;
 
     public Agent(String name, String avatarImg, int personType, Point2D currentLocation, List<Need> needs) {
         this.name = name;
-        this.avatarImg = new Image(getClass().getResourceAsStream(avatarImg));
+        this.avatarImg = new ImageIcon(getClass().getResource(avatarImg)).getImage();
         this.personType = personType;
         this.currentLocation = currentLocation;
         this.needs = needs != null ? new ArrayList<>(needs) : null;
@@ -116,7 +117,7 @@ public class Agent {
         this.currentTask = currentTask;
 
         if (currentTask != null) {
-            if (currentTask.getType().equals(TaskEnum.Automatic.name())) {
+            if (currentTask.getType().equals(Activities_Type.Automatic.name())) {
                 this.remainingTaskDuration = 60 * new Random().nextInt(3);
             } else {
                 this.remainingTaskDuration = currentTask.getDurationSeconds() + (60 * new Random().nextInt(4));
@@ -124,9 +125,9 @@ public class Agent {
         }
     }
 
-    public void setCurrentTask(ITask task, Gadget gadget) {
+    public void setCurrentTask(ITask task, Appliance applianceInUse) {
         this.setCurrentTask(currentTask);
-        this.setGadget(gadget);
+        this.setApplianceInUse(applianceInUse);
     }
 
     public double getFetchTime() {
@@ -162,12 +163,12 @@ public class Agent {
         this.goalTask = goalTask;
     }
 
-    public Gadget getGadget() {
-        return gadget;
+    public Appliance getApplianceInUse() {
+        return applianceInUse;
     }
 
-    public void setGadget(Gadget gadget) {
-        this.gadget = gadget;
+    public void setApplianceInUse(Appliance applianceInUse) {
+        this.applianceInUse = applianceInUse;
     }
 
     public Set<String> getState() {
@@ -223,8 +224,8 @@ public class Agent {
         if (this.currentTask != null) {
             poses.addAll(this.currentTask.getPoses());
         }
-        if (this.gadget != null) {
-            poses.addAll(this.gadget.getPoses());
+        if (this.applianceInUse != null) {
+            poses.addAll(this.applianceInUse.getPoses());
         }
 
         Set<String> filtered = new HashSet<>();

@@ -27,7 +27,7 @@ public class Node extends BaseEntity implements AStarNode {
     private int posY;
     
     @OneToMany(mappedBy = "node")
-    private List<Gadget> gadgetTypes;
+    private List<Appliance> appliancesTypes;
     
     @OneToMany
     private Collection<Node> neighbors;
@@ -52,12 +52,12 @@ public class Node extends BaseEntity implements AStarNode {
         this.posY = posY;
     }
 
-    public List<Gadget> getGadgetTypes() {
-        return gadgetTypes;
+    public List<Appliance> getAppliancesTypes() {
+        return appliancesTypes;
     }
 
-    public void setGadgetTypes(List<Gadget> gadgetTypes) {
-        this.gadgetTypes = gadgetTypes;
+    public void setAppliancesTypes(List<Appliance> appliances) {
+        this.appliancesTypes = appliances;
     }
 
     public Point2D getLocation() {
@@ -80,10 +80,10 @@ public class Node extends BaseEntity implements AStarNode {
     
     /**
      * Needs to call update at the end
-     * @param gadgetType 
+     * @param appliancesType 
      */
-    public void addGadget(String gadgetType){
-        if(gadgetTypes.add(new Gadget(gadgetType, this))){
+    public void addAppliance(String appliancesType){
+        if(appliancesTypes.add(new Appliance(appliancesType, this))){
             
         }
     }
@@ -92,11 +92,11 @@ public class Node extends BaseEntity implements AStarNode {
      * Needs to call update at the end
      * @param type 
      */
-    public void removeGadget(String type){
-        Iterator<Gadget> it = gadgetTypes.iterator();
+    public void removeAppliance(String type){
+        Iterator<Appliance> it = appliancesTypes.iterator();
         while(it.hasNext()){
-            Gadget gadget = it.next();
-            if(gadget.getType().equals(type)){
+            Appliance appliance = it.next();
+            if(appliance.getType().equals(type)){
                 it.remove();
             }
         }
