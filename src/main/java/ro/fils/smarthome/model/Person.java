@@ -10,8 +10,9 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import javafx.geometry.Point2D;
-import javafx.scene.image.Image;
+import java.awt.Point;
+import java.awt.Image;
+import javax.swing.ImageIcon;
 
 /**
  *
@@ -24,7 +25,7 @@ public class Person {
     private int personType;
     private double pauseTime;
     
-    private Point2D currentLocation;
+    private Point currentLocation;
     private Deque<Node> route;
     private List<Need> needs;
     private ITask currentTask;  
@@ -36,11 +37,9 @@ public class Person {
     private ITask goalTask;
     private Gadget gadget;
 
-    public Person(String name, String avatarImg, Point2D currentLocation, List<Need> needs, int type) {
-        this.name = name;
-        // not sure if this works - 
-        // in swing: new ImageIcon(getClass().getResource(avatarImage)).getImage();
-        this.avatarImg = new Image(getClass().getResourceAsStream(avatarImg));
+    public Person(String name, String avatarImg, Point currentLocation, List<Need> needs, int type) {
+        this.name = name;;
+        this.avatarImg = new ImageIcon(getClass().getResource(avatarImg)).getImage();
         this.currentLocation = currentLocation;
         this.needs = needs != null? new ArrayList<>() : null;
         this.personType = type;
@@ -71,11 +70,11 @@ public class Person {
         this.pauseTime = pauseTime;
     }
 
-    public Point2D getCurrentLocation() {
+    public Point getCurrentLocation() {
         return currentLocation;
     }
 
-    public void setCurrentLocation(Point2D currentLocation) {
+    public void setCurrentLocation(Point currentLocation) {
         this.currentLocation = currentLocation;
     }
 

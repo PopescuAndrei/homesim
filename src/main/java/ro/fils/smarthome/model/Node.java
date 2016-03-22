@@ -5,11 +5,11 @@
  */
 package ro.fils.smarthome.model;
 
+import java.awt.Point;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import javafx.geometry.Point2D;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -60,8 +60,8 @@ public class Node extends BaseEntity implements AStarNode {
         this.gadgetTypes = gadgetTypes;
     }
 
-    public Point2D getLocation() {
-        return new Point2D(getPosX(), getPosY());
+    public Point getLocation() {
+        return new Point(getPosX(), getPosY());
     }
 
     @Override
@@ -101,8 +101,8 @@ public class Node extends BaseEntity implements AStarNode {
             }
         }
     }
-    public double distance(Point2D target) {
-        Point2D current = new Point2D(getPosX(), getPosY());
+    public double distance(Point target) {
+        Point current = new Point(getPosX(), getPosY());
         return current.distance(target);
     }
 
@@ -110,7 +110,7 @@ public class Node extends BaseEntity implements AStarNode {
     public <T extends AStarNode> double getDistance(T node) throws RuntimeException {
         if (node instanceof Node) {
             Node nodeTemp = (Node) node;
-            double distance = nodeTemp.distance(new Point2D(this.getPosX(), this.getPosY()));
+            double distance = nodeTemp.distance(new Point(this.getPosX(), this.getPosY()));
             return distance;
         } else {
             throw new RuntimeException("Incompatible class type" + node.getClass());

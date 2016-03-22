@@ -5,13 +5,13 @@
  */
 package ro.fils.smarthome.simulation;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import javafx.geometry.Point2D;
 import org.springframework.beans.factory.annotation.Autowired;
 import ro.fils.smarthome.model.Gadget;
 import ro.fils.smarthome.model.ITask;
@@ -56,7 +56,7 @@ public class SimulationMap {
         this.runningTasks = new ArrayList<>();
     }
 
-    public Node getClosesNode(Point2D start) {
+    public Node getClosesNode(Point start) {
         double smallestDistance = Const.MAX_DISTANCE;
         Node smallestNode = null;
         for (Node node : nodes) {
@@ -72,11 +72,11 @@ public class SimulationMap {
         return people;
     }
 
-    public Point2D moveActor(Person person, int simulationsPerSec) {
+    public Point moveActor(Person person, int simulationsPerSec) {
         int walkingSpeed = (int) (walkingSpeedPerSec / simulationsPerSec);
-        Point2D p = new Point2D(person.getCurrentLocation().getX(), person.getCurrentLocation().getY());
+        Point p = new Point((int) person.getCurrentLocation().getX(), (int) person.getCurrentLocation().getY());
         Node targetNode = person.getRoute().peek();
-        Point2D targetLocation = targetNode.getLocation();
+        Point targetLocation = targetNode.getLocation();
         double distance = p.distance(targetLocation);
         int dx = (int) (targetLocation.getX() - p.getX());
         int dy = (int) (targetLocation.getY() - p.getY());
@@ -136,8 +136,8 @@ public class SimulationMap {
         return nodePool.get(rand.nextInt(nodePool.size()));
     }
 
-    public Point2D getStartingPoint() {
-        return startNode == null ? new Point2D(0, 0) : startNode.getLocation();
+    public Point getStartingPoint() {
+        return startNode == null ? new Point(0, 0) : startNode.getLocation();
     }
 
     void addTask(ITask currentTask, Node closestNode) {

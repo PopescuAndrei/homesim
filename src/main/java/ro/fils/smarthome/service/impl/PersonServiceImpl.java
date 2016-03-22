@@ -5,13 +5,13 @@
  */
 package ro.fils.smarthome.service.impl;
 
+import java.awt.Point;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
-import javafx.geometry.Point2D;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.fils.smarthome.model.Gadget;
@@ -60,7 +60,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person setLocation(Person p, Point2D newLocation) {
+    public Person setLocation(Person p, Point newLocation) {
         p.setCurrentLocation(newLocation);
         Deque<Node> route = p.getRoute();
         //TODO : uncomment when Node is replaced by our implementation

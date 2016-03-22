@@ -6,7 +6,7 @@
 package ro.fils.smarthome.service;
 
 import java.util.Set;
-import javafx.geometry.Point2D;
+import java.awt.Point;
 import ro.fils.smarthome.model.Gadget;
 import ro.fils.smarthome.model.ITask;
 import ro.fils.smarthome.model.Item;
@@ -25,7 +25,7 @@ public interface PersonService {
 
     public boolean hasItem(Person p, String item, int amount);
 
-    public Person setLocation(Person p, Point2D newLocation);
+    public Person setLocation(Person p, Point newLocation);
 
     public Person setCurrentTask(ITask task, Person p);
 
