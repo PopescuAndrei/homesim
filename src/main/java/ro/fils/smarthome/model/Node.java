@@ -13,6 +13,7 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.astar.AStarNode;
 
 /**
@@ -27,7 +28,7 @@ public class Node extends BaseEntity implements AStarNode {
     private int posY;
     
     @OneToMany(mappedBy = "node")
-    private List<Gadget> gadgetTypes;
+    private List<Appliance> applianceTypes;
     
     @OneToMany
     private Collection<Node> neighbors;
@@ -52,12 +53,12 @@ public class Node extends BaseEntity implements AStarNode {
         this.posY = posY;
     }
 
-    public List<Gadget> getGadgetTypes() {
-        return gadgetTypes;
+    public List<Appliance> getApplianceTypes() {
+        return applianceTypes;
     }
 
-    public void setGadgetTypes(List<Gadget> gadgetTypes) {
-        this.gadgetTypes = gadgetTypes;
+    public void setApplianceTypes(List<Appliance> applianceTypes) {
+        this.applianceTypes = applianceTypes;
     }
 
     public Point getLocation() {
@@ -80,10 +81,10 @@ public class Node extends BaseEntity implements AStarNode {
     
     /**
      * Needs to call update at the end
-     * @param gadgetType 
+     * @param applianceType 
      */
-    public void addGadget(String gadgetType){
-        if(gadgetTypes.add(new Gadget(gadgetType, this))){
+    public void addAppliance(String applianceType){
+        if(applianceTypes.add(new Appliance(applianceType, this))){
             
         }
     }
@@ -92,11 +93,11 @@ public class Node extends BaseEntity implements AStarNode {
      * Needs to call update at the end
      * @param type 
      */
-    public void removeGadget(String type){
-        Iterator<Gadget> it = gadgetTypes.iterator();
+    public void removeAppliance(String type){
+        Iterator<Appliance> it = applianceTypes.iterator();
         while(it.hasNext()){
-            Gadget gadget = it.next();
-            if(gadget.getType().equals(type)){
+            Appliance appliance = it.next();
+            if(appliance.getType().equals(type)){
                 it.remove();
             }
         }

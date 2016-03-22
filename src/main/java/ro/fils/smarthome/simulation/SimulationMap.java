@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
-import ro.fils.smarthome.model.Gadget;
+import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.model.ITask;
 import ro.fils.smarthome.model.Item;
 import ro.fils.smarthome.model.Node;
-import ro.fils.smarthome.model.Person;
+import ro.fils.smarthome.model.Agent;
+import ro.fils.smarthome.sensor.Sensor;
 import ro.fils.smarthome.service.NodeService;
 import ro.fils.smarthome.util.Const;
 
@@ -25,6 +26,8 @@ import ro.fils.smarthome.util.Const;
  *
  * @author andre
  */
+
+
 public class SimulationMap {
 
     private final int walkingSpeedPerSec;
@@ -33,20 +36,20 @@ public class SimulationMap {
     private final int dotsPerMeter;
 
     private ArrayList<Node> nodes;
-    private final Collection<Person> people;
-    private ArrayList<Gadget> objects;
+    private final Collection<Agent> people;
+    private ArrayList<Appliance> objects;
     private Collection<Item> items;
-    //TODO private Collection<Sensor> sensors;
+    private Collection<Sensor> sensors;
     private final Node startNode;
     private Collection<AutoTask> runningTasks;
 
     @Autowired
     private NodeService nodeService;
 
-    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Person> people, int dotsPerMeter) {
+    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter) {
         this.mapName = mapName;
         this.people = people;
-        //this.sensors = sensors
+        this.sensors = sensors;
         this.walkingSpeedPerSec = walkingSpeed;
         this.dotsPerMeter = dotsPerMeter;
         this.startNodeId = startNodeId;
@@ -68,11 +71,11 @@ public class SimulationMap {
         return smallestNode;
     }
 
-    public Collection<Person> getPeople() {
+    public Collection<Agent> getPeople() {
         return people;
     }
 
-    public Point moveActor(Person person, int simulationsPerSec) {
+    public Point moveActor(Agent person, int simulationsPerSec) {
         int walkingSpeed = (int) (walkingSpeedPerSec / simulationsPerSec);
         Point p = new Point((int) person.getCurrentLocation().getX(), (int) person.getCurrentLocation().getY());
         Node targetNode = person.getRoute().peek();
@@ -87,7 +90,7 @@ public class SimulationMap {
     }
 
     public void addItem(Item item) {
-        System.out.println("Added " + item.getName() + " to map");
+        System.out.println("Added " + item.getName()+ " to map");
         this.items.add(item);
     }
 
@@ -110,17 +113,17 @@ public class SimulationMap {
         return count >= amount;
     }
 
-    public Collection<Node> getLocationOfGadgets(Collection<String> gadgetTypes) {
+    public Collection<Node> getLocationOfAppliances(Collection<String> applianceTypes) {
         Collection<Node> locations = new ArrayList<>();
         objects.stream().forEach((g) -> {
-            gadgetTypes.stream().filter((gType) -> (g.getType().equals(gType))).forEach((_item) -> {
+            applianceTypes.stream().filter((gType) -> (g.getType().equals(gType))).forEach((_item) -> {
                 locations.add(g.getNode());
             });
         });
         return locations;
     }
 
-    public Collection<Gadget> getGadgets() {
+    public Collection<Appliance> getAppliances() {
         return objects;
     }
 
@@ -129,8 +132,8 @@ public class SimulationMap {
         if (nodePool.isEmpty()) {
             return null;
         }
-        objects.stream().forEach((gadget) -> {
-            nodePool.remove(gadget.getNode());
+        objects.stream().forEach((appliance) -> {
+            nodePool.remove(appliance.getNode());
         });
         Random rand = new Random();
         return nodePool.get(rand.nextInt(nodePool.size()));
@@ -150,7 +153,7 @@ public class SimulationMap {
             AutoTask t = it.next();
             t.progressTask(seconds);
             if (t.getDuration() <= 0.0) {
-                //System.out.println(t.getTask().getName() + ", " + t.getTask().getCreatedItems());
+                System.out.println(t.getTask().getName() + ", " + t.getTask().getCreatedItems());
 //                for(String item: t.getTask().getCreatedItems()){
 //                    this.addItem(new Item(item, t.getNode()));
 //                }

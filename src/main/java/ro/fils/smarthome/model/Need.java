@@ -9,8 +9,8 @@ package ro.fils.smarthome.model;
  *
  * @author Silvia
  */
-public class Need implements Comparable<Need>{
-    
+public class Need implements Comparable<Need> {
+
     private String name;
     private double decayRate;
     private double value;
@@ -44,15 +44,32 @@ public class Need implements Comparable<Need>{
     public void setValue(double value) {
         this.value = value;
     }
-    
+
     @Override
     public int compareTo(Need need) {
-      return (int) (this.value - need.value);
-    } 
+        return (int) (this.value - need.value);
+    }
+
+    public void deteriorateNeed(double seconds) {
+
+        this.value -= this.decayRate / (60 * 60 * seconds);
+        if (this.value < 0) {
+            this.value = 0;
+        }
+    }
+
+    public void improveNeed(int amount) {
+
+        this.value = this.value + amount;
+        if (this.value > 100) {
+            this.value = 100;
+        }
+
+    }
 
     @Override
     public String toString() {
         return "Need{" + "name=" + name + ", decayRate=" + decayRate + ", value=" + value + '}';
     }
-    
+
 }
