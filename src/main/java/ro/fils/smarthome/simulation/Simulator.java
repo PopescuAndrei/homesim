@@ -56,13 +56,15 @@ public class Simulator {
      */
     public boolean simulationStep() {
         boolean movement = false;
+        AStarImpl aStartAlg = new AStarImpl();
+        
         for (Agent agent : map.getPeople()) {
             if (agent.getPauseTime() > 0.0) {
                 agent.passTime(1.0 / simsPerSec);
                 continue;
             }
             if (agent.isMoving()) {   //We're traveling!
-                agent.setLocation(map.moveActor(agent, simsPerSec));
+                agent.setCurrentLocation(map.moveActor(agent, simsPerSec));
 
             } else if (agent.getTargetItem() != null) {
                 agent.progressFetch(1.0 / simsPerSec);
@@ -100,7 +102,7 @@ public class Simulator {
                 }
             } else if (Math.random() < 0.15 && agent.getPauseTime() == 0.0) {
                 try {
-                    agent.setRoute(AStarImpl.getRoute(map.getRandomNode(), map.getClosestNode(agent.getCurrentLocation())));
+                    agent.setRoute(aStartAlg.getRoute(map.getRandomNode(), map.getClosestNode(agent.getCurrentLocation())));
                 } catch (Exception ex) {
                     Logger.getLogger(Simulator.class.getName()).warning("No route found");
                 }

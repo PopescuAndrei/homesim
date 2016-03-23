@@ -71,6 +71,10 @@ public class Appliance extends BaseEntity {
         this.type = type;
     }
 
+    public String getName() {
+        return this.type + getNode().getId();
+    }
+
     public Node getNode() {
         return node;
     }
@@ -109,10 +113,6 @@ public class Appliance extends BaseEntity {
             amount = inventory.get(item);
         }
         return amount;
-    }
-
-    public String getName() {
-        return type + node.getId();
     }
 
     @Override
