@@ -12,4 +12,6 @@ package ro.fils.smarthome.util;
 public interface Const {
 
     static final double MAX_DISTANCE = 10000000.0;
+    static final char PLUS = '+';
+    static final char MINUS = '-';
 }
