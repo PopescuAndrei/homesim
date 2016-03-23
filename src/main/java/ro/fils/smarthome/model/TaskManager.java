@@ -127,7 +127,7 @@ public class TaskManager {
         }
     }
 
-    private void moveForItems(Agent agent, ITask goalTask, SimulationMap map) {
+    public void moveForItems(Agent agent, ITask goalTask, SimulationMap map) {
         LOG.log(Level.INFO, "{0} is fetching item:", agent.getName());
         AStarImpl aStartAlg = new AStarImpl();
         for (String s : goalTask.getRequiredItemsSet()) {

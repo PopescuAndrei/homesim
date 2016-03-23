@@ -44,7 +44,7 @@ public class SimulationMap {
     @Autowired
     private NodeService nodeService;
 
-    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter) {
+    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter, Collection<Sensor> sensors) {
         this.mapName = mapName;
         this.people = people;
         this.sensors = sensors;
@@ -161,11 +161,11 @@ public class SimulationMap {
             t.progressTask(seconds);
             if (t.getDuration() <= 0.0) {
                 System.out.println(t.getTask().getName() + ", " + t.getTask().getCreatedItems());
-//                for(String item: t.getTask().getCreatedItems()){
-//                    this.addItem(new Item(item, t.getNode()));
-//                }
+                for(String item: t.getTask().getCreatedItems()){
+                    this.addItem(new Item(item, t.getNode()));
+                }
                 it.remove();
-                //System.out.println(t.getTask().getName() + " completed");
+                System.out.println(t.getTask().getName() + " completed");
             }
         }
     }
@@ -174,6 +174,11 @@ public class SimulationMap {
         return items;
     }
 
+    public Collection<Sensor> getSensors() {
+        return sensors;
+    }
+
+    
     private static class AutoTask {
 
         private final ITask task;
