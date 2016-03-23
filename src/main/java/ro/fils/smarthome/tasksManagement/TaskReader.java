@@ -19,8 +19,8 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Need;
-import ro.fils.smarthome.util.Const;
-import ro.fils.smarthome.util.JSONReader_Constants;
+import ro.fils.smarthome.constants.Const;
+import ro.fils.smarthome.constants.JSONReader_Constants;
 
 /**
  *

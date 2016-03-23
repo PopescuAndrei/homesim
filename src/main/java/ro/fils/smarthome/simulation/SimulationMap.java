@@ -20,7 +20,7 @@ import ro.fils.smarthome.planManagement.Node;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.sensor.Sensor;
 import ro.fils.smarthome.service.NodeService;
-import ro.fils.smarthome.util.Const;
+import ro.fils.smarthome.constants.Const;
 
 /**
  *

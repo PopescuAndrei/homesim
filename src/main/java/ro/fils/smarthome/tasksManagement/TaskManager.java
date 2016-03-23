@@ -21,7 +21,7 @@ import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.planManagement.Node;
 import ro.fils.smarthome.planManagement.PPlanWrapper;
 import ro.fils.smarthome.simulation.SimulationMap;
-import ro.fils.smarthome.util.Activities_Type;
+import ro.fils.smarthome.constants.Activities_Type;
 
 /**
  *

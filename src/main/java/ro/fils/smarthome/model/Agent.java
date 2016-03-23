@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import javax.swing.ImageIcon;
-import ro.fils.smarthome.util.Activities_Type;
+import ro.fils.smarthome.constants.Activities_Type;
 
 /**
  *

@@ -14,7 +14,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import ro.fils.smarthome.util.Const;
+import ro.fils.smarthome.constants.Const;
 
 /**
  * A* implementation that allows specifying of one or more goals

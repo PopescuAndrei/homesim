@@ -3,18 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.util;
+package ro.fils.smarthome.constants;
 
 /**
  *
- * @author Silvia
+ * @author andre
  */
-public enum Activities_Type {
+public interface Const {
 
-    Automatic,
-    Finite,
-    Infinite,
-    Scheduled,
-    Cleanup
-
+    static final double MAX_DISTANCE = 10000000.0;
+    static final char PLUS = '+';
+    static final char MINUS = '-';
 }
