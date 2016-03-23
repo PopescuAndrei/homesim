@@ -17,8 +17,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ro.fils.smarthome.model.Agent;
-import ro.fils.smarthome.model.ITask;
-import ro.fils.smarthome.model.Time;
+import ro.fils.smarthome.tasksManagement.ITask;
 import ro.fils.smarthome.sensor.Camera;
 import ro.fils.smarthome.sensor.Sensor;
 

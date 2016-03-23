@@ -6,7 +6,7 @@
 package ro.fils.smarthome.service;
 
 import java.util.List;
-import ro.fils.smarthome.model.Node;
+import ro.fils.smarthome.planManagement.Node;
 
 /**
  *

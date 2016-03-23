@@ -7,7 +7,7 @@ package ro.fils.smarthome.service.impl;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import ro.fils.smarthome.model.Node;
+import ro.fils.smarthome.planManagement.Node;
 import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.service.NodeService;
 

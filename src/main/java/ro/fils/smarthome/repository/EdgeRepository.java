@@ -6,7 +6,7 @@
 package ro.fils.smarthome.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ro.fils.smarthome.model.Edge;
+import ro.fils.smarthome.planManagement.Edge;
 
 /**
  *

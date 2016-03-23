@@ -6,8 +6,8 @@
 package ro.fils.smarthome.service;
 
 import java.util.ArrayList;
-import ro.fils.smarthome.model.Edge;
-import ro.fils.smarthome.model.Node;
+import ro.fils.smarthome.planManagement.Edge;
+import ro.fils.smarthome.planManagement.Node;
 
 /**
  *

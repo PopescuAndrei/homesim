@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.model;
+package ro.fils.smarthome.planManagement;
 
+import ro.fils.smarthome.planManagement.BaseEntity;
+import ro.fils.smarthome.planManagement.Node;
 import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;

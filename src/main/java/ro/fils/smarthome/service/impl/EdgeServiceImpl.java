@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.fils.smarthome.model.Edge;
-import ro.fils.smarthome.model.Node;
+import ro.fils.smarthome.planManagement.Edge;
+import ro.fils.smarthome.planManagement.Node;
 import ro.fils.smarthome.repository.EdgeRepository;
 import ro.fils.smarthome.service.EdgeService;
 

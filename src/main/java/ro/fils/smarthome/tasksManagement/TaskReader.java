@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.model;
+package ro.fils.smarthome.tasksManagement;
 
+import ro.fils.smarthome.tasksManagement.Task;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ import java.util.Set;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import ro.fils.smarthome.model.Agent;
+import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.util.Const;
 import ro.fils.smarthome.util.JSONReader_Constants;
 

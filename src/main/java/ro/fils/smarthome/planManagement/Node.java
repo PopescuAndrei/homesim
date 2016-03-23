@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.model;
+package ro.fils.smarthome.planManagement;
 
 import java.awt.Point;
 import java.util.Collection;
@@ -15,6 +15,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.astar.AStarNode;
+import ro.fils.smarthome.model.Appliance;
 
 /**
  *

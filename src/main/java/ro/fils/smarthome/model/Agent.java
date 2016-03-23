@@ -5,6 +5,8 @@
  */
 package ro.fils.smarthome.model;
 
+import ro.fils.smarthome.planManagement.Node;
+import ro.fils.smarthome.tasksManagement.ITask;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;

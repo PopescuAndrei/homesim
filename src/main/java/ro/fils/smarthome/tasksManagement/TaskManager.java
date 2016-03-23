@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.model;
+package ro.fils.smarthome.tasksManagement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,6 +15,11 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ro.fils.smarthome.astar.AStarImpl;
+import ro.fils.smarthome.model.Agent;
+import ro.fils.smarthome.model.Appliance;
+import ro.fils.smarthome.model.Need;
+import ro.fils.smarthome.planManagement.Node;
+import ro.fils.smarthome.planManagement.PPlanWrapper;
 import ro.fils.smarthome.simulation.SimulationMap;
 import ro.fils.smarthome.util.Activities_Type;
 

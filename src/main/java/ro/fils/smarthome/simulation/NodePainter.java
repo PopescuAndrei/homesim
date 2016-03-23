@@ -8,8 +8,8 @@ package ro.fils.smarthome.simulation;
 import java.util.ArrayList;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.image.Image;
-import ro.fils.smarthome.model.Edge;
-import ro.fils.smarthome.model.Node;
+import ro.fils.smarthome.planManagement.Edge;
+import ro.fils.smarthome.planManagement.Node;
 
 /**
  *

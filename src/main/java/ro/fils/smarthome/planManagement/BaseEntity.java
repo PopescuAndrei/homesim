@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.model;
+package ro.fils.smarthome.planManagement;
 
 import java.io.Serializable;
 import javax.persistence.GeneratedValue;
