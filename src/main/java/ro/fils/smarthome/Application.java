@@ -5,7 +5,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import ro.fils.smarthome.views.MainController;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.springframework.context.annotation.ImportResource;
@@ -16,8 +15,6 @@ public class Application extends javafx.application.Application {
 
     @Autowired
     Config config;
-    @Autowired
-    MainController mainController;
 
     private static String[] savedArgs;
     private ConfigurableApplicationContext applicationContext;
@@ -35,9 +32,6 @@ public class Application extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        stage.setTitle(config.getWindow().getTitle());
-        stage.setScene(new Scene(mainController.getView(), 640, 480));
-        stage.show();
     }
 
     @Override
