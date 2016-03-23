@@ -59,7 +59,7 @@ public class SimulationMap {
         this.runningTasks = new ArrayList<>();
     }
 
-    public Node getClosesNode(Point start) {
+    public Node getClosestNode(Point start) {
         double smallestDistance = Const.MAX_DISTANCE;
         Node smallestNode = null;
         for (Node node : nodes) {
@@ -161,6 +161,10 @@ public class SimulationMap {
                 //System.out.println(t.getTask().getName() + " completed");
             }
         }
+    }
+
+    public Collection<Item> getItems() {
+        return items;
     }
 
     private static class AutoTask {

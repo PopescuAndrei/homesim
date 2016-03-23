@@ -194,13 +194,13 @@ public class Task implements ITask {
             });
         }
         if (!resultingItem.isEmpty()) {
-            for (String item : resultingItem.keySet()) {
+            resultingItem.keySet().stream().forEach((item) -> {
                 for (int i = 0; i < resultingItem.get(item); i++) {
                     //TODO
-                    //map.addItem(new Item(item, map.getClosestNode(p.getCurrentLocation())));
-                    //map.getItems().size(); // why??
+                    map.addItem(new Item(item, map.getClosestNode(p.getCurrentLocation())));
+//                    map.getItems().size(); // why??
                 }
-            }
+            });
         }
     }
 
@@ -265,4 +265,23 @@ public class Task implements ITask {
 
     }
 
+    public void setCooldown(double cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public void addPose(String poseString) {
+        poseSet.add(poseString);
+    }
+
+    public void addNeededState(String poseString) {
+        precond.add(poseString);
+    }
+
+    public void addPlusState(String substring) {
+        pos.add(substring);
+    }
+
+    public void addMinusState(String substring) {
+        neg.add(substring);
+    }
 }
