@@ -1,42 +1,16 @@
 package ro.fils.smarthome;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.springframework.context.annotation.ImportResource;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import ro.fils.smarthome.view.TestFrame;
 
 @SpringBootApplication
-@ImportResource("classpath:applicationContext.xml")
-public class Application extends javafx.application.Application {
-
-    @Autowired
-    Config config;
-
-    private static String[] savedArgs;
-    private ConfigurableApplicationContext applicationContext;
+public class Application extends SpringApplication {
 
     public static void main(String[] args) {
-        savedArgs = args;
-        launch(Application.class, args);
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+        TestFrame frame = new TestFrame(context);
+        frame.setVisible(true);
     }
-
-    @Override
-    public void init() throws Exception {
-        applicationContext = SpringApplication.run(getClass(), savedArgs);
-        applicationContext.getAutowireCapableBeanFactory().autowireBean(this);
-    }
-
-    @Override
-    public void start(Stage stage) throws Exception {
-    }
-
-    @Override
-    public void stop() throws Exception {
-        applicationContext.close();
-    }
-
 }

@@ -34,6 +34,7 @@ public class Simulator {
     /**
      *
      * @param map
+     * @param taskmanager
      * @param simulationsPerSec
      */
     public Simulator(SimulationMap map, TaskManager taskmanager, int simulationsPerSec) {
