@@ -28,21 +28,21 @@ public class Appliance extends BaseEntity {
 
     @Transient
     private Map<String, Integer> inventory;
-    
+
     @Column(name = "type")
     private String type;
-    
+
     @OneToOne
     @ManyToOne
     private Node node;
-    
+
     @Transient
     private Set<String> poses;
 
-    public Appliance(){
-        
+    public Appliance() {
+
     }
-    
+
     public Appliance(String applianceType, Node node) {
         this.type = applianceType;
         this.node = node;
@@ -88,7 +88,7 @@ public class Appliance extends BaseEntity {
     }
 
     public void setPosesByString(String posesString) {
-        this.poses = new HashSet<String>(Arrays.asList(posesString.split(" ")));
+        this.poses = new HashSet<>(Arrays.asList(posesString.split(" ")));
     }
 
     public boolean hasItem(String item) {
@@ -109,6 +109,10 @@ public class Appliance extends BaseEntity {
             amount = inventory.get(item);
         }
         return amount;
+    }
+
+    public String getName() {
+        return type + node.getId();
     }
 
     @Override
@@ -145,6 +149,5 @@ public class Appliance extends BaseEntity {
     public String toString() {
         return "Appliance{" + "inventory=" + inventory + ", type=" + type + ", node=" + node + ", poses=" + poses + '}';
     }
-
 
 }

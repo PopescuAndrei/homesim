@@ -21,7 +21,6 @@ import ro.fils.smarthome.model.ITask;
 import ro.fils.smarthome.model.Time;
 import ro.fils.smarthome.sensor.Camera;
 import ro.fils.smarthome.sensor.Sensor;
-import ro.fils.smarthome.sensor.SensorArea;
 
 /**
  *
@@ -61,18 +60,18 @@ public class SensorLogger {
 
     public void log(Agent agent, Collection<Sensor> sensors, double currentTime) {
 
-        for (Sensor s : sensors) {
-            for (SensorArea sa : s.getSensorAreas()) {
-                if (sa.getArea() == null && agent.getUsingAppliance() != null
+        sensors.stream().forEach((s) -> {
+            s.getSensorAreas().stream().forEach((sa) -> {
+                if (sa.getArea() == null && agent.getApplianceInUse() != null
                         && !agent.isMoving() && agent.getCurrentTask() != null
-                        && sa.getName().contains(agent.getUsingAppliance().type)
-                        && (!lastTriggered.containsKey(agent.getUsingAppliance().getName())
-                        || (lastTriggered.get(agent.getUsingAppliance().getName()) != null && currentTime - lastTriggered.get(agent.getUsingAppliance().getName()) >= 60.0))) {
-                    lastTriggered.put(agent.getUsingAppliance().getName(), currentTime);
+                        && sa.getName().contains(agent.getApplianceInUse().getType())
+                        && (!lastTriggered.containsKey(agent.getApplianceInUse().getName())
+                        || (lastTriggered.get(agent.getApplianceInUse().getName()) != null && currentTime - lastTriggered.get(agent.getApplianceInUse().getName()) >= 60.0))) {
+                    lastTriggered.put(agent.getApplianceInUse().getName(), currentTime);
                     if (!sa.getLastValue().equals("ON")) {
                         try {
-                            addSensor(currentTime, agent.getUsingAppliance().getName() + "CT",
-                                    agent.getUsingAppliance().getName() + "CT", "ON", (agent.getCurrentTask() != null
+                            addSensor(currentTime, agent.getApplianceInUse().getName() + "CT",
+                                    agent.getApplianceInUse().getName() + "CT", "ON", (agent.getCurrentTask() != null
                                             ? (agent.getCurrentTask().label() != null ? agent.getCurrentTask().label()
                                                     : (agent.getGoalTask() != null
                                                             ? (agent.getGoalTask().label() != null ? agent.getGoalTask().label() : "Other_Activity")
@@ -83,7 +82,7 @@ public class SensorLogger {
                             LOG.log(Level.SEVERE, null, ex);
                         }
                     }
-                } else if (sa.getArea() != null && sa.getArea().contains(agent.currentLocation())) {
+                } else if (sa.getArea() != null && sa.getArea().contains(agent.getCurrentLocation())) {
                     if (s instanceof Camera && !agent.isMoving()) {
                         Set<String> poses = agent.getPoseData();
                         if (lastPoses != poses && lastTask != agent.getCurrentTask()) {
@@ -129,17 +128,19 @@ public class SensorLogger {
                         }
                     }
                 } else //Not still in area.
-                if (lastTriggered.containsKey(sa.getName()) && currentTime - lastTriggered.get(sa.getName()) >= TRIGGER_INTERVAL) {
-                    if (!sa.getLastValue().equals("OFF")) {
-                        try {
-                            sa.setLastValue("OFF");
-                        } catch (Exception ex) {
-                            LOG.log(Level.SEVERE, null, ex);
+                {
+                    if (lastTriggered.containsKey(sa.getName()) && currentTime - lastTriggered.get(sa.getName()) >= TRIGGER_INTERVAL) {
+                        if (!sa.getLastValue().equals("OFF")) {
+                            try {
+                                sa.setLastValue("OFF");
+                            } catch (Exception ex) {
+                                LOG.log(Level.SEVERE, null, ex);
+                            }
                         }
                     }
                 }
-            }
-        }
+            });
+        });
     }
 
     public void addSensor(double time, String sensorName, String sensorNote,
