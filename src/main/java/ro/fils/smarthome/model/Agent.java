@@ -248,4 +248,13 @@ public class Agent {
         }
     }
 
+    public Image getAvatarImg() {
+        return avatarImg;
+    }
+
+    public void setAvatarImg(Image avatarImg) {
+        this.avatarImg = avatarImg;
+    }
+
+    
 }

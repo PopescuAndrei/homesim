@@ -26,8 +26,6 @@ import ro.fils.smarthome.util.Const;
  *
  * @author andre
  */
-
-
 public class SimulationMap {
 
     private final int walkingSpeedPerSec;
@@ -84,13 +82,14 @@ public class SimulationMap {
         int dx = (int) (targetLocation.getX() - p.getX());
         int dy = (int) (targetLocation.getY() - p.getY());
         if (distance < walkingSpeed) {
-            //p.setLocation
+            p.translate((int) (walkingSpeed * (dx / distance)),
+                    (int) (walkingSpeed * (dy / distance)));
         }
         return null;
     }
 
     public void addItem(Item item) {
-        System.out.println("Added " + item.getName()+ " to map");
+        System.out.println("Added " + item.getName() + " to map");
         this.items.add(item);
     }
 
@@ -111,6 +110,14 @@ public class SimulationMap {
                 .map((_item) -> 1)
                 .reduce(count, Integer::sum);
         return count >= amount;
+    }
+
+    public Collection<Node> getLocationsOfItem(String itemName) {
+        Collection<Node> itemNodes = new ArrayList<>();
+        items.stream().filter((item) -> (item.getName().equals(itemName))).forEach((item) -> {
+            itemNodes.add(item.getLocation());
+        });
+        return itemNodes;
     }
 
     public Collection<Node> getLocationOfAppliances(Collection<String> applianceTypes) {
