@@ -10,11 +10,13 @@ import java.util.Collection;
 import java.util.Deque;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ro.fils.smarthome.astar.AStarImpl;
 import ro.fils.smarthome.simulation.SimulationMap;
+import ro.fils.smarthome.util.Activities_Type;
 
 /**
  *
@@ -101,41 +103,62 @@ public class TaskManager {
     }
 
     private void setTaskForAgent(Agent agent, ITask goalTask, SimulationMap map) {
-     
+
         if (goalTask.itemExists(agent, map)) {
             moveForItems(agent, goalTask, map);
         } else {
-           LOG.log(Level.INFO, "{0} is doing task {1}, for {2}", new Object[]{agent.getName(), goalTask.toString(), agent.getGoalTask().toString()}); 
-           
-           try {
-               
+            LOG.log(Level.INFO, "{0} is doing task {1}, for {2}", new Object[]{agent.getName(), goalTask.toString(), agent.getGoalTask().toString()});
+
+            try {
+
                 Collection<Appliance> appliances = map.getAppliances();
                 Collection<String> valids = goalTask.getUsedAppliances();
                 Set<Appliance> validApps = new HashSet<>();
-                
-                for (Appliance appliance: appliances) {
-                    for (String valid: valids) {
+
+                for (Appliance appliance : appliances) {
+                    for (String valid : valids) {
                         if (appliance.getType().contains(valid)) {
                             validApps.add(appliance);
                         }
                     }
                 }
-               
-           } catch (Exception ex) {
-               
-           }
+                Collection<Node> goals = map.getLocationOfAppliances(valids);
+                for (Agent a : map.getPeople()) {
+                    if (!a.equals(agent) && a.getRoute() != null) {
+                        goals.remove(a.getRoute().getLast());
+                    }
+                }
+                AStarImpl aStarAlg = new AStarImpl();
+                Node closestNode = map.getClosestNode(agent.getCurrentLocation());
+                agent.setRoute(aStarAlg.getRoute(goals, closestNode));
+
+                for (Appliance app : validApps) {
+                    if (app.getNode().equals(agent.getRoute().getLast())) {
+                        agent.setCurrentTask(goalTask, app);
+                        goalTask.consumeItem(agent);
+                        break;
+                    }
+                }
+
+                if (closestNode.equals(agent.getRoute().getLast())) {
+                    agent.setRoute(null);
+                }
+
+            } catch (Exception ex) {
+
+            }
         }
     }
 
     public void moveForItems(Agent agent, ITask goalTask, SimulationMap map) {
         LOG.log(Level.INFO, "{0} is fetching item:", agent.getName());
-        AStarImpl aStartAlg = new AStarImpl();
+        AStarImpl aStarAlg = new AStarImpl();
         for (String s : goalTask.getRequiredItemsSet()) {
             if (!(agent.hasItem(s, goalTask.getRequiredItems().get(s))) && map.hasItem(s, goalTask.getRequiredItems().get(s))) {
                 agent.setTargetItem(s);
                 LOG.info(s);
                 try {
-                    agent.setRoute(aStartAlg.getRoute(map.getLocationsOfItem(s), map.getClosestNode(agent.getCurrentLocation())));
+                    agent.setRoute(aStarAlg.getRoute(map.getLocationsOfItem(s), map.getClosestNode(agent.getCurrentLocation())));
                     if (map.getClosestNode(agent.getCurrentLocation()).equals(agent.getRoute().getLast())) {
                         agent.setRoute(null);
                     }
@@ -147,23 +170,75 @@ public class TaskManager {
     }
 
     private Collection<ITask> getScheduled(Collection<ITask> availableTasks) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Collection<ITask> schedules = new ArrayList<>();
+        for (ITask t : availableTasks) {
+            if (t.getType().equals(Activities_Type.Scheduled.name())) {
+                schedules.add(t);
+            }
+        }
+
+        if (schedules.isEmpty()) {
+            return null;
+        } else {
+            return schedules;
+        }
     }
 
     private Collection<ITask> getRemoverTasks(Collection<ITask> availableTasks, Agent agent, SimulationMap map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Collection<ITask> removers = new ArrayList<>();
+        Set<String> states = agent.getState();
+        for (ITask t : availableTasks) {
+            if (t.getType().equals(Activities_Type.Cleanup.name()) && t.itemsExist(agent, map)) {
+                removers.add(t);
+            } else {
+                for (String state : states) {
+                    if (t.getNeg().contains(state)) {
+                        removers.add(t);
+                    }
+                }
+            }
+
+        }
+
+        if (removers.isEmpty()) {
+            return null;
+        } else {
+            return removers;
+        }
     }
 
     private Need getLowestNeed(List<Need> needs) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        double value = 1000.0;
+        Need returnedNeed = null;
+        for (Need need : needs) {
+            if (value > need.getValue()) {
+                value = need.getValue();
+                returnedNeed = need;
+            }
+        }
+        return returnedNeed;
     }
 
-    private ITask taskForNeed(Need lowest, Collection<ITask> availableTasks, double time, Agent agent, SimulationMap map) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private ITask taskForNeed(Need lowest, Collection<ITask> tasks, double time, Agent agent, SimulationMap map) {
+        List<ITask> tasksForNeed = new ArrayList<>();
+        for (ITask task : tasks) {
+            if (task.fulfilledNeed() != null && task.fulfilledNeed().equals(lowest.getName())) {
+                try {
+                    PPlanWrapper.getPlan(map, agent, tasks, task);
+                    tasksForNeed.add(task);
+                } catch (Exception e) {
+                    LOG.log(Level.INFO, "{0} has no viable plan", task.getName());
+                }
+            }
+        }
+        LOG.log(Level.INFO, "{0} possible tasks to fulfill {1}", new Object[]{tasksForNeed.size(), lowest.getName()});
+        return (tasksForNeed.isEmpty() ? null : tasksForNeed.get(new Random().nextInt(tasksForNeed.size())));
     }
 
     public void passTime(double d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (ITask t : tasks) {
+            t.passTime(d);
+        }
     }
 
 }
