@@ -5,7 +5,6 @@
  */
 package ro.fils.smarthome.view;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ro.fils.smarthome.service.NodeService;
