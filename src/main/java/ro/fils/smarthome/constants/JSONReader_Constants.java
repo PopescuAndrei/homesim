@@ -26,6 +26,18 @@ public enum JSONReader_Constants {
     NeedsState,
     AddsState,
     People,
-    Image
+    Image,
+    Sensors,
+    Position,
+    Attached_to,
+    Range,
+    Resolution,
+    Direction,
+    FieldOfView,
+    Size,
+    Radius,
+    Exclude,
+    Edge,
+    Confine
 
 }
