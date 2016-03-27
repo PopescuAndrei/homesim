@@ -5,7 +5,6 @@
  */
 package ro.fils.smarthome.tasksManagement;
 
-import ro.fils.smarthome.tasksManagement.Task;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class TaskReader {
     public TaskReader() throws ParseException, IOException {
         JSONParser jp = new JSONParser();
         try {
-            this.object = (JSONObject) jp.parse(new FileReader("classpath:activities.json"));
+            this.object = (JSONObject) jp.parse(new FileReader(getClass().getResource("/activities.json").getPath()));
         } catch (IOException | ParseException ex) {
             System.out.println("ro.fils.smarthome.util.TaskReader.<init>() => " + ex.getLocalizedMessage());
             this.object = null;

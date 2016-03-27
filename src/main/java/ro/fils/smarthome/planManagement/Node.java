@@ -11,11 +11,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.astar.AStarNode;
 import ro.fils.smarthome.model.Appliance;
+import ro.fils.smarthome.model.Room;
 
 /**
  *
@@ -27,12 +29,15 @@ public class Node extends BaseEntity implements AStarNode {
 
     private int posX;
     private int posY;
-    
-    @OneToMany(mappedBy = "node")
+
+    @OneToMany(mappedBy = "node", fetch = FetchType.EAGER)
     private List<Appliance> applianceTypes;
-    
+
     @OneToMany
     private Collection<Node> neighbors;
+
+    @ManyToOne
+    private Room room;
 
     public Node() {
 
@@ -66,43 +71,54 @@ public class Node extends BaseEntity implements AStarNode {
         return new Point(getPosX(), getPosY());
     }
 
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room r) {
+        this.room = r;
+    }
+
     @Override
     public <T extends AStarNode> Collection<T> getNeighbors() {
         return (Collection<T>) neighbors;
     }
-    
-    public void addNeighbor(Node node){
-        for(Node n : neighbors){
-            if(Objects.equals(n.getId(), node.getId())){
+
+    public void addNeighbor(Node node) {
+        for (Node n : neighbors) {
+            if (Objects.equals(n.getId(), node.getId())) {
                 return;
             }
         }
         neighbors.add(node);
     }
-    
+
     /**
-     * Needs to call update at the end
-     * @param applianceType 
+     * Needs to call update after each call
+     *
+     * @param applianceType
      */
-    public void addAppliance(String applianceType){
-        if(applianceTypes.add(new Appliance(applianceType, this))){
-            
+    public void addAppliance(String applianceType) {
+        if (applianceTypes.add(new Appliance(applianceType, this))) {
+
         }
     }
     
     /**
-     * Needs to call update at the end
-     * @param type 
+     * Needs to call update after each call
+     *
+     * @param type
      */
-    public void removeAppliance(String type){
+    public void removeAppliance(String type) {
         Iterator<Appliance> it = applianceTypes.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             Appliance appliance = it.next();
-            if(appliance.getType().equals(type)){
+            if (appliance.getType().equals(type)) {
                 it.remove();
             }
         }
     }
+
     public double distance(Point target) {
         Point current = new Point(getPosX(), getPosY());
         return current.distance(target);
@@ -119,4 +135,5 @@ public class Node extends BaseEntity implements AStarNode {
         }
 
     }
+
 }

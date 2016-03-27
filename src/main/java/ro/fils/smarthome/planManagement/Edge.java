@@ -5,6 +5,8 @@
  */
 package ro.fils.smarthome.planManagement;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import ro.fils.smarthome.planManagement.BaseEntity;
 import ro.fils.smarthome.planManagement.Node;
 import java.util.Objects;
@@ -87,6 +89,20 @@ public class Edge extends BaseEntity {
     public String toString() {
         return "Edge{" + "a=" + a + ", b=" + b + ", cachedLength=" + cachedLength + '}';
     }
-    
-    
+
+    public boolean exists(ArrayList<Edge> edges, Node p1, Node p2) {
+        boolean result = false;
+        if (edges.isEmpty()) {
+            return false;
+        } else {
+            for (Edge edge : edges) {
+                if ((edge.a.equals(p1) && edge.b.equals(p2)) || (edge.b.equals(p1) && edge.a.equals(p2))) {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+    }
+
 }

@@ -192,7 +192,7 @@ public class TaskManager {
     private Collection<ITask> getRemoverTasks(Collection<ITask> availableTasks, Agent agent, SimulationMap map) {
         Collection<ITask> removers = new ArrayList<>();
         Set<String> states = agent.getState();
-        for (ITask t : availableTasks) {
+        availableTasks.stream().forEach((t) -> {
             if (t.getType().equals(Activities_Type.Cleanup.name()) && t.itemsExist(agent, map)) {
                 removers.add(t);
             } else {
@@ -202,8 +202,7 @@ public class TaskManager {
                     }
                 }
             }
-
-        }
+        });
 
         if (removers.isEmpty()) {
             return null;

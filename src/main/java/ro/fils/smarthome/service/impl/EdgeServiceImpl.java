@@ -6,6 +6,7 @@
 package ro.fils.smarthome.service.impl;
 
 import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +29,11 @@ public class EdgeServiceImpl implements EdgeService {
     @Override
     public Edge createNew(Edge edge){
         return edgeRepository.save(edge);
+    }
+    
+    @Override
+    public List<Edge> findAll(){
+        return edgeRepository.findAll();
     }
     
     @Override

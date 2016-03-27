@@ -13,10 +13,14 @@ import ro.fils.smarthome.planManagement.Node;
  * @author andre
  */
 public interface NodeService {
-    
+
     Node findNodeById(Long nodeId);
-    List<Node> getNodes();
+
+    List<Node> findAll();
+
     Node createNewNode(Node node);
+
     void updateNode(Node node);
     
+    void removeNode(Node node);
 }
