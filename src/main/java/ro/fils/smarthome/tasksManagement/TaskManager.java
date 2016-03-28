@@ -112,7 +112,7 @@ public class TaskManager {
         if (goalTask.itemExists(agent, map)) {
             moveForItems(agent, goalTask, map);
         } else {
-            LOG.log(Level.INFO, "{0} is doing task {1}, for {2}", new Object[]{agent.getName(), goalTask.toString(), agent.getGoalTask().toString()});
+            LOG.log(Level.INFO, "{0} is doing task {1}, for {2}", new Object[]{agent.getName(), goalTask.getName(), agent.getGoalTask().getName()});
 
             try {
 

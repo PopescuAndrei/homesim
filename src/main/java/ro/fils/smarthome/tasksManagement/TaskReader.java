@@ -56,7 +56,7 @@ public class TaskReader {
                     JSONArray timespan = (JSONArray) task.get(JSONReader_Constants.Timespan.name());
                     newTask = new Task((String) task.get(JSONReader_Constants.Name.name()),
                             (String) task.get(JSONReader_Constants.Type.name()),
-                            Integer.parseInt((String) task.get(JSONReader_Constants.Duration.name())),
+                            Integer.parseInt((String) task.get(JSONReader_Constants.Duration.name()).toString()),
                             Integer.parseInt(timespan.get(0).toString()),
                             Integer.parseInt(timespan.get(1).toString()),
                             (String) task.get(JSONReader_Constants.Appliance.name()),
@@ -64,7 +64,7 @@ public class TaskReader {
                     tasks.add(newTask);
                 } else {
                     newTask = new Task((String) task.get(JSONReader_Constants.Name.name()),
-                            Integer.parseInt((String) task.get(JSONReader_Constants.Duration.name())),
+                            Integer.parseInt(task.get(JSONReader_Constants.Duration.name()).toString()),
                             (String) task.get(JSONReader_Constants.Type.name()),
                             (String) task.get(JSONReader_Constants.Appliance.name()),
                             (task.containsKey(JSONReader_Constants.Label.name()) ? (String) task.get(JSONReader_Constants.Label.name()) : null));

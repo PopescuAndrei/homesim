@@ -6,7 +6,6 @@
 package ro.fils.smarthome.view;
 
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,6 +28,8 @@ import ro.fils.smarthome.sensor.Sensor;
 import ro.fils.smarthome.sensor.SensorReader;
 import ro.fils.smarthome.simulation.SimulationMap;
 import ro.fils.smarthome.simulation.Simulator;
+import ro.fils.smarthome.tasksManagement.Task;
+import ro.fils.smarthome.tasksManagement.TaskManager;
 import ro.fils.smarthome.tasksManagement.TaskReader;
 import ro.fils.smarthome.util.SensorLogger;
 import ro.fils.smarthome.util.Time;
@@ -69,12 +70,13 @@ public class SimulatorFrame extends javax.swing.JFrame {
             simulationMap = new SimulationMap(context, "/environment.jpg", 50, 2L, people, 43, sensors);
             people.add(new Agent("Person1", "/agent.png", 0, simulationMap.getStartingPoint(), taskReader.getNeeds()));
             people.add(new Agent("Person2", "/agent.png", 0, simulationMap.getStartingPoint(), taskReader.getNeeds()));
+            simulator = new Simulator(simulationMap, new TaskManager(taskReader), 3 );
             this.days = 30;
-
+            
         } catch (Exception e) {
             Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, e);
         }
-
+ 
     }
 
     private Box populateAgentsAndNeeds(String agentName) {
@@ -89,10 +91,8 @@ public class SimulatorFrame extends javax.swing.JFrame {
                 Font boldFont = new Font(Font.SERIF, Font.BOLD, 20);
 
                 JLabel jLabel = new JLabel("Agent:");
-//                jLabel.setFont(boldFont);
                 needsPanel.add(jLabel);
                 JLabel jLabel2 = new JLabel(person.getName());
-//                jLabel2.setFont(boldFont);
                 needsPanel.add(jLabel2);
 
                 for (Need need : personNeeds) {
