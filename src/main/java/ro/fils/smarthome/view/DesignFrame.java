@@ -5,20 +5,13 @@
  */
 package ro.fils.smarthome.view;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
-import javax.swing.AbstractAction;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JTextField;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ro.fils.smarthome.model.Appliance;
@@ -37,7 +30,8 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
     ClassPathXmlApplicationContext ctx;
     private NodePainter painter;
     private Node selectedNode;
-
+    private DefaultComboBoxModel comboBoxModel;
+    private DefaultListModel<String> listModel;
     NodeObjectService nodeObjectService;
     NodeService nodeService;
 
@@ -63,21 +57,33 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
         labelRestartPart1 = new javax.swing.JLabel();
         labelRestartPart2 = new javax.swing.JLabel();
         actionsPanel = new javax.swing.JPanel();
+        isStart = new javax.swing.JCheckBox();
+        chooser = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        lister = new javax.swing.JList<>();
+        jLabel2 = new javax.swing.JLabel();
+        btnAddAppliance = new javax.swing.JButton();
+        btnRemoveAppliance = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        editPoses = new javax.swing.JTextField();
+        btnUpdatePoses = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jSplitPane1.setResizeWeight(0.3);
+
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
         leftPanel.setLayout(leftPanelLayout);
         leftPanelLayout.setHorizontalGroup(
             leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 350, Short.MAX_VALUE)
+            .addGap(0, 300, Short.MAX_VALUE)
         );
         leftPanelLayout.setVerticalGroup(
             leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 311, Short.MAX_VALUE)
+            .addGap(0, 402, Short.MAX_VALUE)
         );
 
         jSplitPane1.setLeftComponent(leftPanel);
@@ -101,16 +107,76 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
         labelRestartPart2.setText("to take effect!");
 
         actionsPanel.setBackground(new java.awt.Color(200, 200, 200));
+        actionsPanel.setMinimumSize(new java.awt.Dimension(300, 313));
+
+        isStart.setBackground(new java.awt.Color(200, 200, 200));
+        isStart.setText("Starting Point");
+
+        chooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        lister.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(lister);
+
+        jLabel2.setText("Node's Appliances:");
+
+        btnAddAppliance.setText("Add Appliance to Node");
+
+        btnRemoveAppliance.setText("Remove Appliance from Node");
+
+        jLabel3.setText("Available Poses :");
+
+        btnUpdatePoses.setText("Update Poses");
 
         javax.swing.GroupLayout actionsPanelLayout = new javax.swing.GroupLayout(actionsPanel);
         actionsPanel.setLayout(actionsPanelLayout);
         actionsPanelLayout.setHorizontalGroup(
             actionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(actionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(actionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(isStart, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(chooser, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(actionsPanelLayout.createSequentialGroup()
+                        .addGroup(actionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(actionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnRemoveAppliance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnAddAppliance, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(editPoses)
+                            .addComponent(btnUpdatePoses, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         actionsPanelLayout.setVerticalGroup(
             actionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 123, Short.MAX_VALUE)
+            .addGroup(actionsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(isStart)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(actionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(actionsPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(actionsPanelLayout.createSequentialGroup()
+                        .addComponent(btnAddAppliance)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnRemoveAppliance)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editPoses, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnUpdatePoses, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel1.setText("Node Actions");
@@ -126,7 +192,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                     .addComponent(labelSelectNode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelLinkNodes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelMoveNode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(labelRestartPart1, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                    .addComponent(labelRestartPart1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
                     .addComponent(labelRestartPart2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelAddNode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -155,9 +221,9 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
-                .addGap(4, 4, 4)
-                .addComponent(actionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(actionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 214, Short.MAX_VALUE)
+                .addGap(9, 9, 9))
         );
 
         jSplitPane1.setRightComponent(rightPanel);
@@ -176,112 +242,84 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    //TODO need to check logic of adding boxes one more time
     public void setActiveNode(Node selectedPoint) throws Exception {
-        System.out.println("Active: " + selectedPoint.getId());
-        actionsPanel.removeAll();
-        isStart = new JCheckBox("Starting point");
         isStart.addActionListener(this);
         int start = 0;
-
+        System.out.println(selectedPoint.toString());
         if (selectedPoint.getId() == start) {
+            System.out.println("Ci plm are?");
             isStart.setSelected(true);
             isStart.setEnabled(false);
         }
+
         selectedNode = selectedPoint;
-        actionsPanel.add(isStart);
         TaskReader taskReader = new TaskReader();
         Set<String> objectList = taskReader.getAppliances();
-        chooser = new JComboBox(objectList.toArray());
-        actionsPanel.add(chooser);
-        Box actionsBox = Box.createHorizontalBox();
-        JButton adder = new JButton("Add");
-        adder.addActionListener(new ActionListener() {
+        comboBoxModel = new DefaultComboBoxModel();
+        objectList.forEach(o -> comboBoxModel.addElement(o));
+        chooser.setModel(comboBoxModel);
 
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                selectedNode.addAppliance(chooser.getSelectedItem().toString());
-                nodeService.updateNode(selectedNode);
-                try {
-                    setActiveNode(selectedNode);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                repaint();
+        btnAddAppliance.addActionListener((ActionEvent ae) -> {
+            selectedNode.addAppliance(chooser.getSelectedItem().toString());
+            nodeService.updateNode(selectedNode);
+            try {
+                setActiveNode(selectedNode);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "You must first select a node");
             }
         });
-        actionsBox.add(adder);
-        JButton remover = new JButton("Remove");
-        remover.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                selectedNode.removeAppliance(lister.getSelectedValue().toString());
-                try {
-                    setActiveNode(selectedNode);
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-                repaint();
+        btnRemoveAppliance.addActionListener((ActionEvent ae) -> {
+            selectedNode.removeAppliance(lister.getSelectedValue());
+            try {
+                setActiveNode(selectedNode);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "You must first select a node");
             }
         });
-        actionsBox.add(remover);
-        actionsPanel.add(actionsBox);
+
         Iterator it = selectedPoint.getApplianceTypes().iterator();
-        ArrayList<String> list = new ArrayList<>();
+        DefaultListModel<String> nodeObjects = new DefaultListModel<>();
         while (it.hasNext()) {
             Appliance obj = (Appliance) it.next();
-            list.add(obj.getType());
+            nodeObjects.addElement(obj.getType());
         }
-        Object[] nodeObjects = new Object[list.size()];
-        for (int i = 0; i < nodeObjects.length; i++) {
-            nodeObjects[i] = list.get(i);
-            System.out.println(list.get(i));
-        }
-        lister = new JList(nodeObjects);
+
+        lister.setModel(nodeObjects);
         lister.setVisibleRowCount(5);
-        actionsPanel.add(lister);
+
         lister.addListSelectionListener((ListSelectionEvent lse) -> {
             if (!lse.getValueIsAdjusting()) {
-                String selected = lister.getSelectedValue().toString();
-                final JTextField poses = new JTextField(7);
-                for (final Appliance app : selectedNode.getApplianceTypes()) {
-                    if (app.getType().equals(selected)) {
-                        StringBuilder sb = new StringBuilder();
-                        app.getPoses().stream().forEach((pose) -> {
-                            sb.append(pose).append(" ");
-                        });
-                        poses.setText(sb.toString());
-                        JButton update = new JButton("Update");
+                String selected = lister.getSelectedValue();
 
-                        update.setPreferredSize(new Dimension(70, 30));
-                        update.setAction(new AbstractAction("Update") {
+                selectedNode.getApplianceTypes().stream().filter((app) -> (app.getType().equals(selected))).forEach((app) -> {
+                    StringBuilder sb = new StringBuilder();
+                    app.getPoses().stream().forEach((pose) -> {
+                        sb.append(pose).append(" ");
+                    });
+                    editPoses.setText(sb.toString());
 
-                            @Override
-                            public void actionPerformed(ActionEvent ae) {
-                                nodeObjectService.updateNodeObjectPosesByIdAndType(poses.getText(), selectedNode.getId(), app.getType());
-                            }
-                        });
-                        actionsPanel.removeAll();
-                        actionsPanel.add(new JLabel("Poses(space separated)"));
-                        actionsPanel.add(poses);
-                        actionsPanel.add(update);
-                        pack();
+                    btnUpdatePoses.addActionListener((ActionEvent ae) -> {
+                        nodeObjectService.updateNodeObjectPosesByIdAndType(editPoses.getText(), selectedNode.getId(), app.getType());
 
-                    }
-                }
+                    });
+                });
             }
         });
-        rightPanel.add(actionsPanel);
-        pack();
     }
 
-    private javax.swing.JCheckBox isStart;
-    private javax.swing.JComboBox chooser;
-    private javax.swing.JList lister;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel actionsPanel;
+    private javax.swing.JButton btnAddAppliance;
+    private javax.swing.JButton btnRemoveAppliance;
+    private javax.swing.JButton btnUpdatePoses;
+    private javax.swing.JComboBox<String> chooser;
+    private javax.swing.JTextField editPoses;
+    private javax.swing.JCheckBox isStart;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSplitPane jSplitPane1;
@@ -292,6 +330,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JLabel labelRestartPart2;
     private javax.swing.JLabel labelSelectNode;
     private javax.swing.JPanel leftPanel;
+    private javax.swing.JList<String> lister;
     private javax.swing.JPanel rightPanel;
     // End of variables declaration//GEN-END:variables
 

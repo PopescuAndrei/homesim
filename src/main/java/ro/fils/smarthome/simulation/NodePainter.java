@@ -30,7 +30,7 @@ import ro.fils.smarthome.service.NodeService;
  */
 public class NodePainter extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
 
-    private ClassPathXmlApplicationContext context;
+    private final ClassPathXmlApplicationContext context;
 
     private NodeService nodeService;
     private EdgeService edgeService;
@@ -186,6 +186,7 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
         } else if (hoveredPoint != null) {
             selectedPoint = hoveredPoint;
             try {
+                System.out.println("ajunge pe aci vreodata? " + selectedPoint.toString());
                 simFrame.setActiveNode(selectedPoint);
             } catch (Exception ex) {
                 ex.printStackTrace();

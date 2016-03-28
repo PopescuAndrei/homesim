@@ -165,6 +165,7 @@ public class TaskReader {
                     }
                 }
             }
+            System.out.println(appliances.size() + " this much appliances");
             return appliances;
         }
     }
