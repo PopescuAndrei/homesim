@@ -29,9 +29,8 @@ public class SimulationDisplay extends JPanel {
     private Collection<Agent> people;
 
     public SimulationDisplay(String mapName) {
-        image = new ImageIcon(mapName).getImage();
-        Dimension size = new Dimension(image.getWidth(this), image.getHeight(this));
-        super.setPreferredSize(size);
+        image = new ImageIcon(getClass().getResource("/environment.jpg").getPath()).getImage();
+        initFrame(image);
         people = null;
         sensors = null;
     }
@@ -81,5 +80,12 @@ public class SimulationDisplay extends JPanel {
         this.people = people;
         this.sensors = sensors;
         repaint();
+    }
+
+    private void initFrame(Image image) {
+        setPreferredSize(new Dimension(image.getWidth(this), image.getHeight(this)));
+        setBounds(0, 0, image.getWidth(this), image.getHeight(this));
+        setOpaque(false);
+        setFocusable(true);
     }
 }

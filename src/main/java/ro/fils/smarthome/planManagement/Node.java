@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
@@ -33,7 +34,7 @@ public class Node extends BaseEntity implements AStarNode {
     @OneToMany(mappedBy = "node", fetch = FetchType.EAGER)
     private List<Appliance> applianceTypes;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<Node> neighbors;
 
     @ManyToOne
