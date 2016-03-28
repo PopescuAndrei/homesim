@@ -227,7 +227,7 @@ public class Agent {
             poses.addAll(this.currentTask.getPoses());
         }
         if (this.applianceInUse != null) {
-            poses.addAll(this.applianceInUse.getPoses());
+            poses.addAll(this.applianceInUse.getPosesSet());
         }
 
         Set<String> filtered = new HashSet<>();

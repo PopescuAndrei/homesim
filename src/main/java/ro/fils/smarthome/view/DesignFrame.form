@@ -23,7 +23,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jSplitPane1" alignment="1" pref="400" max="32767" attributes="0"/>
+          <Component id="jSplitPane1" alignment="1" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -53,12 +53,12 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="300" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="22" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="402" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="418" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -73,6 +73,8 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
+                  <Component id="jSeparator2" alignment="0" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -80,15 +82,14 @@
                           <Component id="labelSelectNode" alignment="0" max="32767" attributes="0"/>
                           <Component id="labelLinkNodes" alignment="0" max="32767" attributes="0"/>
                           <Component id="labelMoveNode" alignment="0" max="32767" attributes="0"/>
-                          <Component id="labelRestartPart1" alignment="0" pref="342" max="32767" attributes="0"/>
+                          <Component id="labelRestartPart1" alignment="0" pref="351" max="32767" attributes="0"/>
                           <Component id="labelRestartPart2" alignment="0" max="32767" attributes="0"/>
                           <Component id="labelAddNode" alignment="0" max="32767" attributes="0"/>
                           <Component id="jLabel1" alignment="0" max="32767" attributes="0"/>
+                          <Component id="labelDelete" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
-                  <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jSeparator2" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -103,13 +104,15 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="labelMoveNode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
+                      <Component id="labelDelete" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
+                      <Component id="jSeparator2" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="labelRestartPart1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Component id="labelRestartPart2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
+                      <Component id="jSeparator1" min="-2" pref="5" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -122,22 +125,22 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="labelAddNode">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Right-click: Add node"/>
+                <Property name="text" type="java.lang.String" value="Right - Click: Add Node"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="labelSelectNode">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Left-click: Select node"/>
+                <Property name="text" type="java.lang.String" value="Left - Click: Select Node"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="labelLinkNodes">
               <Properties>
-                <Property name="text" type="java.lang.String" value="CTRL+Left-click: Link nodes"/>
+                <Property name="text" type="java.lang.String" value="CTRL+ Left - Click: Link Nodes"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="labelMoveNode">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Shift+drag: Move node"/>
+                <Property name="text" type="java.lang.String" value="Shift+ Drag: Move Node"/>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="labelRestartPart1">
@@ -304,6 +307,11 @@
             <Component class="javax.swing.JSeparator" name="jSeparator1">
             </Component>
             <Component class="javax.swing.JSeparator" name="jSeparator2">
+            </Component>
+            <Component class="javax.swing.JLabel" name="labelDelete">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Delete: Delete Node"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>
