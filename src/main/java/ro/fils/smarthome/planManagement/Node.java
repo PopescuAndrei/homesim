@@ -34,7 +34,7 @@ public class Node extends BaseEntity implements AStarNode {
     @OneToMany(mappedBy = "node", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Appliance> applianceTypes;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<Node> neighbors;
 
     @ManyToOne

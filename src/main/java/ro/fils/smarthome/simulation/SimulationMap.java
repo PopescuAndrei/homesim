@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.tasksManagement.ITask;
 import ro.fils.smarthome.model.Item;
@@ -28,6 +29,7 @@ import ro.fils.smarthome.constants.Const;
  */
 public class SimulationMap {
 
+    private ClassPathXmlApplicationContext context;
     private final int walkingSpeedPerSec;
     private final String mapName;
     private final Long startNodeId;
@@ -44,7 +46,10 @@ public class SimulationMap {
     @Autowired
     private NodeService nodeService;
 
-    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter, Collection<Sensor> sensors) {
+    public SimulationMap(ClassPathXmlApplicationContext context, String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter, Collection<Sensor> sensors) {
+        this.context = context;
+        initBeans();
+        
         this.mapName = mapName;
         this.people = people;
         this.sensors = sensors;
@@ -55,6 +60,10 @@ public class SimulationMap {
         this.startNode = nodeService.findNodeById(startNodeId);
         this.items = new ArrayList<>();
         this.runningTasks = new ArrayList<>();
+    }
+
+    private void initBeans() {
+        nodeService = context.getBean(NodeService.class);
     }
 
     public Node getClosestNode(Point start) {
@@ -178,7 +187,6 @@ public class SimulationMap {
         return sensors;
     }
 
-    
     private static class AutoTask {
 
         private final ITask task;
