@@ -41,7 +41,6 @@ public class SimulatorFrame extends javax.swing.JFrame {
         this.context = ctx;
         initSimulatorTools();
         initComponents(); 
-        setExtendedState(Frame.MAXIMIZED_BOTH);
         setTitle("Simulator");
     }
 
