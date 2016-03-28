@@ -13,9 +13,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -28,18 +26,17 @@ import javax.persistence.Transient;
 @Table(name = "appliances")
 public class Appliance extends BaseEntity {
 
-    @Transient
-    private Map<String, Integer> inventory;
-
-    @Column(name = "type")
     private String type;
+    private String poses;
 
     @OneToOne
-    @ManyToOne
     private Node node;
 
     @Transient
-    private Set<String> poses;
+    private Map<String, Integer> inventory;
+
+    @Transient
+    private Set<String> posesSet;
 
     public Appliance() {
 
@@ -49,12 +46,12 @@ public class Appliance extends BaseEntity {
         this.type = applianceType;
         this.node = node;
         this.inventory = new HashMap<>();
-        this.poses = new HashSet<>();
+        this.posesSet = new HashSet<>();
     }
 
     public Appliance(String applianceType, Node node, Set<String> poses) {
         this(applianceType, node);
-        this.poses = poses;
+        this.posesSet = new HashSet<>();
     }
 
     public Map<String, Integer> getInventory() {
@@ -85,16 +82,26 @@ public class Appliance extends BaseEntity {
         this.node = node;
     }
 
-    public Set<String> getPoses() {
+    public Set<String> getPosesSet() {
+        return posesSet;
+    }
+
+    public void setPosesSet(Set<String> posesSet) {
+        this.posesSet = posesSet;
+        String posesString = null;
+        for(String s: posesSet){
+            posesString = posesString + " "+ s;
+        }
+        this.poses = posesString;
+    }
+
+    public String getPoses() {
         return poses;
     }
 
-    public void setPoses(Set<String> poses) {
+    public void setPoses(String poses) {
         this.poses = poses;
-    }
-
-    public void setPosesByString(String posesString) {
-        this.poses = new HashSet<>(Arrays.asList(posesString.split(" ")));
+        this.posesSet = new HashSet<>(Arrays.asList(poses.split(" ")));
     }
 
     public boolean hasItem(String item) {
@@ -119,10 +126,9 @@ public class Appliance extends BaseEntity {
 
     @Override
     public int hashCode() {
-        int hash = 3;
-        hash = 71 * hash + Objects.hashCode(this.type);
-        hash = 71 * hash + Objects.hashCode(this.node);
-        hash = 71 * hash + Objects.hashCode(this.poses);
+        int hash = 7;
+        hash = 79 * hash + Objects.hashCode(this.type);
+        hash = 79 * hash + Objects.hashCode(this.node);
         return hash;
     }
 
@@ -141,11 +147,10 @@ public class Appliance extends BaseEntity {
         if (!Objects.equals(this.type, other.type)) {
             return false;
         }
-        if (!Objects.equals(this.node, other.node)) {
-            return false;
-        }
-        return Objects.equals(this.poses, other.poses);
+        return Objects.equals(this.node, other.node);
     }
+
+    
 
     @Override
     public String toString() {

@@ -61,6 +61,7 @@ public class Node extends BaseEntity implements AStarNode {
     }
 
     public List<Appliance> getApplianceTypes() {
+        System.out.println("Node has " + applianceTypes.size() + " appliances");
         return applianceTypes;
     }
 
@@ -139,7 +140,7 @@ public class Node extends BaseEntity implements AStarNode {
 
     @Override
     public String toString() {
-        return "Node{id=" + super.getId() + ", posX=" + posX + ", posY=" + posY + ", applianceTypes=" + applianceTypes + ", neighbors=" + neighbors + ", room=" + room + '}';
+        return "Node{id=" + super.getId() + ", posX=" + posX + ", posY=" + posY + ", neighbors=" + neighbors + ", room=" + room + '}';
     }
 
     
