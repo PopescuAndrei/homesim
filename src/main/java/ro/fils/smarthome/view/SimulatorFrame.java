@@ -6,21 +6,16 @@
 package ro.fils.smarthome.view;
 
 import java.awt.Font;
-import java.awt.Frame;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 import javax.swing.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Box;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ro.fils.smarthome.model.Agent;
@@ -46,9 +41,6 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private Timer timer;
     private long startTime;
     private int days;
-    private HashMap<String, JProgressBar> needBars = new HashMap<>();
-    private JLabel stateList;
-    private JLabel timeLabel;
 
     /**
      * Creates new form SimulatorFrame
@@ -77,39 +69,11 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
     }
 
-    private Box populateAgentsAndNeeds(String agentName) {
-
-        Box allNeeds = Box.createVerticalBox();
+    private void populateAgentsAndNeeds(String agentName) {
         Collection<Agent> allAgents = simulationMap.getPeople();
-        for (Agent person : allAgents) {
-            if (agentName.equals(person.getName())) {
-                List<Need> personNeeds = person.getNeeds();
-                JPanel needsPanel = new JPanel(new GridLayout(person.getNeeds().size() + 1, 2));
-
-                Font boldFont = new Font(Font.SERIF, Font.BOLD, 20);
-
-                JLabel jLabel = new JLabel("Agent:");
-//                jLabel.setFont(boldFont);
-                needsPanel.add(jLabel);
-                JLabel jLabel2 = new JLabel(person.getName());
-//                jLabel2.setFont(boldFont);
-                needsPanel.add(jLabel2);
-
-                for (Need need : personNeeds) {
-                    needsPanel.add(new JLabel(need.getName()));
-                    JProgressBar prog = new JProgressBar(0, 100);
-                    prog.setName(person.getName() + "," + need.getName());
-                    prog.setValue((int) need.getValue());
-                    prog.setString("" + (int) need.getValue());
-                    prog.setStringPainted(true);
-                    needBars.put(prog.getName(), prog);
-                    needsPanel.add(prog);
-                    needsPanel.setMaximumSize(needsPanel.getPreferredSize());
-                    allNeeds.add(needsPanel);
-                }
-            }
-        }
-        return allNeeds;
+        allAgents.stream().filter((person) -> (agentName.equals(person.getName()))).forEach((person) -> {
+            List<Need> personNeeds = person.getNeeds();
+        });
     }
 
     private String[] getAgents() {
@@ -123,217 +87,288 @@ public class SimulatorFrame extends javax.swing.JFrame {
         return agents;
     }
 
-    public void updateMenu() {
-        Collection<Agent> people = simulationMap.getPeople();
-        String info = "";
-        info = people.stream().map((person) -> {
-            List<Need> needs = person.getNeeds();
-            needs.stream().forEach((need) -> {
-                JProgressBar p = needBars.get(person.getName() + "," + need.getName());
-                p.setValue((int) need.getValue());
-                p.setString("" + (int) need.getValue());
-            });
-            return person;
-        }).map((person) -> person.getName() + person.getState() + "\n").reduce(info, String::concat);
-        stateList.setText(info);
-        timeLabel.setText("W: " + Time.getWeek(simulator.currentTime)
-                + ", D: " + Time.getDayName(simulator.currentTime)
-                + ", " + Time.getNumberFormatted(Time.getHours(simulator.currentTime))
-                + ":" + Time.getNumberFormatted(Time.getMinutes(simulator.currentTime))
-                + ":" + Time.getNumberFormatted(Time.getSeconds(simulator.currentTime)));
-    }
+    public void setProgressBars(List<Need> personNeeds, Agent person) {
+        for (Need need : personNeeds) {
+            if (need.getName().equalsIgnoreCase("hunger")) {
+                progressHunger.setName(person.getName() + "," + need.getName());
+                progressHunger.setValue((int) need.getValue());
+                progressHunger.setString("" + (int) need.getValue());
+                progressHunger.setStringPainted(true);
+            } else if (need.getName().equalsIgnoreCase("energy")) {
+                progressEnergy.setName(person.getName() + "," + need.getName());
+                progressEnergy.setValue((int) need.getValue());
+                progressEnergy.setString("" + (int) need.getValue());
+                progressEnergy.setStringPainted(true);
+            } else if (need.getName().equalsIgnoreCase("bladder")) {
+                progressBladder.setName(person.getName() + "," + need.getName());
+                progressBladder.setValue((int) need.getValue());
+                progressBladder.setString("" + (int) need.getValue());
+                progressBladder.setStringPainted(true);
+            } else if (need.getName().equalsIgnoreCase("fun")) {
+                progressFun.setName(person.getName() + "," + need.getName());
+                progressFun.setValue((int) need.getValue());
+                progressFun.setString("" + (int) need.getValue());
+                progressFun.setStringPainted(true);
+            } else if (need.getName().equalsIgnoreCase("hygiene")) {
+                progressHygiene.setName(person.getName() + "," + need.getName());
+                progressHygiene.setValue((int) need.getValue());
+                progressHygiene.setString("" + (int) need.getValue());
+                progressHygiene.setStringPainted(true);
+            }
 
+        }
+    }
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+     * 
+     */    
+    public void updateMenu() {
+    }
+ 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        jSeparator1 = new javax.swing.JSeparator();
-        jLabel1 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jSplitPane2 = new javax.swing.JSplitPane();
-        jPanel3 = new javax.swing.JPanel();
+        rightPanel = new javax.swing.JPanel();
+        labelLogbook = new javax.swing.JLabel();
+        scrollPaneLog = new javax.swing.JScrollPane();
+        insideSplitPane = new javax.swing.JSplitPane();
+        panelAgents = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jList2 = new javax.swing.JList<>();
-        jButton1 = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel3 = new javax.swing.JLabel();
-        jSeparator2 = new javax.swing.JSeparator();
-        jPanel2 = new javax.swing.JPanel();
-        left = new javax.swing.JPanel();
+        listAgents = new javax.swing.JList<>();
+        btnStartSimulation = new javax.swing.JButton();
+        panelNeeds = new javax.swing.JPanel();
+        labelDuration = new javax.swing.JLabel();
+        editDurationDays = new javax.swing.JTextField();
+        labelTimeDisplayed = new javax.swing.JLabel();
+        panelProgressbars = new javax.swing.JPanel();
+        labelHunger = new javax.swing.JLabel();
+        labelEnergy = new javax.swing.JLabel();
+        labelBladder = new javax.swing.JLabel();
+        labelFun = new javax.swing.JLabel();
+        labelHygiene = new javax.swing.JLabel();
+        progressHunger = new javax.swing.JProgressBar(0,100);
+        progressEnergy = new javax.swing.JProgressBar(0,100);
+        progressBladder = new javax.swing.JProgressBar(0,100);
+        progressFun = new javax.swing.JProgressBar(0,100);
+        progressHygiene = new javax.swing.JProgressBar(0,100);
+        leftPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jSplitPane1.setResizeWeight(0.3);
 
-        jLabel1.setText("Logbook:");
-        Font font = jLabel1.getFont();
+        labelLogbook.setText("Logbook:");
+        Font font = labelLogbook.getFont();
         Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
-        jLabel1.setFont(boldFont);
+        labelLogbook.setFont(boldFont);
 
-        jScrollPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        scrollPaneLog.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        insideSplitPane.setResizeWeight(0.4);
 
         jLabel4.setText("List of Agents:");
 
-        jList2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jList2.setModel(new javax.swing.AbstractListModel<String>() {
+        listAgents.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        listAgents.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = getAgents();
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jList2.addMouseListener(new java.awt.event.MouseAdapter() {
+        listAgents.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jList2MouseClicked(evt);
+                listAgentsMouseClicked(evt);
             }
         });
-        jScrollPane3.setViewportView(jList2);
+        jScrollPane3.setViewportView(listAgents);
 
-        jButton1.setText("Start");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        btnStartSimulation.setText("Start");
+        btnStartSimulation.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                btnStartSimulationMouseClicked(evt);
+            }
+        });
+        btnStartSimulation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStartSimulationActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout panelAgentsLayout = new javax.swing.GroupLayout(panelAgents);
+        panelAgents.setLayout(panelAgentsLayout);
+        panelAgentsLayout.setHorizontalGroup(
+            panelAgentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAgentsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelAgentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(btnStartSimulation, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        panelAgentsLayout.setVerticalGroup(
+            panelAgentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelAgentsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addComponent(btnStartSimulation)
                 .addContainerGap())
         );
 
-        jSplitPane2.setLeftComponent(jPanel3);
+        insideSplitPane.setLeftComponent(panelAgents);
 
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel4.setAlignmentX(0.2F);
-        jPanel4.setAlignmentY(0.2F);
-        jPanel4.setAutoscrolls(true);
+        panelNeeds.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        panelNeeds.setAlignmentX(0.2F);
+        panelNeeds.setAlignmentY(0.2F);
+        panelNeeds.setAutoscrolls(true);
 
-        jLabel2.setText("Duration in Days:");
+        labelDuration.setText("Duration in Days:");
 
-        jTextField1.setText("30");
+        editDurationDays.setText("30");
 
-        jLabel3.setText("Time - to be displayed");
+        labelTimeDisplayed.setText("Time - to be displayed");
 
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.LINE_AXIS));
+        panelProgressbars.setBackground(new java.awt.Color(210, 210, 210));
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSeparator2)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        labelHunger.setText("Hunger");
+
+        labelEnergy.setText("Energy");
+
+        labelBladder.setText("Bladder");
+
+        labelFun.setText("Fun");
+
+        labelHygiene.setText("Hygiene");
+
+        javax.swing.GroupLayout panelProgressbarsLayout = new javax.swing.GroupLayout(panelProgressbars);
+        panelProgressbars.setLayout(panelProgressbarsLayout);
+        panelProgressbarsLayout.setHorizontalGroup(
+            panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelProgressbarsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 96, Short.MAX_VALUE)))
+                .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(labelHygiene, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelHunger, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelEnergy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelBladder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelFun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressHygiene, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressFun, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressBladder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressEnergy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(progressHunger, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        panelProgressbarsLayout.setVerticalGroup(
+            panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelProgressbarsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelHunger)
+                    .addComponent(progressHunger, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressEnergy, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelEnergy))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressBladder, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelBladder))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressFun, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelFun))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(progressHygiene, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelHygiene))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+
+        javax.swing.GroupLayout panelNeedsLayout = new javax.swing.GroupLayout(panelNeeds);
+        panelNeeds.setLayout(panelNeedsLayout);
+        panelNeedsLayout.setHorizontalGroup(
+            panelNeedsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelNeedsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelNeedsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelProgressbars, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelNeedsLayout.createSequentialGroup()
+                        .addComponent(labelDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(editDurationDays, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(labelTimeDisplayed)
+                        .addGap(0, 45, Short.MAX_VALUE)))
                 .addContainerGap())
         );
-
-        jPanel2.add(populateAgentsAndNeeds("Person1"));
-
-        jSplitPane2.setRightComponent(jPanel4);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        panelNeedsLayout.setVerticalGroup(
+            panelNeedsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelNeedsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1)
-                        .addContainerGap())))
-            .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jSplitPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
+                .addGroup(panelNeedsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelDuration)
+                    .addComponent(editDurationDays, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelTimeDisplayed))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
-                .addGap(6, 6, 6))
+                .addComponent(panelProgressbars, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jSplitPane1.setRightComponent(jPanel1);
+        insideSplitPane.setRightComponent(panelNeeds);
 
-        left.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        left.setAlignmentY(0.3F);
-
-        javax.swing.GroupLayout leftLayout = new javax.swing.GroupLayout(left);
-        left.setLayout(leftLayout);
-        leftLayout.setHorizontalGroup(
-            leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 152, Short.MAX_VALUE)
+        javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
+        rightPanel.setLayout(rightPanelLayout);
+        rightPanelLayout.setHorizontalGroup(
+            rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(insideSplitPane, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(scrollPaneLog)
+            .addGroup(rightPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelLogbook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
-        leftLayout.setVerticalGroup(
-            leftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 348, Short.MAX_VALUE)
+        rightPanelLayout.setVerticalGroup(
+            rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
+                .addComponent(insideSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelLogbook)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollPaneLog, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jSplitPane1.setRightComponent(rightPanel);
+
+        leftPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        leftPanel.setAlignmentY(0.3F);
+
+        javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
+        leftPanel.setLayout(leftPanelLayout);
+        leftPanelLayout.setHorizontalGroup(
+            leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 160, Short.MAX_VALUE)
+        );
+        leftPanelLayout.setVerticalGroup(
+            leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 357, Short.MAX_VALUE)
         );
 
         try {
             display = new SimulationDisplay("/environment.jpg");
             display.update(simulationMap.getPeople(), simulationMap.getSensors());
-            left.add(display);
+            leftPanel.add(display);
 
         }catch(Exception e){
             e.printStackTrace();
         }
 
-        jSplitPane1.setLeftComponent(left);
+        jSplitPane1.setLeftComponent(leftPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -343,7 +378,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 361, Short.MAX_VALUE)
         );
 
         ActionListener timeListen = new ActionListener() {
@@ -369,47 +404,53 @@ public class SimulatorFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+    private void btnStartSimulationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStartSimulationMouseClicked
+        
+    }//GEN-LAST:event_btnStartSimulationMouseClicked
 
-        try {
-            simulator.setSensorLogger(new SensorLogger("sensorvals"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        days = Integer.parseInt(jTextField1.getText());
+    private void listAgentsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listAgentsMouseClicked
+        String selectedValue = listAgents.getSelectedValue();
+        populateAgentsAndNeeds(selectedValue);
+    }//GEN-LAST:event_listAgentsMouseClicked
+
+    private void btnStartSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartSimulationActionPerformed
+//        try {
+//            //simulator.setSensorLogger(new SensorLogger("sensorvals"));
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//            Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        days = Integer.parseInt(editDurationDays.getText());
         startTime = System.currentTimeMillis();
         timer.start();
-
-
-    }//GEN-LAST:event_jButton1MouseClicked
-
-    private void jList2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList2MouseClicked
-        jPanel2.removeAll();
-        jPanel2.repaint();
-        String selectedValue = jList2.getSelectedValue();
-        jPanel2.add(populateAgentsAndNeeds(selectedValue));
-        jPanel2.repaint();
-    }//GEN-LAST:event_jList2MouseClicked
+    }//GEN-LAST:event_btnStartSimulationActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
+    private javax.swing.JButton btnStartSimulation;
+    private javax.swing.JTextField editDurationDays;
+    private javax.swing.JSplitPane insideSplitPane;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JList<String> jList2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JSplitPane jSplitPane2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JPanel left;
+    private javax.swing.JLabel labelBladder;
+    private javax.swing.JLabel labelDuration;
+    private javax.swing.JLabel labelEnergy;
+    private javax.swing.JLabel labelFun;
+    private javax.swing.JLabel labelHunger;
+    private javax.swing.JLabel labelHygiene;
+    private javax.swing.JLabel labelLogbook;
+    private javax.swing.JLabel labelTimeDisplayed;
+    private javax.swing.JPanel leftPanel;
+    private javax.swing.JList<String> listAgents;
+    private javax.swing.JPanel panelAgents;
+    private javax.swing.JPanel panelNeeds;
+    private javax.swing.JPanel panelProgressbars;
+    private javax.swing.JProgressBar progressBladder;
+    private javax.swing.JProgressBar progressEnergy;
+    private javax.swing.JProgressBar progressFun;
+    private javax.swing.JProgressBar progressHunger;
+    private javax.swing.JProgressBar progressHygiene;
+    private javax.swing.JPanel rightPanel;
+    private javax.swing.JScrollPane scrollPaneLog;
     // End of variables declaration//GEN-END:variables
 }
