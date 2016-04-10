@@ -22,14 +22,14 @@ public class Camera implements Sensor{
     private final List<SensorArea> areas;
     
     public Camera(String name, Point position, double directionDegrees, double fieldOfView, double[] range, int partitions){
-        //Cone cone = new Cone(position, directionDegrees, range, fieldOfView);
+        Cone cone = new Cone(position, directionDegrees, range, fieldOfView);
         this.name = name;
         this.position = position;
         areas = getSegments(position, directionDegrees, fieldOfView, range, partitions);
     }
     
     public Camera(String name, Point position, double directionDegrees, double fieldOfView, double[] range){
-        //Cone cone = new Cone(position, directionDegrees, range, fieldOfView);
+        Cone cone = new Cone(position, directionDegrees, range, fieldOfView);
         this.name = name;
         this.position = position;
         areas = getSegments(position, directionDegrees, fieldOfView, range, 5);

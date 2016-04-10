@@ -6,42 +6,39 @@
 package ro.fils.smarthome.planManagement;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import ro.fils.smarthome.astar.AStarNode;
 import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.model.Room;
+import ro.fils.smarthome.repository.NodeRepository;
 
 /**
  *
  * @author andre
  */
-@Entity
-@Table(name = "nodes")
-public class Node extends BaseEntity implements AStarNode {
+public class Node implements AStarNode {
 
+    private Long id;
     private int posX;
     private int posY;
 
-    @OneToMany(mappedBy = "node", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Appliance> applianceTypes;
+    private Collection<Node> neighbors = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Collection<Node> neighbors;
-
-    @ManyToOne
     private Room room;
 
     public Node() {
 
+    }
+    
+    public Node(Long id, Point p){
+        this.id = id;
+        posX = (int) p.getX();
+        posY = (int) p.getY();
     }
 
     public int getPosX() {
@@ -61,7 +58,6 @@ public class Node extends BaseEntity implements AStarNode {
     }
 
     public List<Appliance> getApplianceTypes() {
-        System.out.println("Node has " + applianceTypes.size() + " appliances");
         return applianceTypes;
     }
 
@@ -81,6 +77,15 @@ public class Node extends BaseEntity implements AStarNode {
         this.room = r;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    
     @Override
     public <T extends AStarNode> Collection<T> getNeighbors() {
         return (Collection<T>) neighbors;
@@ -96,18 +101,15 @@ public class Node extends BaseEntity implements AStarNode {
     }
 
     /**
-     * Needs to call update after each call
-     *
      * @param applianceType
      */
     public void addAppliance(String applianceType) {
         if (applianceTypes.add(new Appliance(applianceType, this))) {
-
+            new NodeRepository().update(this);
         }
     }
     
     /**
-     * Needs to call update after each call
      *
      * @param type
      */
@@ -117,6 +119,7 @@ public class Node extends BaseEntity implements AStarNode {
             Appliance appliance = it.next();
             if (appliance.getType().equals(type)) {
                 it.remove();
+                new NodeRepository().update(this);
             }
         }
     }
@@ -140,7 +143,7 @@ public class Node extends BaseEntity implements AStarNode {
 
     @Override
     public String toString() {
-        return "Node{id=" + super.getId() + ", posX=" + posX + ", posY=" + posY + ", neighbors=" + neighbors + ", room=" + room + '}';
+        return "Node{id=" + id + ", posX=" + posX + ", posY=" + posY +  ", room=" + room + '}';
     }
 
     

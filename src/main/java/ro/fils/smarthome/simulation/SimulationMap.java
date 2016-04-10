@@ -12,16 +12,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.tasksManagement.ITask;
 import ro.fils.smarthome.model.Item;
 import ro.fils.smarthome.planManagement.Node;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.sensor.Sensor;
-import ro.fils.smarthome.service.NodeService;
 import ro.fils.smarthome.constants.Const;
+import ro.fils.smarthome.repository.NodeRepository;
 
 /**
  *
@@ -29,26 +27,21 @@ import ro.fils.smarthome.constants.Const;
  */
 public class SimulationMap {
 
-    private ClassPathXmlApplicationContext context;
     private final int walkingSpeedPerSec;
     private final String mapName;
     private final Long startNodeId;
     private final int dotsPerMeter;
 
-    private ArrayList<Node> nodes;
+    private final ArrayList<Node> nodes;
     private final Collection<Agent> people;
     private ArrayList<Appliance> objects;
-    private Collection<Item> items;
-    private Collection<Sensor> sensors;
-    private final Node startNode;
-    private Collection<AutoTask> runningTasks;
+    private final Collection<Item> items;
+    private final Collection<Sensor> sensors;
+    private Node startNode;
+    private final Collection<AutoTask> runningTasks;
+    private final NodeRepository nodeRepo = new NodeRepository();
 
-    @Autowired
-    private NodeService nodeService;
-
-    public SimulationMap(ClassPathXmlApplicationContext context, String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter, Collection<Sensor> sensors) {
-        this.context = context;
-        initBeans();
+    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter, Collection<Sensor> sensors) {
         
         this.mapName = mapName;
         this.people = people;
@@ -57,13 +50,22 @@ public class SimulationMap {
         this.dotsPerMeter = dotsPerMeter;
         this.startNodeId = startNodeId;
 
-        this.startNode = nodeService.findNodeById(startNodeId);
+        //Cred ca asta era eroarea, oricum, sunt pe calea cea buna
+        this.nodes = (ArrayList<Node>) nodeRepo.getNodes();
+        objects = new ArrayList<>();
+        for (Node node : nodes) {
+            if (Objects.equals(node.getId(), startNodeId)) {
+                startNode = node;
+            }
+            if (!node.getApplianceTypes().isEmpty()) {
+                node.getApplianceTypes().stream().forEach((obj) -> {
+                    objects.add(obj);
+                });
+            }
+        }
+        System.out.println("am applianceeeeeeeeeeees + " + objects.size());
         this.items = new ArrayList<>();
         this.runningTasks = new ArrayList<>();
-    }
-
-    private void initBeans() {
-        nodeService = context.getBean(NodeService.class);
     }
 
     public Node getClosestNode(Point start) {
@@ -94,11 +96,11 @@ public class SimulationMap {
             p.translate((int) (walkingSpeed * (dx / distance)),
                     (int) (walkingSpeed * (dy / distance)));
         }
-        return null;
+        return p;
     }
 
     public void addItem(Item item) {
-        System.out.println("Added " + item.getName() + " to map");
+        System.out.println("#######################Added " + item.getName() + " to map");
         this.items.add(item);
     }
 
@@ -156,7 +158,7 @@ public class SimulationMap {
     }
 
     public Point getStartingPoint() {
-        return startNode == null ? new Point(0, 0) : startNode.getLocation();
+        return (startNode == null ? new Point(0, 0) : startNode.getLocation());
     }
 
     void addTask(ITask currentTask, Node closestNode) {
@@ -170,7 +172,8 @@ public class SimulationMap {
             t.progressTask(seconds);
             if (t.getDuration() <= 0.0) {
                 System.out.println(t.getTask().getName() + ", " + t.getTask().getCreatedItems());
-                for(String item: t.getTask().getCreatedItems()){
+                System.out.println("AM CREAT 1000000: " + t.getTask().getCreatedItems().size());
+                for (String item : t.getTask().getCreatedItems()) {
                     this.addItem(new Item(item, t.getNode()));
                 }
                 it.remove();

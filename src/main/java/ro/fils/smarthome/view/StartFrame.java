@@ -6,19 +6,14 @@
 package ro.fils.smarthome.view;
 
 import javax.swing.JFrame;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
  * @author andre
  */
 public class StartFrame extends javax.swing.JFrame {
-
-
-    ClassPathXmlApplicationContext ctx;
     
-    public StartFrame(ClassPathXmlApplicationContext ctx) {
-        this.ctx = ctx;
+    public StartFrame() {
         initComponents();
     }
 
@@ -119,13 +114,13 @@ public class StartFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRunSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunSimulationActionPerformed
-        SimulatorFrame frame = new SimulatorFrame(ctx);
+        SimulatorFrame frame = new SimulatorFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }//GEN-LAST:event_btnRunSimulationActionPerformed
 
     private void btnEditMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditMapActionPerformed
-        DesignFrame frame = new DesignFrame(ctx);
+        DesignFrame frame = new DesignFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }//GEN-LAST:event_btnEditMapActionPerformed

@@ -11,11 +11,13 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.geom.Area;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import ro.fils.smarthome.constants.Const;
 import ro.fils.smarthome.constants.JSONReader_Constants;
 
@@ -27,11 +29,11 @@ public class SensorReader {
 
     private JSONObject object;
 
-    public SensorReader(String fileName) throws Exception {
+    public SensorReader(String fileName){
         JSONParser jp = new JSONParser();
         try {
-            this.object = (JSONObject) jp.parse(new FileReader(fileName));
-        } catch (Exception e) {
+            this.object = (JSONObject) jp.parse(new FileReader(getClass().getResource(fileName).getPath()));
+        } catch (IOException | ParseException e) {
             this.object = null;
         }
     }

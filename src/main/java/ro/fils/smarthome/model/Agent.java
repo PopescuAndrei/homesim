@@ -24,12 +24,13 @@ import ro.fils.smarthome.constants.Activities_Type;
  * @author Silvia
  */
 public class Agent {
-
+    public static final int WANDERER = 1;
+    
     private String name;
     private Image avatarImg;
-    private int personType;
     private double pauseTime;
-
+    private int personType;
+    
     private Point currentLocation;
     private Deque<Node> route;
     private List<Need> needs;
@@ -37,17 +38,19 @@ public class Agent {
     private double fetchTime;
     private double remainingTaskDuration;
     private String targetItem;
-    private Set<String> state = new HashSet<>();
-    private HashMap<String, Integer> inventory = new HashMap<>();
+    private Set<String> state;
+    private HashMap<String, Integer> inventory;
     private ITask goalTask;
     private Appliance applianceInUse;
 
-    public Agent(String name, String avatarImg, int personType, Point currentLocation, List<Need> needs) {
+    public Agent(String name, String avatarImg, Point currentLocation, List<Need> needs) {
         this.name = name;
         this.avatarImg = new ImageIcon(getClass().getResource(avatarImg)).getImage();
-        this.personType = personType;
         this.currentLocation = currentLocation;
         this.needs = needs != null ? new ArrayList<>(needs) : null;
+        this.inventory = new HashMap<>();
+        this.state = new HashSet<>();
+        this.personType = 0;
         this.pauseTime = 0;
     }
 
@@ -57,14 +60,6 @@ public class Agent {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getPersonType() {
-        return personType;
-    }
-
-    public void setPersonType(int personType) {
-        this.personType = personType;
     }
 
     public double getPauseTime() {
@@ -79,12 +74,11 @@ public class Agent {
         return currentLocation;
     }
 
-    public void setCurrentLocation(Point currentLocation) {
-        this.currentLocation = currentLocation;
-        if (route != null && !route.isEmpty()) {
-            if (currentLocation.distance(route.peek().getLocation()) == 0) {
-                route.remove();
-            }
+    public void setCurrentLocation(Point moveToPoint) {
+        this.currentLocation = moveToPoint;
+        if((route != null || !route.isEmpty()) && 
+                currentLocation.distance(route.peek().getLocation()) == 0){
+            route.remove();
         }
     }
 
@@ -189,8 +183,9 @@ public class Agent {
         this.inventory = inventory;
     }
 
-    public void addItem(Item item) {
-        inventory.put(item.getName(), (inventory.get(item.getName()) != null ? inventory.get(item.getName()) : 0) + 1);
+    public void addItem(Item item){
+        inventory.put(item.getName(), (inventory.get(item.getName()) != null ? 
+                inventory.get(item.getName()) : 0) + 1);
     }
 
     public void removeItem(String itemName, int amount) {
@@ -202,7 +197,7 @@ public class Agent {
     }
 
     public void progressTask(double seconds) {
-        this.remainingTaskDuration = this.remainingTaskDuration - seconds;
+        this.remainingTaskDuration -= seconds;
     }
 
     public void progressFetch(double seconds) {
@@ -210,18 +205,15 @@ public class Agent {
     }
 
     public void passTime(double seconds) {
-
-        this.needs.stream().forEach((n) -> {
-            n.deteriorateNeed(seconds);
-        });
-
+        for(Need need: needs){
+            need.deteriorateNeed(seconds);
+        }
         if (this.pauseTime > 0) {
             this.pauseTime = this.pauseTime - seconds;
         }
     }
 
     public Set<String> getPoseData() {
-
         Set<String> poses = new HashSet<>();
         if (this.currentTask != null) {
             poses.addAll(this.currentTask.getPoses());
@@ -258,5 +250,14 @@ public class Agent {
         this.avatarImg = avatarImg;
     }
 
+    public int getPersonType() {
+        return personType;
+    }
+
+    public void setPersonType(int personType) {
+        this.personType = personType;
+    }
     
+    
+
 }

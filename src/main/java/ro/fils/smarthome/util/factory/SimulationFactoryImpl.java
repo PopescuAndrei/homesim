@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.parser.ParseException;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.sensor.Sensor;
 import ro.fils.smarthome.sensor.SensorReader;
@@ -24,20 +23,12 @@ import ro.fils.smarthome.view.SimulationDisplay;
  */
 public class SimulationFactoryImpl implements SimulationFactory {
 
-    ClassPathXmlApplicationContext ctx;
     private ArrayList<Agent> people;
     private TaskReader taskReader;
     private Collection<Sensor> sensors;
     private int days;
 
-    public SimulationFactoryImpl(ClassPathXmlApplicationContext ctx) {
-        this.ctx = ctx;
-        try {
-            taskReader = new TaskReader();
-            people = new ArrayList<>();
-        } catch (ParseException | IOException ex) {
-            Logger.getLogger(SimulationFactoryImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public SimulationFactoryImpl() {
     }
 
     @Override

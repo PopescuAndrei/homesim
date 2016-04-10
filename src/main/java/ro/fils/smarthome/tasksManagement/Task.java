@@ -47,24 +47,35 @@ public class Task implements ITask {
     private Set<String> neg = new HashSet<>();
     private double cooldownMax = 0;
     private double cooldown = 0;
-
-    public Task(String taskName, int durationMinutes, String performedAt, String type, String label) {
+    
+    public Task(String taskName, String type, int durationMinutes, String performedAt, String label) {
         this.taskName = taskName;
+        this.label = label;
+        this.type = type;
         this.durationMinutes = durationMinutes;
         this.remainingSeconds = (double) (durationMinutes * 60);
+        this.startTime = -1;
+        this.endTime = -1;
         this.performedAt = performedAt;
-        this.type = type;
-        this.label = label;
-        this.fulfilledNeed = null;
+        fulfilledNeed = null;
+        fulfilledAmount = -1;
+        resultingItem = new HashMap<>();
+        requiredItem = new HashMap<>();
+        this.poseSet = new HashSet<>();
+        this.precond = new HashSet<>();
+        this.pos = new HashSet<>();
+        this.neg = new HashSet<>();
+        this.cooldownMax = 0.0;
+        this.cooldown = 0.0;
     }
 
-    public Task(String taskName, int durationMinutes, String performedAt, String type, String label, double cooldown) {
-        this(taskName, durationMinutes, performedAt, type, label);
-        this.cooldown = cooldown;
+    public Task(String taskName, String type, int durationMinutes, String performedAt, String label, int cooldown) {
+        this(taskName, type, durationMinutes, performedAt, label);
+        this.setCooldown(cooldown * 60.0);
     }
 
     public Task(String taskName, String type, int durationSeconds, int startTime, int endTime, String performedAt, String label) {
-        this(taskName, durationSeconds, performedAt, type, label);
+        this(taskName, type, durationSeconds, performedAt, label);
         this.startTime = startTime;
         this.endTime = endTime;
     }
@@ -199,13 +210,12 @@ public class Task implements ITask {
             });
         }
         if (!resultingItem.isEmpty()) {
-            resultingItem.keySet().stream().forEach((item) -> {
-                for (int i = 0; i < resultingItem.get(item); i++) {
-                    //TODO
+            for(String item: resultingItem.keySet()){
+                for(int i = 0; i < resultingItem.get(item); i++){
                     map.addItem(new Item(item, map.getClosestNode(p.getCurrentLocation())));
-//                    map.getItems().size(); // why??
+                    System.out.println(map.getItems().size());
                 }
-            });
+            }
         }
     }
 
@@ -289,4 +299,11 @@ public class Task implements ITask {
     public void addMinusState(String substring) {
         neg.add(substring);
     }
+
+    @Override
+    public String toString() {
+        return taskName;
+    }
+    
+    
 }

@@ -18,22 +18,16 @@ import ro.fils.smarthome.view.DesignFrame;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ro.fils.smarthome.planManagement.Edge;
 import ro.fils.smarthome.planManagement.Node;
-import ro.fils.smarthome.service.EdgeService;
-import ro.fils.smarthome.service.NodeService;
+import ro.fils.smarthome.repository.EdgeRepository;
+import ro.fils.smarthome.repository.NodeRepository;
 
 /**
  *
  * @author andre
  */
 public class NodePainter extends JPanel implements MouseListener, MouseMotionListener, KeyListener {
-
-    private final ClassPathXmlApplicationContext context;
-
-    private NodeService nodeService;
-    private EdgeService edgeService;
 
     private static final long serialVersionUID = 1L;
 
@@ -52,15 +46,18 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
     private final Image image;
     ArrayList<Edge> edges;
 
-    public NodePainter(ClassPathXmlApplicationContext context, DesignFrame frame, String imgFile) {
-        this.context = context;
-        this.simFrame = frame;
+    private final NodeRepository nodeRepo;
+    private final EdgeRepository edgeRepo;
 
-        initBeans();
+    public NodePainter(DesignFrame frame, String imgFile) {
+        this.simFrame = frame;
+        nodeRepo = new NodeRepository();
+        edgeRepo = new EdgeRepository();
+
         image = new ImageIcon(getClass().getResource("/environment.jpg").getPath()).getImage();
         initFrame(image);
-        points = (ArrayList<Node>) nodeService.findAll();
-        edges = (ArrayList<Edge>) edgeService.findAll();
+        points = (ArrayList<Node>) nodeRepo.getNodes();
+        edges = (ArrayList<Edge>) edgeRepo.getEdges(points);
         repaint();
     }
 
@@ -164,16 +161,16 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
         yReleased = arg0.getY();
         addKeyListener(this);
 
-        if(draggingPoint == true) draggingPoint = false;
+        if (draggingPoint == true) {
+            draggingPoint = false;
+        }
         if (selectedPoint != null && arg0.getButton() == MouseEvent.BUTTON1 && drawingLine) {
             for (Node point : points) {
                 if (arg0.getX() > point.getLocation().x - 4 && arg0.getX() < point.getLocation().x + 4
                         && arg0.getY() > point.getLocation().y - 4 && arg0.getY() < point.getLocation().y + 4) {
-                    Edge edg = new Edge();
-                    edg.setA(point);
-                    edg.setB(selectedPoint);
+                    Edge edg = new Edge(-1L, point, selectedPoint);
                     if (!edg.exists(edges, point, selectedPoint)) {
-                        edgeService.update(edg);
+                        edg = edgeRepo.update(edg);
                         edges.add(edg);
                         repaint();
                         break;
@@ -192,15 +189,16 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
                 ex.printStackTrace();
             }
         } else if (hoveredPoint != null && draggingPoint) {
-            nodeService.updateNode(hoveredPoint);
+            hoveredPoint = new NodeRepository().update(hoveredPoint);
         } else if (arg0.getButton() == MouseEvent.BUTTON3 && selectedPoint != null) {
             selectedPoint = null;
         } else if (arg0.getButton() == MouseEvent.BUTTON3 && selectedPoint == null) {
             try {
                 Node nod = new Node();
+                nod.setId(-1L);
                 nod.setPosX(arg0.getX());
                 nod.setPosY(arg0.getY());
-                nodeService.createNewNode(nod);
+                nod = nodeRepo.update(nod);
                 points.add(nod);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -229,7 +227,7 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
         if (KeyEvent.VK_SHIFT == ke.getKeyCode()) {
             draggingPoint = false;
             if (hoveredPoint != null) {
-                nodeService.updateNode(hoveredPoint);
+                hoveredPoint = nodeRepo.update(hoveredPoint);
             }
         } else if (KeyEvent.VK_CONTROL == ke.getKeyCode()) {
             drawingLine = false;
@@ -241,25 +239,20 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
                     for (int j = 0; j < edges.size(); j++) {
                         if (edges.get(j).getA().equals(selectedPoint)
                                 || edges.get(j).getB().equals(selectedPoint)) {
-                            edgeService.deleteEdge(edges.get(j));
+                            edgeRepo.removeEdge(edges.get(j));
                             edges.remove(j);
                             if (!edges.isEmpty()) {
                                 j = -1;
                             }
                         }
                     }
-                    nodeService.removeNode(selectedPoint);
+                    nodeRepo.remove(selectedPoint);
                     selectedPoint = null;
                     repaint();
                     break;
                 }
             }
         }
-    }
-
-    private void initBeans() {
-        nodeService = context.getBean(NodeService.class);
-        edgeService = context.getBean(EdgeService.class);
     }
 
     private void initFrame(Image image) {

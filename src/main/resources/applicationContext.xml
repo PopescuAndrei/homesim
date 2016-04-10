@@ -27,7 +27,7 @@
         <property name="dataSource" ref="dataSource"></property>
         <property name="jpaVendorAdapter">
             <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-                <property name="showSql" value="true"></property>
+                <property name="showSql" value="false"></property>
 
             </bean>
         </property>

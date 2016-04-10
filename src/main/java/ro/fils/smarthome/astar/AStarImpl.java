@@ -31,7 +31,7 @@ public class AStarImpl {
      * @param start the start point
      * @return
      */
-    public <Node extends AStarNode> Deque<Node> getRoute(Node goal, Node start) {
+    public static <Node extends AStarNode> Deque<Node> getRoute(Node goal, Node start) {
         Collection<Node> goals = new ArrayList<>();
         goals.add(goal);
         return getRoute(goals, start);
@@ -45,7 +45,7 @@ public class AStarImpl {
      * @param start
      * @return
      */
-    public <Node extends AStarNode> Deque<Node> getRoute(Collection<Node> goals, Node start) {
+    public static <Node extends AStarNode> Deque<Node> getRoute(Collection<Node> goals, Node start) {
         if (goals.isEmpty()) {
             throw new RuntimeException("No goals in the list");
         }
@@ -98,7 +98,7 @@ public class AStarImpl {
      * @param current the current node
      * @return
      */
-    public <Node extends AStarNode> Deque<Node> reconstructPath(Map<Node, Node> cameFrom, Node current) {
+    public static <Node extends AStarNode> Deque<Node> reconstructPath(Map<Node, Node> cameFrom, Node current) {
         Deque<Node> nodes = new ArrayDeque<>();
         if (cameFrom.containsKey(current)) {
             nodes.addAll(reconstructPath(cameFrom, cameFrom.get(current)));
@@ -116,7 +116,7 @@ public class AStarImpl {
      * neighbors are known)
      * @return
      */
-    public <Node extends AStarNode> Node getLowest(Map<Node, Double> scores, Set<Node> openSet) {
+    public static <Node extends AStarNode> Node getLowest(Map<Node, Double> scores, Set<Node> openSet) {
         double shortestDistance = Const.MAX_DISTANCE;
         Node shortestNode = null;
         for (Node node : scores.keySet()) {
@@ -137,7 +137,7 @@ public class AStarImpl {
      * @param goals the collection of goals
      * @return
      */
-    public <Node extends AStarNode> double getShortestDistance(Node start, Collection<Node> goals) {
+    public static <Node extends AStarNode> double getShortestDistance(Node start, Collection<Node> goals) {
         double distance = Const.MAX_DISTANCE;
         Iterator<Node> iterator = goals.iterator();
         while (iterator.hasNext()) {

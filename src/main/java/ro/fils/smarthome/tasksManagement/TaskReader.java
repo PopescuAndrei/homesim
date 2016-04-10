@@ -16,9 +16,9 @@ import java.util.Set;
 import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import ro.fils.smarthome.constants.Const;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Need;
-import ro.fils.smarthome.constants.Const;
 import ro.fils.smarthome.constants.JSONReader_Constants;
 
 /**
@@ -29,10 +29,10 @@ public class TaskReader {
 
     private JSONObject object;
 
-    public TaskReader() throws ParseException, IOException {
+    public TaskReader(String fileName) {
         JSONParser jp = new JSONParser();
         try {
-            this.object = (JSONObject) jp.parse(new FileReader(getClass().getResource("/activities.json").getPath()));
+            this.object = (JSONObject) jp.parse(new FileReader(getClass().getResource(fileName).getPath()));
         } catch (IOException | ParseException ex) {
             System.out.println("ro.fils.smarthome.util.TaskReader.<init>() => " + ex.getLocalizedMessage());
             this.object = null;
@@ -56,7 +56,7 @@ public class TaskReader {
                     JSONArray timespan = (JSONArray) task.get(JSONReader_Constants.Timespan.name());
                     newTask = new Task((String) task.get(JSONReader_Constants.Name.name()),
                             (String) task.get(JSONReader_Constants.Type.name()),
-                            Integer.parseInt((String) task.get(JSONReader_Constants.Duration.name())),
+                            Integer.parseInt((String) task.get(JSONReader_Constants.Duration.name()).toString()),
                             Integer.parseInt(timespan.get(0).toString()),
                             Integer.parseInt(timespan.get(1).toString()),
                             (String) task.get(JSONReader_Constants.Appliance.name()),
@@ -64,8 +64,8 @@ public class TaskReader {
                     tasks.add(newTask);
                 } else {
                     newTask = new Task((String) task.get(JSONReader_Constants.Name.name()),
-                            Integer.parseInt((String) task.get(JSONReader_Constants.Duration.name())),
                             (String) task.get(JSONReader_Constants.Type.name()),
+                            ((Long) task.get(JSONReader_Constants.Duration.name())).intValue(),
                             (String) task.get(JSONReader_Constants.Appliance.name()),
                             (task.containsKey(JSONReader_Constants.Label.name()) ? (String) task.get(JSONReader_Constants.Label.name()) : null));
                     tasks.add(newTask);
@@ -201,7 +201,7 @@ public class TaskReader {
         for (int i = 0; i < peopleMap.size(); i++) {
             JSONObject personObject = (JSONObject) peopleMap.get(i);
             Agent p = new Agent((String) personObject.get(JSONReader_Constants.Name.name()),
-                    (String) personObject.get(JSONReader_Constants.Image.name()), 0, null, getNeeds());
+                    (String) personObject.get(JSONReader_Constants.Image.name()), null, getNeeds());
             people.add(p);
         }
         return people;

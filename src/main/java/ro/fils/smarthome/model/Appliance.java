@@ -5,37 +5,23 @@
  */
 package ro.fils.smarthome.model;
 
-import ro.fils.smarthome.planManagement.BaseEntity;
 import ro.fils.smarthome.planManagement.Node;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 
 /**
  *
  * @author Silvia
  */
-@Entity
-@Table(name = "appliances")
-public class Appliance extends BaseEntity {
+public class Appliance{
 
     private String type;
     private String poses;
-
-    @OneToOne
     private Node node;
-
-    @Transient
     private Map<String, Integer> inventory;
-
-    @Transient
     private Set<String> posesSet;
 
     public Appliance() {
@@ -123,34 +109,6 @@ public class Appliance extends BaseEntity {
         }
         return amount;
     }
-
-    @Override
-    public int hashCode() {
-        int hash = 7;
-        hash = 79 * hash + Objects.hashCode(this.type);
-        hash = 79 * hash + Objects.hashCode(this.node);
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final Appliance other = (Appliance) obj;
-        if (!Objects.equals(this.type, other.type)) {
-            return false;
-        }
-        return Objects.equals(this.node, other.node);
-    }
-
-    
 
     @Override
     public String toString() {

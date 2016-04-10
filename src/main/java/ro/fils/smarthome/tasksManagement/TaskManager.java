@@ -21,7 +21,7 @@ import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.planManagement.Node;
 import ro.fils.smarthome.planManagement.PPlanWrapper;
 import ro.fils.smarthome.simulation.SimulationMap;
-import ro.fils.smarthome.constants.Activities_Type;
+import ro.fils.smarthome.model.Item;
 
 /**
  *
@@ -33,97 +33,96 @@ public class TaskManager {
 
     private Collection<ITask> tasks;
 
-    public TaskManager(TaskReader taskRead) {
-        tasks = taskRead.getTasks();
+    public TaskManager(TaskReader j) {
+        tasks = j.getTasks();
+
     }
 
-    public void findTask(Agent agent, SimulationMap map, double time) {
-
+    public void findTask(Agent person, SimulationMap map, double time) {
         Collection<ITask> availableTasks = new ArrayList<>(filterAvailable(tasks, time));
-        if (agent.getGoalTask() != null && !agent.getGoalTask().available(time)) {
-            agent.setGoalTask(null);
+        if (person.getGoalTask() != null && !person.getGoalTask().available(time)) {
+            person.setGoalTask(null);
         }
-
-        if (agent.getGoalTask() != null) {
-
-            if (agent.getGoalTask().agentMeetsRequirements(agent)) {
-                LOG.log(Level.INFO, "Requirements met for task {0}", agent.getGoalTask().getName());
-                setTaskForAgent(agent, agent.getGoalTask(), map);
-                agent.setGoalTask(null);
-            } else if (agent.getGoalTask().itemExists(agent, map)) {
-                moveForItems(agent, agent.getGoalTask(), map);
+        if (person.getGoalTask() != null) {
+            if (person.getGoalTask().agentMeetsRequirements(person)) {
+                LOG.info("Requirements met for task " + person.getGoalTask().getName());
+                setTaskForAgent(person, person.getGoalTask(), map);
+                person.setGoalTask(null);
+            } else if (person.getGoalTask().itemExists(person, map)) {
+                moveForItems(person, person.getGoalTask(), map);
             } else {
                 try {
-                    Deque<ITask> tusks = PPlanWrapper.getPlan(map, agent, availableTasks, agent.getGoalTask());
-                    LOG.info(tusks.toString());
-                    setTaskForAgent(agent, tusks.getFirst(), map);
+                    Deque<ITask> tusks = PPlanWrapper.getPlan(map, person, availableTasks, person.getGoalTask());
+                    LOG.info("######## + " + tusks.toString());
+                    setTaskForAgent(person, tusks.getFirst(), map);
                 } catch (Exception ex) {
                     ArrayList<String> mapItems = new ArrayList<>();
-                    map.getItems().stream().forEach((it) -> {
+                    for (Item it : map.getItems()) {
                         mapItems.add(it.getName());
-                    });
-                    LOG.log(Level.SEVERE, "Crashed when finding plan and setting task " + agent.getGoalTask().getName()
-                            + ", " + agent.getGoalTask().getRequiredItemsSet() + ", " + agent.getInventory().keySet() + ", "
+                    }
+                    LOG.log(Level.SEVERE, "Crashed when finding plan and setting task " + person.getGoalTask().getName()
+                            + ", " + person.getGoalTask().getRequiredItemsSet() + ", " + person.getInventory().keySet() + ", "
                             + mapItems, ex);
                 }
             }
         } else {
-            // if no goal task then create a goal
+            //IF NO GOALTASK, WHAT THEN? CREATE A GOAL
             LOG.info("Finding a new goal task");
-            List<Need> needs = new ArrayList<>(agent.getNeeds());
+            List<Need> needs = new ArrayList<>(person.getNeeds());
             Collection<ITask> scheduledTasks = getScheduled(availableTasks);
-
-            System.out.println(scheduledTasks);
-
-            Collection<ITask> tasksToRemoveStuff = getRemoverTasks(availableTasks, agent, map);
-            System.out.println(tasksToRemoveStuff);
-
+            System.out.println("############" + scheduledTasks + " size: ");
+            Collection<ITask> tasksToRemoveStuff = getRemoverTasks(availableTasks, person, map);
+            System.out.println("############" + scheduledTasks + " size: ");
             if (scheduledTasks != null) {
-                agent.setGoalTask(scheduledTasks.iterator().next());
+                person.setGoalTask(scheduledTasks.iterator().next());
             } else if (tasksToRemoveStuff != null) {
-                agent.setGoalTask(tasksToRemoveStuff.iterator().next());
+                person.setGoalTask(tasksToRemoveStuff.iterator().next());
             } else {
                 while (!needs.isEmpty()) {
                     Need lowest = getLowestNeed(needs);
 
-                    LOG.log(Level.FINE, "{0} is lowest need", lowest.getName());
-                    ITask taskForNeed = taskForNeed(lowest, availableTasks, time, agent, map);
+                    LOG.fine(lowest.getName()+ " is lowest need");
+                    ITask taskForNeed = taskForNeed(lowest, availableTasks, time, person, map);
                     if (taskForNeed != null) {
-                        agent.setGoalTask(taskForNeed);
+                        person.setGoalTask(taskForNeed);
                         break;
                     } else {
                         needs.remove(lowest);
                     }
+
                 }
             }
         }
     }
 
-    public Collection<ITask> filterAvailable(Collection<ITask> allTasks, double time) {
-        Collection<ITask> filteredTasks = new ArrayList<>();
-        allTasks.stream().filter((task) -> (task.available(time))).forEach((task) -> {
-            filteredTasks.add(task);
-        });
-        return filteredTasks;
+    public void moveForItems(Agent p, ITask task, SimulationMap map){
+        for(String str: task.getRequiredItemsSet()){
+            if(!p.hasItem(str, task.getRequiredItems().get(str)) && map.hasItem(str, task.getRequiredItems().get(str))){
+                p.setTargetItem(str);
+                LOG.info(str);
+                try {
+                    p.setRoute(AStarImpl.getRoute(map.getLocationsOfItem(str), map.getClosestNode(p.getCurrentLocation())));
+                    if(map.getClosestNode(p.getCurrentLocation()).equals(p.getRoute().getLast())) p.setRoute(null);
+                } catch (Exception ex) {
+                    Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
-    private void setTaskForAgent(Agent agent, ITask goalTask, SimulationMap map) {
-
-        if (goalTask.itemExists(agent, map)) {
-            moveForItems(agent, goalTask, map);
+    public void setTaskForAgent(Agent agent, ITask task, SimulationMap map) {
+        if (task.itemExists(agent, map)) {
+            moveForItems(agent, task, map);
         } else {
-            LOG.log(Level.INFO, "{0} is doing task {1}, for {2}", new Object[]{agent.getName(), goalTask.toString(), agent.getGoalTask().toString()});
-
+            LOG.info(agent.getName() + " is doing task " + task.toString() + ", for " + agent.getGoalTask().toString());
             try {
-
-                Collection<Appliance> appliances = map.getAppliances();
-                Collection<String> valids = goalTask.getUsedAppliances();
+                Collection<Appliance> apps = map.getAppliances();
+                Collection<String> valids = task.getUsedAppliances();
                 Set<Appliance> validApps = new HashSet<>();
-
-                for (Appliance appliance : appliances) {
+                for (Appliance app : apps) {
                     for (String valid : valids) {
-                        if (appliance.getType().contains(valid)) {
-                            validApps.add(appliance);
+                        if (app.getType().contains(valid)) {
+                            validApps.add(app);
                         }
                     }
                 }
@@ -133,85 +132,42 @@ public class TaskManager {
                         goals.remove(a.getRoute().getLast());
                     }
                 }
-                AStarImpl aStarAlg = new AStarImpl();
                 Node closestNode = map.getClosestNode(agent.getCurrentLocation());
-                agent.setRoute(aStarAlg.getRoute(goals, closestNode));
-
+                agent.setRoute(AStarImpl.getRoute(goals, closestNode));
                 for (Appliance app : validApps) {
                     if (app.getNode().equals(agent.getRoute().getLast())) {
-                        agent.setCurrentTask(goalTask, app);
-                        goalTask.consumeItem(agent);
+                        agent.setCurrentTask(task, app);
+                        task.consumeItem(agent);
                         break;
                     }
                 }
-
                 if (closestNode.equals(agent.getRoute().getLast())) {
                     agent.setRoute(null);
                 }
-
             } catch (Exception ex) {
-
+                LOG.severe("Error while setting task. Route not found! Maybe " + task.getUsedAppliances().toString() + " does not exist or route is impossible?");
+                agent.setPauseTime(7200);
             }
         }
     }
 
-    public void moveForItems(Agent agent, ITask goalTask, SimulationMap map) {
-        LOG.log(Level.INFO, "{0} is fetching item:", agent.getName());
-        AStarImpl aStarAlg = new AStarImpl();
-        for (String s : goalTask.getRequiredItemsSet()) {
-            if (!(agent.hasItem(s, goalTask.getRequiredItems().get(s))) && map.hasItem(s, goalTask.getRequiredItems().get(s))) {
-                agent.setTargetItem(s);
-                LOG.info(s);
+    public ITask taskForNeed(Need need, Collection<ITask> tasks, double time, Agent agent, SimulationMap map) {
+        List<ITask> tasksForNeed = new ArrayList<>();
+        for (ITask task : tasks) {
+            if (task.fulfilledNeed() != null && task.fulfilledNeed().equals(need.getName())) {
                 try {
-                    agent.setRoute(aStarAlg.getRoute(map.getLocationsOfItem(s), map.getClosestNode(agent.getCurrentLocation())));
-                    if (map.getClosestNode(agent.getCurrentLocation()).equals(agent.getRoute().getLast())) {
-                        agent.setRoute(null);
-                    }
-                } catch (Exception ex) {
-                    Logger.getLogger(TaskManager.class.getName()).log(Level.SEVERE, null, ex);
+                    PPlanWrapper.getPlan(map, agent, tasks, task);
+                    tasksForNeed.add(task);
+                } catch (Exception e) {
+                    LOG.info(task.getName() + " has no viable plan");
                 }
             }
         }
+        LOG.info(tasksForNeed.size() + " possible tasks to fulfill " + need.getName());
+        return (tasksForNeed.isEmpty() ? null : tasksForNeed.get(new Random().nextInt(tasksForNeed.size())));
     }
 
-    private Collection<ITask> getScheduled(Collection<ITask> availableTasks) {
-        Collection<ITask> schedules = new ArrayList<>();
-        for (ITask t : availableTasks) {
-            if (t.getType().equals(Activities_Type.Scheduled.name())) {
-                schedules.add(t);
-            }
-        }
-
-        if (schedules.isEmpty()) {
-            return null;
-        } else {
-            return schedules;
-        }
-    }
-
-    private Collection<ITask> getRemoverTasks(Collection<ITask> availableTasks, Agent agent, SimulationMap map) {
-        Collection<ITask> removers = new ArrayList<>();
-        Set<String> states = agent.getState();
-        availableTasks.stream().forEach((t) -> {
-            if (t.getType().equals(Activities_Type.Cleanup.name()) && t.itemsExist(agent, map)) {
-                removers.add(t);
-            } else {
-                for (String state : states) {
-                    if (t.getNeg().contains(state)) {
-                        removers.add(t);
-                    }
-                }
-            }
-        });
-
-        if (removers.isEmpty()) {
-            return null;
-        } else {
-            return removers;
-        }
-    }
-
-    private Need getLowestNeed(List<Need> needs) {
+    public Need getLowestNeed(List<Need> needs) {
         double value = 1000.0;
         Need returnedNeed = null;
         for (Need need : needs) {
@@ -223,20 +179,50 @@ public class TaskManager {
         return returnedNeed;
     }
 
-    private ITask taskForNeed(Need lowest, Collection<ITask> tasks, double time, Agent agent, SimulationMap map) {
-        List<ITask> tasksForNeed = new ArrayList<>();
-        for (ITask task : tasks) {
-            if (task.fulfilledNeed() != null && task.fulfilledNeed().equals(lowest.getName())) {
-                try {
-                    PPlanWrapper.getPlan(map, agent, tasks, task);
-                    tasksForNeed.add(task);
-                } catch (Exception e) {
-                    LOG.log(Level.INFO, "{0} has no viable plan", task.getName());
-                }
+    public Collection<ITask> filterAvailable(Collection<ITask> allTasks, double time) {
+        Collection<ITask> filteredTasks = new ArrayList<>();
+        for (ITask task : allTasks) {
+            if (task.available(time)) {
+                filteredTasks.add(task);
             }
         }
-        LOG.log(Level.INFO, "{0} possible tasks to fulfill {1}", new Object[]{tasksForNeed.size(), lowest.getName()});
-        return (tasksForNeed.isEmpty() ? null : tasksForNeed.get(new Random().nextInt(tasksForNeed.size())));
+        return filteredTasks;
+    }
+
+    private Collection<ITask> getScheduled(Collection<ITask> availableTasks) {
+        Collection<ITask> schedules = new ArrayList<>();
+        for (ITask t : availableTasks) {
+            if (t.getType().equals("Scheduled")) {
+                schedules.add(t);
+            }
+        }
+        if (schedules.isEmpty()) {
+            return null;
+        } else {
+            return schedules;
+        }
+    }
+
+    private Collection<ITask> getRemoverTasks(Collection<ITask> availableTasks, Agent agent, SimulationMap map) {
+        Collection<ITask> removers = new ArrayList<>();
+        Set<String> states = agent.getState();
+        for (ITask t : availableTasks) {
+            if (t.getType().equals("Cleanup") && t.itemsExist(agent, map)) {
+                removers.add(t);
+            } else {
+                for (String state : states) {
+                    if (t.getNeg().contains(state)) {
+                        removers.add(t);
+                    }
+                }
+            }
+
+        }
+        if (removers.isEmpty()) {
+            return null;
+        } else {
+            return removers;
+        }
     }
 
     public void passTime(double d) {
@@ -244,5 +230,4 @@ public class TaskManager {
             t.passTime(d);
         }
     }
-
 }

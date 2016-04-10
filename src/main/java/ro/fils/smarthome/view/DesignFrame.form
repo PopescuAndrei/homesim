@@ -42,7 +42,7 @@
       <SubComponents>
         <Container class="javax.swing.JPanel" name="leftPanel">
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="try{&#xa;    painter = new NodePainter(ctx, this, &quot;environment.png&quot;);&#xa;}catch(Exception e){&#xa;    e.printStackTrace();&#xa;}&#xa;leftPanel.add(painter);"/>
+            <AuxValue name="JavaCodeGenerator_AddingCodePost" type="java.lang.String" value="try{&#xa;    painter = new NodePainter(this, &quot;environment.png&quot;);&#xa;}catch(Exception e){&#xa;    e.printStackTrace();&#xa;}&#xa;leftPanel.add(painter);"/>
           </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">
@@ -53,7 +53,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="22" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="233" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

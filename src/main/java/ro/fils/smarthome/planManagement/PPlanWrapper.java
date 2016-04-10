@@ -46,9 +46,8 @@ public class PPlanWrapper {
         List planList = plan.findPlan();
         Deque<Task> taskPlan = new ArrayDeque<>();
         for (Object ob : planList) {
-            List pl = null;
             if (ob instanceof ArrayList) {
-                pl = (List) ob;
+                List pl = (List) ob;
                 for (Object obs : pl) {
                     for (Task t : tasks) {
                         if (obs.toString().equals(t.getName())) {
@@ -81,6 +80,7 @@ public class PPlanWrapper {
         });
         inventory.keySet().stream().forEach((s) -> {
             state.add(s);
+            System.out.println("State " + s + " added");
         });
         state.addAll(p.getState());
         return state;
@@ -104,6 +104,7 @@ public class PPlanWrapper {
 
         Set<String> created = t.getCreatedItems();
         created.stream().forEach((s) -> {
+            //Logger.egtLogger(PPlanWrapper.class.getName()).log(Level.SEVERE, null, "?????????" + s);
             pos.add(s);
         });
         plan.addOperator(t.getName(), precond, neg, pos);

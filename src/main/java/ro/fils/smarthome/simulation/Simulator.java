@@ -14,6 +14,7 @@ import ro.fils.smarthome.model.Item;
 import ro.fils.smarthome.planManagement.Node;
 import ro.fils.smarthome.util.SensorLogger;
 import ro.fils.smarthome.astar.AStarImpl;
+import ro.fils.smarthome.constants.Activities_Type;
 import ro.fils.smarthome.tasksManagement.TaskManager;
 
 /**
@@ -57,17 +58,19 @@ public class Simulator {
      */
     public boolean simulationStep() {
         boolean movement = false;
-        AStarImpl aStartAlg = new AStarImpl();
-        
         for (Agent agent : map.getPeople()) {
             if (agent.getPauseTime() > 0.0) {
                 agent.passTime(1.0 / simsPerSec);
                 continue;
             }
             if (agent.isMoving()) {   //We're traveling!
-                agent.setCurrentLocation(map.moveActor(agent, simsPerSec));
-
-            } else if (agent.getTargetItem() != null) {
+                if (agent.getPersonType() == 0) {
+                    movement = true;
+                    agent.setCurrentLocation(map.moveActor(agent, simsPerSec));
+                } else {
+                    agent.setCurrentLocation(map.moveActor(agent, simsPerSec * 6));
+                }
+            } else if (agent.getPersonType() == 0 && agent.getTargetItem() != null) {
                 agent.progressFetch(1.0 / simsPerSec);
                 Node current = map.getClosestNode(agent.getCurrentLocation());
                 if (agent.getFetchTime() <= 0.0) {
@@ -83,10 +86,10 @@ public class Simulator {
                     }
                     agent.setTargetItem(null);
                 }
-            } else if (agent.getCurrentTask() != null) {
+            } else if (agent.getPersonType() == 0 && agent.getCurrentTask() != null) {
                 agent.progressTask(1.0 / simsPerSec);
                 if (agent.getRemainingTaskDuration() <= 0.0) {
-                    if (agent.getCurrentTask().getType().equals("Automatic")) {
+                    if (agent.getCurrentTask().getType().equals(Activities_Type.Automatic.toString())) {
                         map.addTask(agent.getCurrentTask(), map.getClosestNode(agent.getCurrentLocation()));
                         agent.getCurrentTask().getNeg().stream().forEach((stat) -> {
                             agent.addState("-" + stat);
@@ -103,11 +106,11 @@ public class Simulator {
                 }
             } else if (Math.random() < 0.15 && agent.getPauseTime() == 0.0) {
                 try {
-                    agent.setRoute(aStartAlg.getRoute(map.getRandomNode(), map.getClosestNode(agent.getCurrentLocation())));
+                    agent.setRoute(AStarImpl.getRoute(map.getRandomNode(), map.getClosestNode(agent.getCurrentLocation())));
                 } catch (Exception ex) {
                     Logger.getLogger(Simulator.class.getName()).warning("No route found");
                 }
-            } else {
+            } else if (agent.getPersonType() == 0) {
                 taskManager.findTask(agent, map, currentTime);
             }
             sensorlogger.log(agent, map.getSensors(), currentTime);

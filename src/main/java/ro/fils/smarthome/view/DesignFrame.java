@@ -13,11 +13,9 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.planManagement.Node;
-import ro.fils.smarthome.service.NodeObjectService;
-import ro.fils.smarthome.service.NodeService;
+import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.simulation.NodePainter;
 import ro.fils.smarthome.tasksManagement.TaskReader;
 
@@ -27,20 +25,16 @@ import ro.fils.smarthome.tasksManagement.TaskReader;
  */
 public class DesignFrame extends javax.swing.JFrame implements ActionListener {
 
-    ClassPathXmlApplicationContext ctx;
     private NodePainter painter;
     private Node selectedNode;
     private DefaultComboBoxModel comboBoxModel;
     private DefaultListModel<String> listModel;
-    NodeObjectService nodeObjectService;
-    NodeService nodeService;
-
-    public DesignFrame(ClassPathXmlApplicationContext ctx) {
-        this.ctx = ctx;
-        nodeObjectService = ctx.getBean(NodeObjectService.class);
-        nodeService = ctx.getBean(NodeService.class);
+    private final NodeRepository nodeRepo;
+    
+    public DesignFrame() {
+        nodeRepo = new NodeRepository();
         initComponents();
-
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -80,7 +74,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
         leftPanel.setLayout(leftPanelLayout);
         leftPanelLayout.setHorizontalGroup(
             leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 22, Short.MAX_VALUE)
+            .addGap(0, 233, Short.MAX_VALUE)
         );
         leftPanelLayout.setVerticalGroup(
             leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,7 +83,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
 
         jSplitPane1.setLeftComponent(leftPanel);
         try{
-            painter = new NodePainter(ctx, this, "environment.png");
+            painter = new NodePainter(this, "environment.png");
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -259,7 +253,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
         }
 
         selectedNode = selectedPoint;
-        TaskReader taskReader = new TaskReader();
+        TaskReader taskReader = new TaskReader("/activities.json");
         Set<String> objectList = taskReader.getAppliances();
         comboBoxModel = new DefaultComboBoxModel();
         objectList.forEach(o -> comboBoxModel.addElement(o));
@@ -267,7 +261,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
 
         btnAddAppliance.addActionListener((ActionEvent ae) -> {
             selectedNode.addAppliance(chooser.getSelectedItem().toString());
-            nodeService.updateNode(selectedNode);
+            nodeRepo.update(selectedNode);
             try {
                 setActiveNode(selectedNode);
             } catch (Exception ex) {
@@ -306,8 +300,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                     editPoses.setText(sb.toString());
 
                     btnUpdatePoses.addActionListener((ActionEvent ae) -> {
-                        nodeObjectService.updateNodeObjectPosesByIdAndType(editPoses.getText(), selectedNode.getId(), app.getType());
-
+                        nodeRepo.updatePoses(selectedNode, app, editPoses.getText());
                     });
                 });
             }

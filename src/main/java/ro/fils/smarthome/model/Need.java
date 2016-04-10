@@ -13,7 +13,7 @@ public class Need implements Comparable<Need> {
 
     private String name;
     private double decayRate;
-    private double value;
+;    private double value;
 
     public Need(String name, double decayRate) {
         this.name = name;
@@ -51,7 +51,6 @@ public class Need implements Comparable<Need> {
     }
 
     public void deteriorateNeed(double seconds) {
-
         this.value -= this.decayRate / (60 * 60 * seconds);
         if (this.value < 0) {
             this.value = 0;
