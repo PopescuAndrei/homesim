@@ -93,10 +93,13 @@ public class SimulationMap {
         int dx = (int) (targetLocation.getX() - p.getX());
         int dy = (int) (targetLocation.getY() - p.getY());
         if (distance < walkingSpeed) {
+            p.setLocation(targetLocation);
+        } else{
             p.translate((int) (walkingSpeed * (dx / distance)),
                     (int) (walkingSpeed * (dy / distance)));
         }
         return p;
+         
     }
 
     public void addItem(Item item) {
