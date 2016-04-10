@@ -82,8 +82,8 @@ public class TaskReader {
                 }
 
                 if (task.containsKey(JSONReader_Constants.RequiresItem.name())) {
-                    if (!(task.get(JSONReader_Constants.RequiresItem) instanceof JSONArray)) {
-                        newTask.addRequiredItem((String) task.get(JSONReader_Constants.RequiresItem), 1);
+                    if (!(task.get(JSONReader_Constants.RequiresItem.name()) instanceof JSONArray)) {
+                        newTask.addRequiredItem((String) task.get(JSONReader_Constants.RequiresItem.name()), 1);
                     } else {
                         JSONArray requirements = (JSONArray) task.get(JSONReader_Constants.RequiresItem.name());
                         if (requirements.get(1) instanceof Number) {
