@@ -156,9 +156,14 @@ public class TaskManager {
         for (ITask task : tasks) {
             if (task.fulfilledNeed() != null && task.fulfilledNeed().equals(need.getName())) {
                 try {
+                    System.out.println("map is" + map!=null);
+                    System.out.println("agent is" + agent!= null);
+                    System.out.println("tasks are " + tasks.size());
+                    System.out.println("taks is" + task.getName());
                     PPlanWrapper.getPlan(map, agent, tasks, task);
                     tasksForNeed.add(task);
                 } catch (Exception e) {
+                    e.printStackTrace();
                     LOG.info(task.getName() + " has no viable plan");
                 }
             }
