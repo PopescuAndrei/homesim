@@ -38,23 +38,24 @@ public class TaskManager {
 
     }
 
-    public void findTask(Agent person, SimulationMap map, double time) {
+    public String findTask(Agent person, SimulationMap map, double time) {
+        String log = null;
         Collection<ITask> availableTasks = new ArrayList<>(filterAvailable(tasks, time));
         if (person.getGoalTask() != null && !person.getGoalTask().available(time)) {
             person.setGoalTask(null);
         }
         if (person.getGoalTask() != null) {
             if (person.getGoalTask().agentMeetsRequirements(person)) {
-                LOG.info("Requirements met for task " + person.getGoalTask().getName());
-                setTaskForAgent(person, person.getGoalTask(), map);
+                LOG.log(Level.INFO, "Requirements met for task {0}", person.getGoalTask().getName());
+                log = setTaskForAgent(person, person.getGoalTask(), map);
                 person.setGoalTask(null);
             } else if (person.getGoalTask().itemExists(person, map)) {
                 moveForItems(person, person.getGoalTask(), map);
             } else {
                 try {
                     Deque<ITask> tusks = PPlanWrapper.getPlan(map, person, availableTasks, person.getGoalTask());
-                    LOG.info("######## + " + tusks.toString());
-                    setTaskForAgent(person, tusks.getFirst(), map);
+                    LOG.log(Level.INFO, "######## + {0}", tusks.toString());
+                    log = setTaskForAgent(person, tusks.getFirst(), map);
                 } catch (Exception ex) {
                     ArrayList<String> mapItems = new ArrayList<>();
                     for (Item it : map.getItems()) {
@@ -66,13 +67,10 @@ public class TaskManager {
                 }
             }
         } else {
-            //IF NO GOALTASK, WHAT THEN? CREATE A GOAL
             LOG.info("Finding a new goal task");
             List<Need> needs = new ArrayList<>(person.getNeeds());
             Collection<ITask> scheduledTasks = getScheduled(availableTasks);
-            System.out.println("############" + scheduledTasks + " size: ");
             Collection<ITask> tasksToRemoveStuff = getRemoverTasks(availableTasks, person, map);
-            System.out.println("############" + scheduledTasks + " size: ");
             if (scheduledTasks != null) {
                 person.setGoalTask(scheduledTasks.iterator().next());
             } else if (tasksToRemoveStuff != null) {
@@ -81,7 +79,7 @@ public class TaskManager {
                 while (!needs.isEmpty()) {
                     Need lowest = getLowestNeed(needs);
 
-                    LOG.fine(lowest.getName()+ " is lowest need");
+                    LOG.log(Level.FINE, "{0} is lowest need", lowest.getName());
                     ITask taskForNeed = taskForNeed(lowest, availableTasks, time, person, map);
                     if (taskForNeed != null) {
                         person.setGoalTask(taskForNeed);
@@ -93,6 +91,7 @@ public class TaskManager {
                 }
             }
         }
+        return log;
     }
 
     public void moveForItems(Agent p, ITask task, SimulationMap map){
@@ -110,11 +109,12 @@ public class TaskManager {
         }
     }
 
-    public void setTaskForAgent(Agent agent, ITask task, SimulationMap map) {
+    public String setTaskForAgent(Agent agent, ITask task, SimulationMap map) {
+        String log = null;
         if (task.itemExists(agent, map)) {
             moveForItems(agent, task, map);
         } else {
-            LOG.info(agent.getName() + " is doing task " + task.toString() + ", for " + agent.getGoalTask().toString());
+            log = String.format("%s is doing task %s for %s", agent.getName(),task.toString(),agent.getGoalTask().toString());
             try {
                 Collection<Appliance> apps = map.getAppliances();
                 Collection<String> valids = task.getUsedAppliances();
@@ -149,6 +149,7 @@ public class TaskManager {
                 agent.setPauseTime(7200);
             }
         }
+        return log;
     }
 
     public ITask taskForNeed(Need need, Collection<ITask> tasks, double time, Agent agent, SimulationMap map) {

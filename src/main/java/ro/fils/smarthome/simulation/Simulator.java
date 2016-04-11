@@ -15,6 +15,7 @@ import ro.fils.smarthome.planManagement.Node;
 import ro.fils.smarthome.util.SensorLogger;
 import ro.fils.smarthome.astar.AStarImpl;
 import ro.fils.smarthome.constants.Activities_Type;
+import ro.fils.smarthome.util.BoolWithLog;
 import ro.fils.smarthome.tasksManagement.TaskManager;
 
 /**
@@ -56,8 +57,9 @@ public class Simulator {
      *
      * @return True if any player moved
      */
-    public boolean simulationStep() {
+    public BoolWithLog simulationStep() {
         boolean movement = false;
+        String log = null;
         for (Agent agent : map.getPeople()) {
             if (agent.getPauseTime() > 0.0) {
                 agent.passTime(1.0 / simsPerSec);
@@ -111,7 +113,7 @@ public class Simulator {
                     Logger.getLogger(Simulator.class.getName()).warning("No route found");
                 }
             } else if (agent.getPersonType() == 0) {
-                taskManager.findTask(agent, map, currentTime);
+                log = taskManager.findTask(agent, map, currentTime);
             }
             sensorlogger.log(agent, map.getSensors(), currentTime);
             agent.passTime(1.0 / simsPerSec);
@@ -120,6 +122,6 @@ public class Simulator {
         taskManager.passTime(1.0 / simsPerSec);
         map.progressTasks(1.0 / simsPerSec);
         currentTime += (1.0 / simsPerSec);
-        return movement;
+        return new BoolWithLog(movement, log);
     }
 }
