@@ -122,7 +122,7 @@ public class Agent {
     }
 
     public void setCurrentTask(ITask task, Appliance applianceInUse) {
-        this.setCurrentTask(currentTask);
+        this.setCurrentTask(task);
         this.setApplianceInUse(applianceInUse);
     }
 
@@ -208,8 +208,8 @@ public class Agent {
         for(Need need: needs){
             need.deteriorateNeed(seconds);
         }
-        if (this.pauseTime > 0) {
-            this.pauseTime = this.pauseTime - seconds;
+        if (this.pauseTime > 0.0) {
+            this.pauseTime -= seconds;
         }
     }
 
