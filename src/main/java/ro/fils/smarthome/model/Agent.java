@@ -24,13 +24,14 @@ import ro.fils.smarthome.constants.Activities_Type;
  * @author Silvia
  */
 public class Agent {
+
     public static final int WANDERER = 1;
-    
+
     private String name;
     private Image avatarImg;
     private double pauseTime;
     private int personType;
-    
+
     private Point currentLocation;
     private Deque<Node> route;
     private List<Need> needs;
@@ -76,8 +77,8 @@ public class Agent {
 
     public void setCurrentLocation(Point moveToPoint) {
         this.currentLocation = moveToPoint;
-        if((route != null || !route.isEmpty()) && 
-                currentLocation.distance(route.peek().getLocation()) == 0){
+        if ((route != null || !route.isEmpty())
+                && currentLocation.distance(route.peek().getLocation()) == 0) {
             route.remove();
         }
     }
@@ -183,9 +184,9 @@ public class Agent {
         this.inventory = inventory;
     }
 
-    public void addItem(Item item){
-        inventory.put(item.getName(), (inventory.get(item.getName()) != null ? 
-                inventory.get(item.getName()) : 0) + 1);
+    public void addItem(Item item) {
+        inventory.put(item.getName(), (inventory.get(item.getName()) != null
+                ? inventory.get(item.getName()) : 0) + 1);
     }
 
     public void removeItem(String itemName, int amount) {
@@ -205,7 +206,7 @@ public class Agent {
     }
 
     public void passTime(double seconds) {
-        for(Need need: needs){
+        for (Need need : needs) {
             need.deteriorateNeed(seconds);
         }
         if (this.pauseTime > 0.0) {
@@ -257,7 +258,5 @@ public class Agent {
     public void setPersonType(int personType) {
         this.personType = personType;
     }
-    
-    
 
 }

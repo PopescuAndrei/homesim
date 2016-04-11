@@ -45,8 +45,11 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private ArrayList<Agent> people;
     private TaskReader taskReader;
     private DefaultListModel<String> agentsListModel;
-
+    private String selectedAgentName;
+    
     public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, String agentName, String agentPicFile, int days) {
+        this.selectedAgentName = agentName;
+        
         initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
         initComponents();
         agentsListModel = new DefaultListModel();
@@ -368,7 +371,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
     public void updateMenu() {
         if (listViewAgents.getSelectedValue() == null) {
-            populateAgentsAndNeeds("");
+            populateAgentsAndNeeds(selectedAgentName);
         } else {
             populateAgentsAndNeeds(listViewAgents.getSelectedValue());
         }
@@ -441,6 +444,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
             if(result.getLog()!=null){
                 logArea.append("\n" + result.getLog());
             }
+            updateMenu();
         }
     };
 

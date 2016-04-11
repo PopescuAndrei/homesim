@@ -5,6 +5,8 @@
  */
 package ro.fils.smarthome.view;
 
+import javax.swing.AbstractListModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import ro.fils.smarthome.util.factory.SimulatorFrameFactory;
 import ro.fils.smarthome.util.factory.SimulatorFrameFactoryImpl;
@@ -16,9 +18,18 @@ import ro.fils.smarthome.util.factory.SimulatorFrameFactoryImpl;
 public class StartFrame extends javax.swing.JFrame {
     
     SimulatorFrameFactory factory;
+    
+    DefaultListModel<String> scenariosModel;
+    String[] scenarios = {"Normal","Old Man"};
     public StartFrame() {
         initComponents();
         factory = new SimulatorFrameFactoryImpl();
+        
+        scenariosModel = new DefaultListModel();
+        for(String s: scenarios){
+            scenariosModel.addElement(s);
+        }
+        listViewSimulation.setModel(scenariosModel);
     }
 
     @SuppressWarnings("unchecked")
