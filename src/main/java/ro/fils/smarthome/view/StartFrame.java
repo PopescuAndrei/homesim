@@ -6,6 +6,8 @@
 package ro.fils.smarthome.view;
 
 import javax.swing.JFrame;
+import ro.fils.smarthome.util.factory.SimulatorFrameFactory;
+import ro.fils.smarthome.util.factory.SimulatorFrameFactoryImpl;
 
 /**
  *
@@ -13,8 +15,10 @@ import javax.swing.JFrame;
  */
 public class StartFrame extends javax.swing.JFrame {
     
+    SimulatorFrameFactory factory;
     public StartFrame() {
         initComponents();
+        factory = new SimulatorFrameFactoryImpl();
     }
 
     @SuppressWarnings("unchecked")
@@ -114,7 +118,7 @@ public class StartFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRunSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunSimulationActionPerformed
-        SimulatorFrame frame = new SimulatorFrame();
+        SimulatorFrame frame = factory.getFrameForScenario(listViewSimulation.getSelectedValue());
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }//GEN-LAST:event_btnRunSimulationActionPerformed

@@ -5,13 +5,13 @@
  */
 package ro.fils.smarthome.util.factory;
 
-import ro.fils.smarthome.view.SimulationDisplay;
+import ro.fils.smarthome.view.SimulatorFrame;
 
 /**
  *
  * @author andre
  */
-public interface SimulationFactory {
+public interface SimulatorFrameFactory {
     
-    SimulationDisplay getFactory(String simulationName);
+    SimulatorFrame getFrameForScenario(String scenarioName);
 }

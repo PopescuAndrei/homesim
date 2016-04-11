@@ -46,10 +46,9 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private TaskReader taskReader;
     private DefaultListModel<String> agentsListModel;
 
-    public SimulatorFrame() {
-        initSimulatorTools();
+    public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, String agentName, String agentPicFile, int days) {
+        initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
         initComponents();
-
         agentsListModel = new DefaultListModel();
         people.forEach(p -> agentsListModel.addElement(p.getName()));
         listViewAgents.setModel(agentsListModel);
@@ -352,15 +351,15 @@ public class SimulatorFrame extends javax.swing.JFrame {
         timer.start();
     }//GEN-LAST:event_btnStartSimulationActionPerformed
 
-    private void initSimulatorTools() {
+    private void initSimulatorTools(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, String agentName, String agentPicFile, int days) {
         try {
-            people = new ArrayList<>();
-            taskReader = new TaskReader("/activities.json");
-            sensors = new SensorReader("/sensors.json").getSensors();
-            simulationMap = new SimulationMap("/environment.jpg", 50, 1L, people, 43, sensors);
-            people.add(new Agent("Roby Roberto", "/running.gif", simulationMap.getStartingPoint(), taskReader.getNeeds()));
+            this.people = new ArrayList<>();
+            this.taskReader = new TaskReader(taskFile);
+            sensors = new SensorReader(sensorsFile).getSensors();
+            simulationMap = new SimulationMap(houseFile, walkingSpeed, startingPoint, people, 43, sensors);
+            people.add(new Agent(agentName, agentPicFile, simulationMap.getStartingPoint(), taskReader.getNeeds()));
             simulator = new Simulator(simulationMap, new TaskManager(taskReader), 3);
-            this.days = 30;
+            this.days = days;
 
         } catch (Exception e) {
             Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, e);
