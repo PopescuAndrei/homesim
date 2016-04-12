@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import ro.fils.smarthome.model.Agent;
@@ -57,7 +58,8 @@ public class SimulatorFrame extends javax.swing.JFrame {
         listViewAgents.setModel(agentsListModel);
 
         listViewAgents.addListSelectionListener((ListSelectionEvent lse) -> {
-            populateAgentsAndNeeds(listViewAgents.getSelectedValue());
+            selectedAgentName = listViewAgents.getSelectedValue();
+            populateAgentsAndNeeds(selectedAgentName);
         });
         
         timer = new Timer(10, timeListen);
@@ -338,6 +340,8 @@ public class SimulatorFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jSplitPane1)
         );
+
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents

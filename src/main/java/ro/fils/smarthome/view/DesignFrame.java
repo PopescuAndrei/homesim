@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import ro.fils.smarthome.model.Appliance;
@@ -239,6 +240,8 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
             .addComponent(jSplitPane1)
         );
 
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -297,6 +300,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                     app.getPosesSet().stream().forEach((pose) -> {
                         sb.append(pose).append(" ");
                     });
+                    System.out.println("POSESSSSSSSSSSSSS: "+ sb);
                     editPoses.setText(sb.toString());
 
                     btnUpdatePoses.addActionListener((ActionEvent ae) -> {

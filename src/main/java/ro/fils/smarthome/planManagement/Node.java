@@ -58,6 +58,7 @@ public class Node implements AStarNode {
     }
 
     public List<Appliance> getApplianceTypes() {
+        System.out.println("I'm returning " + applianceTypes.size());
         return applianceTypes;
     }
 

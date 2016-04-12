@@ -5,7 +5,6 @@
  */
 package ro.fils.smarthome.view;
 
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import ro.fils.smarthome.util.factory.SimulatorFrameFactory;
@@ -20,7 +19,7 @@ public class StartFrame extends javax.swing.JFrame {
     SimulatorFrameFactory factory;
     
     DefaultListModel<String> scenariosModel;
-    String[] scenarios = {"Normal","Old Man"};
+    String[] scenarios = {"Normal","Old Man", "Normal Speed"};
     public StartFrame() {
         initComponents();
         factory = new SimulatorFrameFactoryImpl();

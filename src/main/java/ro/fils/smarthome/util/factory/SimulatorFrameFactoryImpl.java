@@ -21,13 +21,15 @@ public class SimulatorFrameFactoryImpl implements SimulatorFrameFactory {
         SimulatorFrame frame;
         if (scenarioName.equalsIgnoreCase("Old Man")) {
             frame = setElementsForScenarioOldMan();
-        } else {
+        } else if(scenarioName.equalsIgnoreCase("Normal Speed")){
+            frame = setElementsForScenarioGirlWalkingMedium();
+        } else{
             frame = setElementsForScenarioNormal();
         }
         return frame;
     }
 
-    protected SimulatorFrame setElementsForScenarioOldMan() {
+    protected SimulatorFrame setElementsForScenarioNormal() {
         String taskFile = "/activities.json";
         String sensorsFile = "/sensors.json";
         String houseFile = "/environment.jpg";
@@ -39,7 +41,7 @@ public class SimulatorFrameFactoryImpl implements SimulatorFrameFactory {
         return new SimulatorFrame(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
     }
     
-    protected SimulatorFrame setElementsForScenarioNormal(){
+    protected SimulatorFrame setElementsForScenarioGirlWalkingMedium(){
         String taskFile = "/activities.json";
         String sensorsFile = "/sensors.json";
         String houseFile = "/environment.jpg";
@@ -51,4 +53,15 @@ public class SimulatorFrameFactoryImpl implements SimulatorFrameFactory {
         return new SimulatorFrame(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
     }
 
+    protected SimulatorFrame setElementsForScenarioOldMan(){
+        String taskFile = "/activities.json";
+        String sensorsFile = "/sensors.json";
+        String houseFile = "/environment.jpg";
+        int walkingSpeed = 10;
+        Long startingPoint = 1L;
+        String agentName = "Robert Deniro";
+        String agentPicFile = "/grandpa.gif";
+        int days = 30;
+        return new SimulatorFrame(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
+    }
 }
