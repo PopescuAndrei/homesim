@@ -173,26 +173,17 @@ public class TaskReader {
 
     public List<Need> getNeeds() {
         List<Need> needs = new ArrayList<>();
-        if (object == null) {
-            return needs;
-        } else {
-            JSONArray taskList = (JSONArray) object.get(JSONReader_Constants.Activities.name());
-            Set<String> needNames = new HashSet<>();
-
-            Iterator tasks = taskList.iterator();
-            while (tasks.hasNext()) {
-                JSONObject task = (JSONObject) tasks.next();
-                if (task.containsKey(JSONReader_Constants.IncreasesNeed.name())) {
-                    JSONArray arr = (JSONArray) task.get(JSONReader_Constants.IncreasesNeed.name());
-                    needNames.add((String) arr.get(0));
-                }
-            }
-
-            needNames.stream().forEach((name) -> {
-                needs.add(new Need(name, 1.0));
-            });
-            return needs;
-        }
+        Need hunger = new Need("Hunger", 2);
+        Need bladder = new Need("Bladder", 1);
+        Need fun = new Need("Fun", 1.5);
+        Need energy = new Need("Energy", 1);
+        Need hygiene = new Need("Hygiene", 2);
+        needs.add(hunger);
+        needs.add(bladder);
+        needs.add(fun);
+        needs.add(energy);
+        needs.add(hygiene);
+        return needs;
     }
 
     public Collection<Agent> getPeople() {

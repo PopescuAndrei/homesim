@@ -31,9 +31,7 @@ public class SensorLogger {
 
     private final BufferedWriter fileWriter;
     private final DecimalFormat df;
-    private final int counter;
     private final int suffix;
-    private final String fileName;
     private final Map<String, Double> lastTriggered;
     private Set<String> lastPoses;
     private ITask lastTask;
@@ -41,7 +39,6 @@ public class SensorLogger {
     private final double TRIGGER_INTERVAL = 5.0;
 
     public SensorLogger(String fileName) throws IOException {
-        this.fileName = fileName;
         this.suffix = 1;
         this.fileWriter = new BufferedWriter(new FileWriter(fileName + suffix, true));
         DecimalFormatSymbols dfs = new DecimalFormatSymbols();
@@ -51,7 +48,6 @@ public class SensorLogger {
         df.setMaximumIntegerDigits(2);
         df.setMinimumFractionDigits(6);
         df.setMaximumFractionDigits(6);
-        counter = 0;
         lastTriggered = new HashMap<>();
         lastPoses = null;
         lastTask = null;
@@ -69,7 +65,7 @@ public class SensorLogger {
                     lastTriggered.put(agent.getApplianceInUse().getName(), currentTime);
                     if (!sa.getLastValue().equals("ON")) {
                         try {
-                            addSensor(currentTime, agent.getApplianceInUse().getName() + "CT",
+                            addSensor(agent, s,currentTime, agent.getApplianceInUse().getName() + "CT",
                                     agent.getApplianceInUse().getName() + "CT", "ON", (agent.getCurrentTask() != null
                                             ? (agent.getCurrentTask().label() != null ? agent.getCurrentTask().label()
                                                     : (agent.getGoalTask() != null
@@ -93,7 +89,7 @@ public class SensorLogger {
                                         && currentTime - lastTriggered.get(sa.getName() + pose) >= 10.0)) {
                                     lastTriggered.put(sa.getName() + pose, currentTime);
                                     try {
-                                        addSensor(currentTime, sa.getName(), sa.getName(), pose,
+                                        addSensor(agent, s, currentTime, sa.getName(), sa.getName(), pose,
                                                 (agent.getCurrentTask() != null
                                                         ? (agent.getCurrentTask().label() != null ? agent.getCurrentTask().label()
                                                                 : (agent.getGoalTask() != null
@@ -112,7 +108,7 @@ public class SensorLogger {
                         lastTriggered.put(sa.getName(), currentTime);
                         if (!sa.getLastValue().equals("ON")) {
                             try {
-                                addSensor(currentTime, sa.getName(),
+                                addSensor(agent, s, currentTime, sa.getName(),
                                         sa.getName(), "ON",
                                         (agent.getCurrentTask() != null
                                                 ? (agent.getCurrentTask().label() != null ? agent.getCurrentTask().label()
@@ -126,7 +122,7 @@ public class SensorLogger {
                             }
                         }
                     }
-                } else //Not still in area.
+                } else
                 {
                     if (lastTriggered.containsKey(sa.getName()) && currentTime - lastTriggered.get(sa.getName()) >= TRIGGER_INTERVAL) {
                         if (!sa.getLastValue().equals("OFF")) {
@@ -142,14 +138,14 @@ public class SensorLogger {
         });
     }
 
-    public void addSensor(double time, String sensorName, String sensorNote,
+    public void addSensor(Agent agent, Sensor sensor,double time, String sensorName, String sensorNote,
             String sensorValue, String activityName) throws IOException {
 
         int day = Time.getDay(time);
         int dayOfMonth = day % 30;
         int month = day / 30;
         int currentMonth = month % 11 + 1;
-        int year = 2014 + (month / 12);
+        int year = 2016 + (month / 12);
         fileWriter.append(year + "-" + Time.getNumberFormatted(currentMonth) + "-"
                 + Time.getNumberFormatted(dayOfMonth) + " "
                 + Time.getNumberFormatted(Time.getHours(time)) + ":"
@@ -159,13 +155,6 @@ public class SensorLogger {
                 + " " + removeSpaces(sensorValue) + " "
                 + removeSpaces(activityName) + "\n");
         fileWriter.flush();
-        /*if(counter == 25000){
-            counter = 0;
-            suffix ++;
-            fileWriter.close();
-            this.fileWriter = new BufferedWriter(
-                    new FileWriter(fileName+suffix, true));
-        }counter++;*/
     }
 
     public String removeSpaces(String text) {

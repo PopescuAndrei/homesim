@@ -27,7 +27,7 @@ public class Node implements AStarNode {
     private int posY;
 
     private List<Appliance> applianceTypes;
-    private Collection<Node> neighbors = new ArrayList<>();
+    private final Collection<Node> neighbors = new ArrayList<>();
 
     private Room room;
 
@@ -58,7 +58,6 @@ public class Node implements AStarNode {
     }
 
     public List<Appliance> getApplianceTypes() {
-        System.out.println("I'm returning " + applianceTypes.size());
         return applianceTypes;
     }
 
