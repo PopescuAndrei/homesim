@@ -348,7 +348,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
     private void btnStartSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartSimulationActionPerformed
         try {
-            simulator.setSensorLogger(new SensorLogger("sensorvals"));
+            simulator.setSensorLogger(new SensorLogger("sensorReadings.txt"));
         } catch (IOException ex) {
             ex.printStackTrace();
             Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, ex);
