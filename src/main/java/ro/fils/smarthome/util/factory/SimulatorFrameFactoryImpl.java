@@ -33,9 +33,9 @@ public class SimulatorFrameFactoryImpl implements SimulatorFrameFactory {
         String taskFile = "/activities.json";
         String sensorsFile = "/sensors.json";
         String houseFile = "/environment.jpg";
-        int walkingSpeed = 50;
+        int walkingSpeed = 30;
         Long startingPoint = 1L;
-        String agentName = "Roby Roberto";
+        String agentName = "Will Hunting";
         String agentPicFile = "/running.gif";
         int days = 30;
         return new SimulatorFrame(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);

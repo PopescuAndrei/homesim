@@ -250,7 +250,6 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
         int start = 0;
         System.out.println(selectedPoint.toString());
         if (selectedPoint.getId() == start) {
-            System.out.println("Ci plm are?");
             isStart.setSelected(true);
             isStart.setEnabled(false);
         }
@@ -297,7 +296,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
 
                 selectedNode.getApplianceTypes().stream().filter((app) -> (app.getType().equals(selected))).forEach((app) -> {
                     StringBuilder sb = new StringBuilder();
-                    app.getPosesSet().stream().forEach((pose) -> {
+                    app.getPoses().stream().forEach((pose) -> {
                         sb.append(pose).append(" ");
                     });
                     System.out.println("POSESSSSSSSSSSSSS: "+ sb);

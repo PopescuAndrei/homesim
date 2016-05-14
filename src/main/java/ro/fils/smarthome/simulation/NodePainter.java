@@ -183,7 +183,6 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
         } else if (hoveredPoint != null) {
             selectedPoint = hoveredPoint;
             try {
-                System.out.println("ajunge pe aci vreodata? " + selectedPoint.toString());
                 simFrame.setActiveNode(selectedPoint);
             } catch (Exception ex) {
                 ex.printStackTrace();

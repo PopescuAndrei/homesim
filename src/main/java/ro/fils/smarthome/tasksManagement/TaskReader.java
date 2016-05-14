@@ -17,7 +17,6 @@ import org.json.simple.*;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import ro.fils.smarthome.constants.Const;
-import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.constants.JSONReader_Constants;
 
@@ -185,17 +184,4 @@ public class TaskReader {
         needs.add(hygiene);
         return needs;
     }
-
-    public Collection<Agent> getPeople() {
-        JSONArray peopleMap = (JSONArray) object.get(JSONReader_Constants.People.name());
-        Collection<Agent> people = new ArrayList<>();
-        for (int i = 0; i < peopleMap.size(); i++) {
-            JSONObject personObject = (JSONObject) peopleMap.get(i);
-            Agent p = new Agent((String) personObject.get(JSONReader_Constants.Name.name()),
-                    (String) personObject.get(JSONReader_Constants.Image.name()), null, getNeeds());
-            people.add(p);
-        }
-        return people;
-    }
-
 }

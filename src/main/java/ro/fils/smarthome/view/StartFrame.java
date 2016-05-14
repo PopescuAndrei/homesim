@@ -20,6 +20,7 @@ public class StartFrame extends javax.swing.JFrame {
     
     DefaultListModel<String> scenariosModel;
     String[] scenarios = {"Normal","Old Man", "Normal Speed"};
+    
     public StartFrame() {
         initComponents();
         factory = new SimulatorFrameFactoryImpl();

@@ -19,10 +19,9 @@ import java.util.Set;
 public class Appliance{
 
     private String type;
-    private String poses;
     private Node node;
     private Map<String, Integer> inventory;
-    private Set<String> posesSet;
+    private Set<String> poses;
 
     public Appliance() {
 
@@ -32,12 +31,12 @@ public class Appliance{
         this.type = applianceType;
         this.node = node;
         this.inventory = new HashMap<>();
-        this.posesSet = new HashSet<>();
+        this.poses = new HashSet<>();
     }
 
     public Appliance(String applianceType, Node node, Set<String> poses) {
         this(applianceType, node);
-        this.posesSet = new HashSet<>();
+        this.poses = poses;
     }
 
     public Map<String, Integer> getInventory() {
@@ -68,26 +67,12 @@ public class Appliance{
         this.node = node;
     }
 
-    public Set<String> getPosesSet() {
-        return posesSet;
-    }
-
-    public void setPosesSet(Set<String> posesSet) {
-        this.posesSet = posesSet;
-        String posesString = null;
-        for(String s: posesSet){
-            posesString = posesString + " "+ s;
-        }
-        this.poses = posesString;
-    }
-
-    public String getPoses() {
+    public Set<String> getPoses() {
         return poses;
     }
 
-    public void setPoses(String poses) {
-        this.poses = poses;
-        this.posesSet = new HashSet<>(Arrays.asList(poses.split(" ")));
+    public void setPoses(String posesString) {
+        this.poses = new HashSet<>(Arrays.asList(posesString.split(" ")));
     }
 
     public boolean hasItem(String item) {

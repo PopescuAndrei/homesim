@@ -1,0 +1,15 @@
+-- id-urile se pun in ordinea in care le inserezi, incepand de la 1. adica english va avea id 1, french 2, si tot asa
+INSERT INTO LANGUAGES(NAME) VALUES('ENGLISH');
+INSERT INTO LANGUAGES(NAME) VALUES('FRENCH');
+INSERT INTO LANGUAGES(NAME) VALUES('ROMANIAN');
+
+-- si la astea id-urile se pun la fel. in ordinea in care inserezi, Yes va avea 1, Mancas sucks dicks 2, si tot asa
+INSERT INTO PHRASES(PHRASE) VALUES('Yes');
+INSERT INTO PHRASES(PHRASE) VALUES('Mancas sucks dicks');
+
+-- id-urile pentru LANGUAGE_PHRASES se pun la fel. "Oui" are 1, "Da" are 2 si tot asa.
+-- pentru inserare, trebuie sa specifici id-ul frazei din tabela PHRASES si id-ul limbii (din tabelul LANGUAGES) in care este traducerea
+-- pentru primul insert ar fi ceva de genul insereaza pentru fraza 1 (adica Yes) in limba 2 (adica Franceza) traducerea 'Oui'
+-- al 2-lea insert ar fi ceva de genul insereaza pentru fraza 1 (adica Yes) in limba 3 (adica Romana) traducerea 'Da'
+INSERT INTO LANGUAGE_PHRASES(PHRASE_ID, LANG_ID, Translation) VALUES (1, 2, 'Oui');
+INSERT INTO LANGUAGE_PHRASES(PHRASE_ID, LANG_ID, Translation) VALUES (1, 3, 'Da');
