@@ -44,6 +44,9 @@ public class Agent {
     private ITask goalTask;
     private Appliance applianceInUse;
 
+    public Agent(){
+    
+    }
     public Agent(String name, String avatarImg, Point currentLocation, List<Need> needs) {
         this.name = name;
         this.avatarImg = new ImageIcon(getClass().getResource(avatarImg)).getImage();

@@ -6,7 +6,6 @@
 package ro.fils.smarthome.view;
 
 import javax.swing.DefaultListModel;
-import javax.swing.JFrame;
 import ro.fils.smarthome.util.factory.SimulatorFrameFactory;
 import ro.fils.smarthome.util.factory.SimulatorFrameFactoryImpl;
 
@@ -43,10 +42,11 @@ public class StartFrame extends javax.swing.JFrame {
         btnRunSimulation = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         listViewSimulation = new javax.swing.JList<>();
+        btnNewScenario = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(123, 80, 71));
+        jPanel1.setBackground(new java.awt.Color(0, 188, 212));
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
@@ -57,7 +57,7 @@ public class StartFrame extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -85,6 +85,13 @@ public class StartFrame extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(listViewSimulation);
 
+        btnNewScenario.setText("New Scenario");
+        btnNewScenario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewScenarioActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -94,8 +101,10 @@ public class StartFrame extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnEditMap, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addComponent(btnNewScenario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnEditMap, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnRunSimulation, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -106,7 +115,8 @@ public class StartFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEditMap)
-                    .addComponent(btnRunSimulation))
+                    .addComponent(btnRunSimulation)
+                    .addComponent(btnNewScenario))
                 .addContainerGap())
         );
 
@@ -130,18 +140,25 @@ public class StartFrame extends javax.swing.JFrame {
 
     private void btnRunSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunSimulationActionPerformed
         SimulatorFrame frame = factory.getFrameForScenario(listViewSimulation.getSelectedValue());
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setSize(1366,  768);
         frame.setVisible(true);
     }//GEN-LAST:event_btnRunSimulationActionPerformed
 
     private void btnEditMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditMapActionPerformed
         DesignFrame frame = new DesignFrame();
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setSize(1366 , 768);
         frame.setVisible(true);
     }//GEN-LAST:event_btnEditMapActionPerformed
 
+    private void btnNewScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewScenarioActionPerformed
+        ScenarioCreatorFrame frame = new ScenarioCreatorFrame();
+        frame.setSize(1366 , 768);
+        frame.setVisible(true);
+    }//GEN-LAST:event_btnNewScenarioActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditMap;
+    private javax.swing.JButton btnNewScenario;
     private javax.swing.JButton btnRunSimulation;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
