@@ -19,10 +19,15 @@ public class AgentUtil {
         List<Need> needs = new ArrayList<>();
         
         Need energy = new Need("Energy", energyValue);
+        energy.setId(1);
         Need hunger = new Need("Hunger", hungerValue);
+        hunger.setId(2);
         Need bladder = new Need("Bladder", bladderValue);
+        bladder.setId(3);
         Need hygiene = new Need("Hygiene", hygieneValue);
+        hygiene.setId(4);
         Need fun = new Need("Fun", funValue);
+        fun.setId(5);
         needs.add(hunger);
         needs.add(bladder);
         needs.add(fun);

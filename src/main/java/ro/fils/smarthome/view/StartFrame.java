@@ -5,7 +5,10 @@
  */
 package ro.fils.smarthome.view;
 
+import java.util.List;
 import javax.swing.DefaultListModel;
+import ro.fils.smarthome.model.Scenario;
+import ro.fils.smarthome.repository.ScenarioRepository;
 import ro.fils.smarthome.util.factory.SimulatorFrameFactory;
 import ro.fils.smarthome.util.factory.SimulatorFrameFactoryImpl;
 
@@ -15,17 +18,25 @@ import ro.fils.smarthome.util.factory.SimulatorFrameFactoryImpl;
  */
 public class StartFrame extends javax.swing.JFrame {
     
-    SimulatorFrameFactory factory;
-    
-    DefaultListModel<String> scenariosModel;
-    String[] scenarios = {"Normal","Old Man", "Normal Speed"};
+    private final SimulatorFrameFactory factory;
+    private final DefaultListModel<String> scenariosModel;
+    private final String[] scenariosNames;
+    private final List<Scenario> scenarios;
     
     public StartFrame() {
         initComponents();
         factory = new SimulatorFrameFactoryImpl();
+        scenarios = new ScenarioRepository().getAllScenarios();
+        System.out.println(scenarios.size());
+        scenariosNames = new String[scenarios.size()];
+        
+        for(int i = 0;i<scenarios.size();i++){
+            scenariosNames[i] = scenarios.get(i).getName();
+        }
+        System.out.println(scenariosNames.length);
         
         scenariosModel = new DefaultListModel();
-        for(String s: scenarios){
+        for(String s: scenariosNames){
             scenariosModel.addElement(s);
         }
         listViewSimulation.setModel(scenariosModel);
@@ -139,7 +150,7 @@ public class StartFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRunSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunSimulationActionPerformed
-        SimulatorFrame frame = factory.getFrameForScenario(listViewSimulation.getSelectedValue());
+        SimulatorFrame frame = factory.getFrameForScenario(scenarios.get(listViewSimulation.getSelectedIndex()));
         frame.setSize(1366,  768);
         frame.setVisible(true);
     }//GEN-LAST:event_btnRunSimulationActionPerformed

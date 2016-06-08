@@ -5,6 +5,10 @@
  */
 package ro.fils.smarthome.util.factory;
 
+import java.util.List;
+import ro.fils.smarthome.model.Agent;
+import ro.fils.smarthome.model.Scenario;
+import ro.fils.smarthome.repository.AgentRepository;
 import ro.fils.smarthome.view.SimulatorFrame;
 
 /**
@@ -17,51 +21,12 @@ public class SimulatorFrameFactoryImpl implements SimulatorFrameFactory {
     }
 
     @Override
-    public SimulatorFrame getFrameForScenario(String scenarioName) {
-        SimulatorFrame frame;
-        if (scenarioName.equalsIgnoreCase("Old Man")) {
-            frame = setElementsForScenarioOldMan();
-        } else if(scenarioName.equalsIgnoreCase("Normal Speed")){
-            frame = setElementsForScenarioGirlWalkingMedium();
-        } else{
-            frame = setElementsForScenarioNormal();
-        }
-        return frame;
+    public SimulatorFrame getFrameForScenario(Scenario s) {
+        return this.buildSimulatorFrame(s);
     }
 
-    protected SimulatorFrame setElementsForScenarioNormal() {
-        String taskFile = "/activities.json";
-        String sensorsFile = "/sensors.json";
-        String houseFile = "/environment.jpg";
-        int walkingSpeed = 30;
-        Long startingPoint = 1L;
-        String agentName = "Will Hunting";
-        String agentPicFile = "/running.gif";
-        int days = 30;
-        return new SimulatorFrame(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
-    }
-    
-    protected SimulatorFrame setElementsForScenarioGirlWalkingMedium(){
-        String taskFile = "/activities.json";
-        String sensorsFile = "/sensors.json";
-        String houseFile = "/environment.jpg";
-        int walkingSpeed = 30;
-        Long startingPoint = 1L;
-        String agentName = "Danela";
-        String agentPicFile = "/girl_avatar_48p.png";
-        int days = 30;
-        return new SimulatorFrame(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
-    }
-
-    protected SimulatorFrame setElementsForScenarioOldMan(){
-        String taskFile = "/activities.json";
-        String sensorsFile = "/sensors.json";
-        String houseFile = "/environment.jpg";
-        int walkingSpeed = 10;
-        Long startingPoint = 1L;
-        String agentName = "Robert Deniro";
-        String agentPicFile = "/grandpa.gif";
-        int days = 30;
-        return new SimulatorFrame(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
+    protected SimulatorFrame buildSimulatorFrame(Scenario s) {
+        List<Agent> agents = new AgentRepository().getAgentsForScenario(s.getId());
+        return new SimulatorFrame(s.getTaskile(), s.getSensorFile(), s.getHouseFile(), s.getWalking_speed(), s.getStartingPoint(), agents, s.getDays());
     }
 }

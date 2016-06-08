@@ -48,10 +48,10 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private DefaultListModel<String> agentsListModel;
     private String selectedAgentName;
     
-    public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, String agentName, String agentPicFile, int days) {
-        this.selectedAgentName = agentName;
+    public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, List<Agent> agents, int days) {
+        this.selectedAgentName = agents.get(0).getName();
         
-        initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
+        initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agents, days);
         initComponents();
         agentsListModel = new DefaultListModel();
         people.forEach(p -> agentsListModel.addElement(p.getName()));
@@ -358,13 +358,12 @@ public class SimulatorFrame extends javax.swing.JFrame {
         timer.start();
     }//GEN-LAST:event_btnStartSimulationActionPerformed
 
-    private void initSimulatorTools(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, String agentName, String agentPicFile, int days) {
+    private void initSimulatorTools(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startNodeId, List<Agent> agents, int days) {
         try {
-            this.people = new ArrayList<>();
+            this.people = (ArrayList<Agent>) agents;
             this.taskReader = new TaskReader(taskFile);
             sensors = new SensorReader(sensorsFile).getSensors();
-            simulationMap = new SimulationMap(houseFile, walkingSpeed, startingPoint, people, 43, sensors);
-            people.add(new Agent(agentName, agentPicFile, simulationMap.getStartingPoint(), taskReader.getNeeds()));
+            simulationMap = new SimulationMap(houseFile, walkingSpeed, startNodeId, people, 43, sensors);
             simulator = new Simulator(simulationMap, new TaskManager(taskReader), 3);
             this.days = days;
 
@@ -435,9 +434,9 @@ public class SimulatorFrame extends javax.swing.JFrame {
         public void actionPerformed(ActionEvent ae) {
             BoolWithLog result= simulator.simulationStep();
             if (!result.isMovement()) {
-                timer.setDelay(fastSpeed);
+                //timer.setDelay(fastSpeed);
             } else {
-                timer.setDelay(slowSpeed);
+                //timer.setDelay(slowSpeed);
                 display.update(simulationMap.getPeople(), simulationMap.getSensors());
                 updateMenu();
             }

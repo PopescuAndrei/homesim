@@ -5,6 +5,7 @@
  */
 package ro.fils.smarthome.util.factory;
 
+import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.view.SimulatorFrame;
 
 /**
@@ -13,5 +14,5 @@ import ro.fils.smarthome.view.SimulatorFrame;
  */
 public interface SimulatorFrameFactory {
     
-    SimulatorFrame getFrameForScenario(String scenarioName);
+    SimulatorFrame getFrameForScenario(Scenario scenario);
 }

@@ -8,11 +8,16 @@ package ro.fils.smarthome.view;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.ImageIcon;
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Need;
+import ro.fils.smarthome.model.Scenario;
+import ro.fils.smarthome.repository.AgentRepository;
+import ro.fils.smarthome.repository.NodeRepository;
+import ro.fils.smarthome.repository.ScenarioRepository;
 import ro.fils.smarthome.util.AgentUtil;
 
 /**
@@ -21,32 +26,50 @@ import ro.fils.smarthome.util.AgentUtil;
  */
 public class ScenarioCreatorFrame extends javax.swing.JFrame {
 
+    private final AgentRepository agentRepo;
+    private final ScenarioRepository scenarioRepo;
+    private final NodeRepository nodeRepo;
+
+    private Scenario scenarioToBeSaved;
+    List<Agent> agentsDisplayList;
+    DefaultListModel<String> agentsListModel;
+
     public ScenarioCreatorFrame() {
         initComponents();
         labelAvatar1.setHorizontalAlignment(JLabel.CENTER);
         labelAvatar2.setHorizontalAlignment(JLabel.CENTER);
         labelAvatar3.setHorizontalAlignment(JLabel.CENTER);
         labelAvatar4.setHorizontalAlignment(JLabel.CENTER);
-        
+
+        agentRepo = new AgentRepository();
+        scenarioRepo = new ScenarioRepository();
+        nodeRepo = new NodeRepository();
+
+        agentsDisplayList = new ArrayList<>();
+        agentsListModel = new DefaultListModel<>();
+        listViewAgent.setModel(agentsListModel);
+
         sliderBladder.addChangeListener((ChangeEvent e) -> {
-            valueBladder.setText(new Double(sliderBladder.getValue()/10) + "");
+            valueBladder.setText(new Double(sliderBladder.getValue()) / 10 + "");
         });
-        
+
         sliderHunger.addChangeListener((ChangeEvent e) -> {
-            valueHunger.setText(new Double(sliderHunger.getValue())/10 + "");
+            valueHunger.setText(new Double(sliderHunger.getValue()) / 10 + "");
         });
-        
+
         sliderEnergy.addChangeListener((ChangeEvent e) -> {
-            valueEnergy.setText(new Double(sliderEnergy.getValue())/10 + "");
+            valueEnergy.setText(new Double(sliderEnergy.getValue()) / 10 + "");
         });
-        
+
         sliderHygiene.addChangeListener((ChangeEvent e) -> {
-            valueHygiene.setText(new Double(sliderHygiene.getValue())/10 + "");
+            valueHygiene.setText(new Double(sliderHygiene.getValue()) / 10 + "");
         });
-        
+
         sliderFun.addChangeListener((ChangeEvent e) -> {
-            valueFun.setText(new Double(sliderFun.getValue()/10) + "");
+            valueFun.setText(new Double(sliderFun.getValue()) / 10 + "");
         });
+
+        disableFields();
     }
 
     @SuppressWarnings("unchecked")
@@ -74,6 +97,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         btnHomeBrowse = new javax.swing.JButton();
         btnSensorBrowse = new javax.swing.JButton();
         btnActivitiesBrowse = new javax.swing.JButton();
+        labelScenarioName = new javax.swing.JLabel();
+        tfScenarioName = new javax.swing.JTextField();
         rightPanel = new javax.swing.JPanel();
         panelAgentTitle = new javax.swing.JPanel();
         labelNewAgent = new javax.swing.JLabel();
@@ -144,7 +169,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         agentsListPanelLayout.setVerticalGroup(
             agentsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(agentsListPanelLayout.createSequentialGroup()
-                .addComponent(scrollPanelAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                .addComponent(scrollPanelAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -171,6 +196,12 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
 
         labelActivitiesFile.setText("Activities File :");
 
+        tfHomeSchemeFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tfHomeSchemeFileActionPerformed(evt);
+            }
+        });
+
         btnHomeBrowse.setText("Browse");
         btnHomeBrowse.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,6 +223,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
             }
         });
 
+        labelScenarioName.setText("Scenario Name :");
+
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
         leftPanel.setLayout(leftPanelLayout);
         leftPanelLayout.setHorizontalGroup(
@@ -203,28 +236,33 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
                     .addComponent(agentsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(leftPanelLayout.createSequentialGroup()
                         .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(labelScenarioName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(labelDays, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(labelWalkingSpeed, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(labelActivitiesFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(labelSensorFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(labelHomeSchemeFile, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
-                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGap(10, 10, 10)
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(leftPanelLayout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(tfWalkingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(tfDays, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(leftPanelLayout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(tfHomeSchemeFile)
-                                    .addComponent(tfSensorFile)
-                                    .addComponent(tfActivitiesFile, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+                                .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnHomeBrowse))
+                            .addComponent(tfScenarioName, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfWalkingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(leftPanelLayout.createSequentialGroup()
+                                .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(leftPanelLayout.createSequentialGroup()
+                                        .addComponent(tfActivitiesFile, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                    .addGroup(leftPanelLayout.createSequentialGroup()
+                                        .addComponent(tfSensorFile)
+                                        .addGap(4, 4, 4)))
                                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnHomeBrowse)
-                                    .addComponent(btnSensorBrowse)
-                                    .addComponent(btnActivitiesBrowse))))))
+                                    .addComponent(btnSensorBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnActivitiesBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 6, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         leftPanelLayout.setVerticalGroup(
@@ -233,29 +271,37 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
                 .addComponent(newHomeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnHomeBrowse))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labelSensorFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfSensorFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnSensorBrowse))
+                    .addComponent(labelScenarioName, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tfScenarioName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelActivitiesFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(tfActivitiesFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnActivitiesBrowse))
-                .addGap(29, 29, 29)
-                .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfWalkingSpeed)
-                    .addComponent(labelWalkingSpeed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(tfDays)
-                    .addComponent(labelDays, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(agentsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(leftPanelLayout.createSequentialGroup()
+                        .addComponent(labelHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfSensorFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelSensorFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSensorBrowse))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelActivitiesFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfActivitiesFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnActivitiesBrowse))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelWalkingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfWalkingSpeed))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelDays, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfDays))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(agentsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(leftPanelLayout.createSequentialGroup()
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnHomeBrowse))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -591,33 +637,53 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
 
     private void btnAddAgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAgentActionPerformed
         String agentName = tfAgentName.getText();
-        String avatarImg = "";
+        String avatarImg = getSelectedAvatarPath();
         double energyValue = Double.valueOf(valueEnergy.getText());
         double hungerValue = Double.valueOf(valueHunger.getText());
         double bladderValue = Double.valueOf(valueBladder.getText());
         double hygieneValue = Double.valueOf(valueHygiene.getText());
         double funValue = Double.valueOf(valueFun.getText());
+        Long startingNodeId = Long.parseLong(tfStartingPoint.getText());
+        Point currentLocation = nodeRepo.getNodeById(startingNodeId).getLocation();
         List<Need> needs = AgentUtil.getNeeds(energyValue, hungerValue, bladderValue, hygieneValue, funValue);
-        Agent a = new Agent();
-        a.setName(agentName);
-        a.setAvatarImg(new ImageIcon(getClass().getResource(avatarImg)).getImage());
-        a.setNeeds(needs);
-        
-        //TODO persist Agent
-        
-        if(true){
+
+        Agent a = new Agent(agentName, avatarImg, currentLocation, needs);
+        boolean result = agentRepo.saveAgentsToScenario(a, scenarioToBeSaved.getId());
+
+        if (result) {
+            agentsDisplayList.add(a);
+            agentsListModel.addElement(a.getName());
+            listViewAgent.setModel(agentsListModel);
             tfAgentName.setText("");
             tfStartingPoint.setText("");
+            scenarioRepo.addAgentToScenario(agentRepo.getLastAgentInsertedId(), scenarioRepo.getLastInsertedScenarioId());
+            JOptionPane.showMessageDialog(null, "Agent added to scenario!");
+        } else {
+            JOptionPane.showMessageDialog(null, "Agent didn't saved succesfully");
         }
+
     }//GEN-LAST:event_btnAddAgentActionPerformed
 
     private void btnSaveScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveScenarioActionPerformed
-        // TODO persist Scenario
+        scenarioToBeSaved = new Scenario();
+        scenarioToBeSaved.setHouseFile(tfHomeSchemeFile.getText());
+        scenarioToBeSaved.setTaskile(tfActivitiesFile.getText());
+        scenarioToBeSaved.setSensorFile(tfActivitiesFile.getText());
+        scenarioToBeSaved.setDays(Integer.parseInt(tfDays.getText()));
+        scenarioToBeSaved.setName(tfScenarioName.getText());
+        scenarioToBeSaved.setStartingPoint(Long.parseLong(tfStartingPoint.getText()));
+        scenarioRepo.saveScenario(scenarioToBeSaved);
+        scenarioToBeSaved.setId(scenarioRepo.getLastInsertedScenarioId());
+        btnSaveScenario.setEnabled(false);
     }//GEN-LAST:event_btnSaveScenarioActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void tfHomeSchemeFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfHomeSchemeFileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfHomeSchemeFileActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel agentsListPanel;
@@ -645,6 +711,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
     private javax.swing.JLabel labelHunger;
     private javax.swing.JLabel labelHygiene;
     private javax.swing.JLabel labelNewAgent;
+    private javax.swing.JLabel labelScenarioName;
     private javax.swing.JLabel labelSensorFile;
     private javax.swing.JLabel labelStartingPoint;
     private javax.swing.JLabel labelWalkingSpeed;
@@ -668,6 +735,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
     private javax.swing.JTextField tfAgentName;
     private javax.swing.JTextField tfDays;
     private javax.swing.JTextField tfHomeSchemeFile;
+    private javax.swing.JTextField tfScenarioName;
     private javax.swing.JTextField tfSensorFile;
     private javax.swing.JTextField tfStartingPoint;
     private javax.swing.JTextField tfWalkingSpeed;
@@ -677,4 +745,31 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
     private javax.swing.JLabel valueHunger;
     private javax.swing.JLabel valueHygiene;
     // End of variables declaration//GEN-END:variables
+
+    private String getSelectedAvatarPath() {
+        String path = null;
+        if (rBtnAv1.isSelected()) {
+            path = "/boy_avatar_48p.png";
+        } else if (rBtnAv2.isSelected()) {
+            path = "/girl_avatar_48p.png";
+        } else if (rBtnAv3.isSelected()) {
+            path = "/grandpa.gif";
+        } else if (rBtnAv4.isSelected()) {
+            path = "/running.gif";
+        }
+        return path;
+    }
+
+    private void disableFields() {
+        tfActivitiesFile.setText("/activities.json");
+        tfSensorFile.setText("/sensors.json");
+        tfHomeSchemeFile.setText("/environment.jpg");
+        tfDays.setText(30 + "");
+        tfWalkingSpeed.setText(30 + "");
+        tfActivitiesFile.setEnabled(false);
+        tfSensorFile.setEnabled(false);
+        tfHomeSchemeFile.setEnabled(false);
+        tfDays.setEnabled(false);
+        tfWalkingSpeed.setEnabled(false);
+    }
 }

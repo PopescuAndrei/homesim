@@ -169,19 +169,4 @@ public class TaskReader {
             return appliances;
         }
     }
-
-    public List<Need> getNeeds() {
-        List<Need> needs = new ArrayList<>();
-        Need hunger = new Need("Hunger", 2);
-        Need bladder = new Need("Bladder", 1);
-        Need fun = new Need("Fun", 1.5);
-        Need energy = new Need("Energy", 1);
-        Need hygiene = new Need("Hygiene", 2);
-        needs.add(hunger);
-        needs.add(bladder);
-        needs.add(fun);
-        needs.add(energy);
-        needs.add(hygiene);
-        return needs;
-    }
 }

@@ -145,8 +145,8 @@ public class TaskManager {
                     agent.setRoute(null);
                 }
             } catch (Exception ex) {
-                LOG.severe("Error while setting task. Route not found! Maybe " + task.getUsedAppliances().toString() + " does not exist or route is impossible?");
-                agent.setPauseTime(7200);
+                LOG.severe("Error while setting task. Route not found! Maybe " + task.getUsedAppliances().toString() + " does not exist or appliance is in use");
+                agent.setPauseTime(1000);
             }
         }
         return log;

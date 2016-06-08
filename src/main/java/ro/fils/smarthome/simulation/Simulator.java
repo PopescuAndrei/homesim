@@ -65,14 +65,10 @@ public class Simulator {
                 agent.passTime(1.0 / simsPerSec);
                 continue;
             }
-            if (agent.isMoving()) {   //We're traveling!
-                if (agent.getPersonType() == 0) {
+            if (agent.isMoving()) {
                     movement = true;
                     agent.setCurrentLocation(map.moveActor(agent, simsPerSec));
-                } else {
-                    agent.setCurrentLocation(map.moveActor(agent, simsPerSec * 6));
-                }
-            } else if (agent.getPersonType() == 0 && agent.getTargetItem() != null) {
+            } else if (agent.getTargetItem() != null) {
                 agent.progressFetch(1.0 / simsPerSec);
                 Node current = map.getClosestNode(agent.getCurrentLocation());
                 if (agent.getFetchTime() <= 0.0) {
@@ -88,7 +84,7 @@ public class Simulator {
                     }
                     agent.setTargetItem(null);
                 }
-            } else if (agent.getPersonType() == 0 && agent.getCurrentTask() != null) {
+            } else if (agent.getCurrentTask() != null) {
                 agent.progressTask(1.0 / simsPerSec);
                 if (agent.getRemainingTaskDuration() <= 0.0) {
                     if (agent.getCurrentTask().getType().equals(Activities_Type.Automatic.toString())) {
@@ -112,7 +108,7 @@ public class Simulator {
                 } catch (Exception ex) {
                     Logger.getLogger(Simulator.class.getName()).warning("No route found");
                 }
-            } else if (agent.getPersonType() == 0) {
+            } else {
                 log = taskManager.findTask(agent, map, currentTime);
             }
             sensorlogger.log(agent, map.getSensors(), currentTime);

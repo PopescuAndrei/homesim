@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.planManagement.Edge;
 import ro.fils.smarthome.planManagement.Node;
@@ -155,4 +157,43 @@ public class NodeRepository {
         return app;
     }
 
+    public Node getNodeById(Long nodeId) {
+        Connection conn;
+        PreparedStatement ps;
+        String sql;
+        Node node = null;
+        System.out.println(nodeId);
+        try {
+            conn = DatabaseManager.getConnection();
+            sql = "SELECT * FROM nodes WHERE id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setLong(1, nodeId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Node nod = new Node(rs.getLong("id"),
+                        new Point(rs.getInt("posX"), rs.getInt("posY")));
+                ArrayList<Appliance> types = new ArrayList<>();
+
+                sql = "SELECT * FROM appliances WHERE node_id = ?";
+                ps = conn.prepareStatement(sql);
+                ps.setLong(1, rs.getLong("id"));
+                ResultSet appRes = ps.executeQuery();
+                while (appRes.next()) {
+                    String poses = appRes.getString("poses");
+                    if (poses != null) {
+                        String[] poseVals = poses.split(" ");
+                        Set<String> poseSet = new HashSet<>(Arrays.asList(poseVals));
+                        types.add(new Appliance(appRes.getString("type"), nod, poseSet));
+                    } else {
+                        types.add(new Appliance(appRes.getString("type"), nod));
+                    }
+                }
+                nod.setApplianceTypes(types);
+                return nod;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(NodeRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
 }

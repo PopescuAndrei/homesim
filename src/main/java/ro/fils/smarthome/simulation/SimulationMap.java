@@ -63,7 +63,6 @@ public class SimulationMap {
                 });
             }
         }
-        System.out.println("am applianceeeeeeeeeeees + " + objects.size());
         this.items = new ArrayList<>();
         this.runningTasks = new ArrayList<>();
     }

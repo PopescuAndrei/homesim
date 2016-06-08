@@ -26,12 +26,13 @@ import ro.fils.smarthome.constants.Activities_Type;
 public class Agent {
 
     public static final int WANDERER = 1;
-
+    
+    private int id;
     private String name;
     private Image avatarImg;
     private double pauseTime;
-    private int personType;
-
+    private String imagePath;
+    
     private Point currentLocation;
     private Deque<Node> route;
     private List<Need> needs;
@@ -49,12 +50,12 @@ public class Agent {
     }
     public Agent(String name, String avatarImg, Point currentLocation, List<Need> needs) {
         this.name = name;
+        this.imagePath = avatarImg;
         this.avatarImg = new ImageIcon(getClass().getResource(avatarImg)).getImage();
         this.currentLocation = currentLocation;
-        this.needs = needs != null ? new ArrayList<>(needs) : null;
+        this.needs = needs;
         this.inventory = new HashMap<>();
         this.state = new HashSet<>();
-        this.personType = 0;
         this.pauseTime = 0;
     }
 
@@ -65,7 +66,24 @@ public class Agent {
     public void setName(String name) {
         this.name = name;
     }
+    
+    public int getId(){
+        return id;
+    }
 
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+    
+    
     public double getPauseTime() {
         return pauseTime;
     }
@@ -253,13 +271,4 @@ public class Agent {
     public void setAvatarImg(Image avatarImg) {
         this.avatarImg = avatarImg;
     }
-
-    public int getPersonType() {
-        return personType;
-    }
-
-    public void setPersonType(int personType) {
-        this.personType = personType;
-    }
-
 }

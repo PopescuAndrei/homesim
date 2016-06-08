@@ -11,6 +11,7 @@ package ro.fils.smarthome.model;
  */
 public class Need implements Comparable<Need> {
 
+    private int id;
     private String name;
     private double decayRate;
     private double value;
@@ -21,6 +22,14 @@ public class Need implements Comparable<Need> {
         this.value = 100;
     }
 
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     public String getName() {
         return name;
     }
