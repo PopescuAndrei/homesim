@@ -5,18 +5,17 @@
  */
 package ro.fils.smarthome.simulation;
 
-import ro.fils.smarthome.util.Time;
+import ro.fils.smarthome.util.support.Time;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Item;
-import ro.fils.smarthome.planManagement.Node;
+import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.util.SensorLogger;
-import ro.fils.smarthome.astar.AStarImpl;
-import ro.fils.smarthome.constants.Activities_Type;
-import ro.fils.smarthome.util.BoolWithLog;
-import ro.fils.smarthome.tasksManagement.TaskManager;
+import ro.fils.smarthome.util.support.Activities_Type;
+import ro.fils.smarthome.util.support.BoolWithLog;
+import ro.fils.smarthome.tasks.TaskManager;
 
 /**
  *

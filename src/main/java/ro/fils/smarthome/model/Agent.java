@@ -5,8 +5,7 @@
  */
 package ro.fils.smarthome.model;
 
-import ro.fils.smarthome.planManagement.Node;
-import ro.fils.smarthome.tasksManagement.ITask;
+import ro.fils.smarthome.tasks.ITask;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import javax.swing.ImageIcon;
-import ro.fils.smarthome.constants.Activities_Type;
+import ro.fils.smarthome.util.support.Activities_Type;
 
 /**
  *

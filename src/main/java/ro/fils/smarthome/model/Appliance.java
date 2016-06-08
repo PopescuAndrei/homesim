@@ -5,7 +5,6 @@
  */
 package ro.fils.smarthome.model;
 
-import ro.fils.smarthome.planManagement.Node;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;

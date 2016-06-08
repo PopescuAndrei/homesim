@@ -18,8 +18,8 @@ import ro.fils.smarthome.view.DesignFrame;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
-import ro.fils.smarthome.planManagement.Edge;
-import ro.fils.smarthome.planManagement.Node;
+import ro.fils.smarthome.model.Edge;
+import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.repository.EdgeRepository;
 import ro.fils.smarthome.repository.NodeRepository;
 
@@ -66,7 +66,7 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
         super.paintComponent(g);
         g.drawImage(image, 0, 0, image.getWidth(this), image.getHeight(this), this);
 
-        g.setColor(Color.red);
+        g.setColor(new Color(0, 188, 212));
         if (points != null && !points.isEmpty()) {
             for (int i = 0; i < points.size(); i++) {
                 g.fillOval(points.get(i).getLocation().x - 4, points.get(i).getLocation().y - 4, 8, 8);
@@ -78,7 +78,7 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
             g.fillOval(hoveredPoint.getLocation().x - 4, hoveredPoint.getLocation().y - 4, 8, 8);
         }
 
-        g.setColor(Color.red);
+        g.setColor(new Color(0, 188, 212));
         if (selectedPoint != null) {
             g.fillOval(selectedPoint.getLocation().x - 6, selectedPoint.getLocation().y - 6, 12, 12);
         }

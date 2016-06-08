@@ -15,10 +15,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import ro.fils.smarthome.model.Appliance;
-import ro.fils.smarthome.planManagement.Node;
+import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.simulation.NodePainter;
-import ro.fils.smarthome.tasksManagement.TaskReader;
+import ro.fils.smarthome.tasks.TaskReader;
 
 /**
  *
@@ -62,10 +62,12 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
         jLabel3 = new javax.swing.JLabel();
         editPoses = new javax.swing.JTextField();
         btnUpdatePoses = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        labelNodeActions = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
         labelDelete = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,7 +81,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
         );
         leftPanelLayout.setVerticalGroup(
             leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 418, Short.MAX_VALUE)
+            .addGap(0, 516, Short.MAX_VALUE)
         );
 
         jSplitPane1.setLeftComponent(leftPanel);
@@ -89,6 +91,8 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
             e.printStackTrace();
         }
         leftPanel.add(painter);
+
+        rightPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         labelAddNode.setText("Right - Click: Add Node");
 
@@ -102,10 +106,10 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
 
         labelRestartPart2.setText("to take effect!");
 
-        actionsPanel.setBackground(new java.awt.Color(200, 200, 200));
+        actionsPanel.setBackground(new java.awt.Color(255, 255, 255));
+        actionsPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 188, 212)));
         actionsPanel.setMinimumSize(new java.awt.Dimension(300, 313));
 
-        isStart.setBackground(new java.awt.Color(200, 200, 200));
         isStart.setText("Starting Point");
 
         chooser.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
@@ -115,6 +119,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
+        lister.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.setViewportView(lister);
 
         jLabel2.setText("Node's Appliances:");
@@ -157,11 +162,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(chooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(actionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(actionsPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(actionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(actionsPanelLayout.createSequentialGroup()
                         .addComponent(btnAddAppliance)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -171,13 +172,43 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editPoses, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUpdatePoses, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnUpdatePoses, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(actionsPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel1.setText("Node Actions");
+        labelNodeActions.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        labelNodeActions.setForeground(new java.awt.Color(0, 188, 212));
+        labelNodeActions.setText("Node Actions");
+
+        jSeparator1.setForeground(new java.awt.Color(0, 188, 212));
+
+        jSeparator2.setForeground(new java.awt.Color(0, 188, 212));
 
         labelDelete.setText("Delete: Delete Node");
+
+        jPanel1.setBackground(new java.awt.Color(0, 188, 212));
+
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("Edit House Scheme :");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
@@ -195,14 +226,16 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                     .addComponent(labelRestartPart1, javax.swing.GroupLayout.DEFAULT_SIZE, 351, Short.MAX_VALUE)
                     .addComponent(labelRestartPart2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelAddNode, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelNodeActions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(labelDelete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         rightPanelLayout.setVerticalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(rightPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelAddNode)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(labelSelectNode)
@@ -214,16 +247,16 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                 .addComponent(labelDelete)
                 .addGap(3, 3, 3)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(labelRestartPart1)
-                .addGap(2, 2, 2)
+                .addGap(4, 4, 4)
                 .addComponent(labelRestartPart2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
+                .addComponent(labelNodeActions)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(actionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 214, Short.MAX_VALUE)
+                .addComponent(actionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 258, Short.MAX_VALUE)
                 .addGap(9, 9, 9))
         );
 
@@ -321,6 +354,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
@@ -329,6 +363,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
     private javax.swing.JLabel labelDelete;
     private javax.swing.JLabel labelLinkNodes;
     private javax.swing.JLabel labelMoveNode;
+    private javax.swing.JLabel labelNodeActions;
     private javax.swing.JLabel labelRestartPart1;
     private javax.swing.JLabel labelRestartPart2;
     private javax.swing.JLabel labelSelectNode;

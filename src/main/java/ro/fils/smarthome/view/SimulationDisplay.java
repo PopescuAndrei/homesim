@@ -14,9 +14,9 @@ import java.util.Collection;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import ro.fils.smarthome.model.Agent;
-import ro.fils.smarthome.sensor.Contact;
-import ro.fils.smarthome.sensor.Sensor;
-import ro.fils.smarthome.sensor.SensorArea;
+import ro.fils.smarthome.sensors.Contact;
+import ro.fils.smarthome.sensors.Sensor;
+import ro.fils.smarthome.sensors.SensorArea;
 
 /**
  *
@@ -63,9 +63,9 @@ public class SimulationDisplay extends JPanel {
                             }
                         }
                         if (steppedOn) {
-                            g2d.setColor(new Color(0, 255, 0, 50));
+                            g2d.setColor(new Color(255, 102, 82, 70));
                         } else {
-                            g2d.setColor(new Color(255, 255, 0, 50));
+                            g2d.setColor(new Color(0, 188, 212, 20));
                         }
                         g2d.fill(s.getArea());
                         g2d.setColor(Color.BLACK);

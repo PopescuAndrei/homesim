@@ -13,12 +13,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import ro.fils.smarthome.model.Appliance;
-import ro.fils.smarthome.tasksManagement.ITask;
+import ro.fils.smarthome.tasks.ITask;
 import ro.fils.smarthome.model.Item;
-import ro.fils.smarthome.planManagement.Node;
+import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.model.Agent;
-import ro.fils.smarthome.sensor.Sensor;
-import ro.fils.smarthome.constants.Const;
+import ro.fils.smarthome.sensors.Sensor;
+import ro.fils.smarthome.util.support.Const;
 import ro.fils.smarthome.repository.NodeRepository;
 
 /**

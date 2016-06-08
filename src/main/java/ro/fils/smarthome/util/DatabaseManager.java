@@ -5,6 +5,7 @@
  */
 package ro.fils.smarthome.util;
 
+import ro.fils.smarthome.util.support.DatabaseProperties;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;

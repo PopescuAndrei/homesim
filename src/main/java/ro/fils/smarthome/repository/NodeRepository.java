@@ -19,8 +19,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ro.fils.smarthome.model.Appliance;
-import ro.fils.smarthome.planManagement.Edge;
-import ro.fils.smarthome.planManagement.Node;
+import ro.fils.smarthome.model.Edge;
+import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.util.DatabaseManager;
 
 /**

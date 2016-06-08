@@ -18,7 +18,7 @@ import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.AgentRepository;
 import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.repository.ScenarioRepository;
-import ro.fils.smarthome.util.AgentUtil;
+import ro.fils.smarthome.util.AgentsUtils;
 
 /**
  *
@@ -565,11 +565,10 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(rightPanelLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnAddAgent, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(58, 58, 58)
                         .addComponent(btnSaveScenario, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(panelNeeds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(avatarPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -645,7 +644,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         double funValue = Double.valueOf(valueFun.getText());
         Long startingNodeId = Long.parseLong(tfStartingPoint.getText());
         Point currentLocation = nodeRepo.getNodeById(startingNodeId).getLocation();
-        List<Need> needs = AgentUtil.getNeeds(energyValue, hungerValue, bladderValue, hygieneValue, funValue);
+        List<Need> needs = AgentsUtils.getNeeds(energyValue, hungerValue, bladderValue, hygieneValue, funValue);
 
         Agent a = new Agent(agentName, avatarImg, currentLocation, needs);
         boolean result = agentRepo.saveAgentsToScenario(a, scenarioToBeSaved.getId());
@@ -678,7 +677,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSaveScenarioActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        // TODO add your handling code here:
+        this.setVisible(false);
+        this.dispose();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void tfHomeSchemeFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfHomeSchemeFileActionPerformed

@@ -21,16 +21,16 @@ import javax.swing.JFrame;
 import javax.swing.Timer;
 import javax.swing.event.ListSelectionEvent;
 import ro.fils.smarthome.model.Agent;
-import ro.fils.smarthome.util.BoolWithLog;
+import ro.fils.smarthome.util.support.BoolWithLog;
 import ro.fils.smarthome.model.Need;
-import ro.fils.smarthome.sensor.Sensor;
-import ro.fils.smarthome.sensor.SensorReader;
+import ro.fils.smarthome.sensors.Sensor;
+import ro.fils.smarthome.sensors.SensorReader;
 import ro.fils.smarthome.simulation.SimulationMap;
 import ro.fils.smarthome.simulation.Simulator;
-import ro.fils.smarthome.tasksManagement.TaskManager;
-import ro.fils.smarthome.tasksManagement.TaskReader;
+import ro.fils.smarthome.tasks.TaskManager;
+import ro.fils.smarthome.tasks.TaskReader;
 import ro.fils.smarthome.util.SensorLogger;
-import ro.fils.smarthome.util.Time;
+import ro.fils.smarthome.util.support.Time;
 
 /**
  *
@@ -75,15 +75,18 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
         jSplitPane1 = new javax.swing.JSplitPane();
         rightPanel = new javax.swing.JPanel();
-        labelLogbook = new javax.swing.JLabel();
         scrollPaneLog = new javax.swing.JScrollPane();
         logArea = new javax.swing.JTextArea();
-        insidePanel = new javax.swing.JPanel();
+        panelTitle = new javax.swing.JPanel();
+        labelTitle = new javax.swing.JLabel();
+        panelLogTitle = new javax.swing.JPanel();
+        labelLogActivities = new javax.swing.JLabel();
         panelAgents = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         listViewAgents = new javax.swing.JList<>();
         btnStartSimulation = new javax.swing.JButton();
+        btnStopSimulation = new javax.swing.JButton();
         panelNeeds = new javax.swing.JPanel();
         labelDuration = new javax.swing.JLabel();
         editDuration = new javax.swing.JTextField();
@@ -99,18 +102,14 @@ public class SimulatorFrame extends javax.swing.JFrame {
         progressBladder = new javax.swing.JProgressBar(0,100);
         progressFun = new javax.swing.JProgressBar(0,100);
         progressHygiene = new javax.swing.JProgressBar(0,100);
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        labelDaysLong = new javax.swing.JLabel();
+        labelTimeIs = new javax.swing.JLabel();
         leftPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jSplitPane1.setDividerLocation(490);
         jSplitPane1.setResizeWeight(0.3);
-
-        labelLogbook.setText("Log:");
-        Font font = labelLogbook.getFont();
-        Font boldFont = new Font(font.getFontName(), Font.BOLD, font.getSize());
-        labelLogbook.setFont(boldFont);
 
         scrollPaneLog.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -118,6 +117,52 @@ public class SimulatorFrame extends javax.swing.JFrame {
         logArea.setRows(5);
         scrollPaneLog.setViewportView(logArea);
 
+        panelTitle.setBackground(new java.awt.Color(0, 188, 212));
+
+        labelTitle.setBackground(new java.awt.Color(255, 255, 255));
+        labelTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        labelTitle.setForeground(new java.awt.Color(255, 255, 255));
+        labelTitle.setText("Simulation Display");
+
+        javax.swing.GroupLayout panelTitleLayout = new javax.swing.GroupLayout(panelTitle);
+        panelTitle.setLayout(panelTitleLayout);
+        panelTitleLayout.setHorizontalGroup(
+            panelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTitleLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        panelTitleLayout.setVerticalGroup(
+            panelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(labelTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 52, Short.MAX_VALUE)
+        );
+
+        panelLogTitle.setBackground(new java.awt.Color(0, 188, 212));
+
+        labelLogActivities.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        labelLogActivities.setForeground(new java.awt.Color(255, 255, 255));
+        labelLogActivities.setText("Agents Activity Log:");
+
+        javax.swing.GroupLayout panelLogTitleLayout = new javax.swing.GroupLayout(panelLogTitle);
+        panelLogTitle.setLayout(panelLogTitleLayout);
+        panelLogTitleLayout.setHorizontalGroup(
+            panelLogTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelLogTitleLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelLogActivities, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        panelLogTitleLayout.setVerticalGroup(
+            panelLogTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(labelLogActivities, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE)
+        );
+
+        panelAgents.setBackground(new java.awt.Color(250, 250, 250));
+
+        jLabel4.setBackground(new java.awt.Color(0, 188, 212));
+        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 188, 212));
         jLabel4.setText("Agents List:");
 
         listViewAgents.setModel(new javax.swing.AbstractListModel<String>() {
@@ -134,6 +179,8 @@ public class SimulatorFrame extends javax.swing.JFrame {
             }
         });
 
+        btnStopSimulation.setText("Stop Simulation");
+
         javax.swing.GroupLayout panelAgentsLayout = new javax.swing.GroupLayout(panelAgents);
         panelAgents.setLayout(panelAgentsLayout);
         panelAgentsLayout.setHorizontalGroup(
@@ -144,23 +191,26 @@ public class SimulatorFrame extends javax.swing.JFrame {
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelAgentsLayout.createSequentialGroup()
                         .addGroup(panelAgentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnStartSimulation, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1))
+                            .addComponent(btnStopSimulation, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)
+                            .addComponent(btnStartSimulation, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE))
                         .addContainerGap())))
         );
         panelAgentsLayout.setVerticalGroup(
             panelAgentsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelAgentsLayout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnStartSimulation)
-                .addGap(6, 6, 6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnStopSimulation)
+                .addContainerGap(17, Short.MAX_VALUE))
         );
 
-        panelNeeds.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        panelNeeds.setBackground(new java.awt.Color(250, 250, 250));
+        panelNeeds.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Agent's Needs", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(0, 188, 212))); // NOI18N
         panelNeeds.setAlignmentX(0.2F);
         panelNeeds.setAlignmentY(0.2F);
         panelNeeds.setAutoscrolls(true);
@@ -171,7 +221,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
         labelTime.setText("Time - to be displayed");
 
-        panelProgressbars.setBackground(new java.awt.Color(210, 210, 210));
+        panelProgressbars.setBackground(new java.awt.Color(250, 250, 250));
 
         labelHunger.setText("Hunger");
 
@@ -182,6 +232,16 @@ public class SimulatorFrame extends javax.swing.JFrame {
         labelFun.setText("Fun");
 
         labelHygiene.setText("Hygiene");
+
+        progressHunger.setForeground(new java.awt.Color(0, 188, 212));
+
+        progressEnergy.setForeground(new java.awt.Color(0, 188, 212));
+
+        progressBladder.setForeground(new java.awt.Color(0, 188, 212));
+
+        progressFun.setForeground(new java.awt.Color(0, 188, 212));
+
+        progressHygiene.setForeground(new java.awt.Color(0, 188, 212));
 
         javax.swing.GroupLayout panelProgressbarsLayout = new javax.swing.GroupLayout(panelProgressbars);
         panelProgressbars.setLayout(panelProgressbarsLayout);
@@ -207,7 +267,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         panelProgressbarsLayout.setVerticalGroup(
             panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelProgressbarsLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelHunger)
                     .addComponent(progressHunger, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -226,12 +286,13 @@ public class SimulatorFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelProgressbarsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(progressHygiene, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelHygiene)))
+                    .addComponent(labelHygiene))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
 
-        jLabel1.setText("days long.");
+        labelDaysLong.setText("days long.");
 
-        jLabel2.setText("Time is :");
+        labelTimeIs.setText("Time is :");
 
         javax.swing.GroupLayout panelNeedsLayout = new javax.swing.GroupLayout(panelNeeds);
         panelNeeds.setLayout(panelNeedsLayout);
@@ -246,9 +307,9 @@ public class SimulatorFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editDuration, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(labelDaysLong, javax.swing.GroupLayout.DEFAULT_SIZE, 283, Short.MAX_VALUE))
                     .addGroup(panelNeedsLayout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(labelTimeIs)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(labelTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -258,51 +319,41 @@ public class SimulatorFrame extends javax.swing.JFrame {
             .addGroup(panelNeedsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(panelProgressbars, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(panelNeedsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelDuration)
                     .addComponent(editDuration, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1))
+                    .addComponent(labelDaysLong))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelNeedsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
+                    .addComponent(labelTimeIs)
                     .addComponent(labelTime))
-                .addContainerGap(19, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout insidePanelLayout = new javax.swing.GroupLayout(insidePanel);
-        insidePanel.setLayout(insidePanelLayout);
-        insidePanelLayout.setHorizontalGroup(
-            insidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, insidePanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(panelAgents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelNeeds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        insidePanelLayout.setVerticalGroup(
-            insidePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(panelAgents, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(panelNeeds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
         rightPanelLayout.setHorizontalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(scrollPaneLog, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(labelLogbook, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(scrollPaneLog)
+            .addGroup(rightPanelLayout.createSequentialGroup()
+                .addComponent(panelAgents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelNeeds, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
-            .addComponent(insidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(panelLogTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         rightPanelLayout.setVerticalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
-                .addComponent(insidePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(labelLogbook)
+                .addComponent(panelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(panelNeeds, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelAgents, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
+                .addComponent(panelLogTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(scrollPaneLog, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -316,7 +367,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         leftPanel.setLayout(leftPanelLayout);
         leftPanelLayout.setHorizontalGroup(
             leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 298, Short.MAX_VALUE)
+            .addGap(0, 487, Short.MAX_VALUE)
         );
         leftPanelLayout.setVerticalGroup(
             leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -338,11 +389,11 @@ public class SimulatorFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1007, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
         );
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -462,27 +513,30 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnStartSimulation;
+    private javax.swing.JButton btnStopSimulation;
     private javax.swing.JTextField editDuration;
-    private javax.swing.JPanel insidePanel;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel labelBladder;
+    private javax.swing.JLabel labelDaysLong;
     private javax.swing.JLabel labelDuration;
     private javax.swing.JLabel labelEnergy;
     private javax.swing.JLabel labelFun;
     private javax.swing.JLabel labelHunger;
     private javax.swing.JLabel labelHygiene;
-    private javax.swing.JLabel labelLogbook;
+    private javax.swing.JLabel labelLogActivities;
     private javax.swing.JLabel labelTime;
+    private javax.swing.JLabel labelTimeIs;
+    private javax.swing.JLabel labelTitle;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JList<String> listViewAgents;
     private javax.swing.JTextArea logArea;
     private javax.swing.JPanel panelAgents;
+    private javax.swing.JPanel panelLogTitle;
     private javax.swing.JPanel panelNeeds;
     private javax.swing.JPanel panelProgressbars;
+    private javax.swing.JPanel panelTitle;
     private javax.swing.JProgressBar progressBladder;
     private javax.swing.JProgressBar progressEnergy;
     private javax.swing.JProgressBar progressFun;

@@ -5,8 +5,6 @@
  */
 package ro.fils.smarthome.model;
 
-import ro.fils.smarthome.planManagement.Node;
-
 /**
  *
  * @author Silvia

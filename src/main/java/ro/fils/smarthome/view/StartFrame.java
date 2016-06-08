@@ -9,8 +9,6 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.ScenarioRepository;
-import ro.fils.smarthome.util.factory.SimulatorFrameFactory;
-import ro.fils.smarthome.util.factory.SimulatorFrameFactoryImpl;
 
 /**
  *
