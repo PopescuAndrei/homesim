@@ -10,7 +10,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,10 +49,12 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private TaskReader taskReader;
     private DefaultListModel<String> agentsListModel;
     private String selectedAgentName;
-    
-    public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, String agentName, String agentPicFile, int days) {
+    private String scenario;
+
+    public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, String agentName, String agentPicFile, int days, String scenario) {
         this.selectedAgentName = agentName;
-        
+        this.scenario = scenario;
+
         initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agentName, agentPicFile, days);
         initComponents();
         agentsListModel = new DefaultListModel();
@@ -61,7 +65,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
             selectedAgentName = listViewAgents.getSelectedValue();
             populateAgentsAndNeeds(selectedAgentName);
         });
-        
+
         timer = new Timer(10, timeListen);
     }
 
@@ -347,8 +351,12 @@ public class SimulatorFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnStartSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartSimulationActionPerformed
+
         try {
-            simulator.setSensorLogger(new SensorLogger("sensorReadings.txt"));
+            Calendar cal = Calendar.getInstance();
+            Date time = cal.getTime();
+            String timeOfSimulation = time.toString().replaceAll("\\s", "_").replaceAll(":", "-");
+            simulator.setSensorLogger(new SensorLogger(this.scenario+"_"+timeOfSimulation+ ".txt"));
         } catch (IOException ex) {
             ex.printStackTrace();
             Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -433,7 +441,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
 
         @Override
         public void actionPerformed(ActionEvent ae) {
-            BoolWithLog result= simulator.simulationStep();
+            BoolWithLog result = simulator.simulationStep();
             if (!result.isMovement()) {
                 timer.setDelay(fastSpeed);
             } else {
@@ -445,14 +453,14 @@ public class SimulatorFrame extends javax.swing.JFrame {
                 timer.stop();
                 System.out.println("Elapsed time in milliseconds: " + (System.currentTimeMillis() - startTime));
             }
-            if(result.getLog()!=null){
+            if (result.getLog() != null) {
                 logArea.append("\n" + result.getLog());
             }
             updateMenu();
         }
     };
 
-     
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnStartSimulation;
     private javax.swing.JTextField editDuration;
