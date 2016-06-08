@@ -6,6 +6,7 @@
 package ro.fils.smarthome.util;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -38,7 +39,8 @@ public class SensorLogger {
     private final double TRIGGER_INTERVAL = 5.0;
 
     public SensorLogger(String fileName) throws IOException {
-        this.fileWriter = new BufferedWriter(new FileWriter(fileName, true));
+        String userHomeFolder = System.getProperty("user.home") + "\\Desktop";
+        this.fileWriter = new BufferedWriter(new FileWriter(new File(userHomeFolder, fileName), true));
         DecimalFormatSymbols dfs = new DecimalFormatSymbols();
         dfs.setDecimalSeparator('.');
         df = new DecimalFormat("##.#####", dfs);
@@ -108,7 +110,7 @@ public class SensorLogger {
                     + agent.getName() + " is in position ("
                     + agent.getCurrentLocation().getX() + ", " + agent.getCurrentLocation().getY() + "), "
                     + (sensor.getPosition() != null ? (int) sensor.getPosition().distance(agent.getCurrentLocation())
-                    + " distance from the sensor.\n" : "\n"));
+                            + " distance from the sensor.\n" : "\n"));
             fileWriter.flush();
         } catch (IOException e) {
 

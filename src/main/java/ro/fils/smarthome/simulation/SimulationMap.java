@@ -42,7 +42,7 @@ public class SimulationMap {
     private final NodeRepository nodeRepo = new NodeRepository();
 
     public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter, Collection<Sensor> sensors) {
-        
+
         this.mapName = mapName;
         this.people = people;
         this.sensors = sensors;
@@ -93,12 +93,12 @@ public class SimulationMap {
         int dy = (int) (targetLocation.getY() - p.getY());
         if (distance < walkingSpeed) {
             p.setLocation(targetLocation);
-        } else{
+        } else {
             p.translate((int) (walkingSpeed * (dx / distance)),
                     (int) (walkingSpeed * (dy / distance)));
         }
         return p;
-         
+
     }
 
     public void addItem(Item item) {

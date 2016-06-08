@@ -17,26 +17,26 @@ import ro.fils.smarthome.util.factory.SimulatorFrameFactoryImpl;
  * @author andre
  */
 public class StartFrame extends javax.swing.JFrame {
-    
+
     private final SimulatorFrameFactory factory;
     private final DefaultListModel<String> scenariosModel;
     private final String[] scenariosNames;
     private final List<Scenario> scenarios;
-    
+
     public StartFrame() {
         initComponents();
         factory = new SimulatorFrameFactoryImpl();
         scenarios = new ScenarioRepository().getAllScenarios();
         System.out.println(scenarios.size());
         scenariosNames = new String[scenarios.size()];
-        
-        for(int i = 0;i<scenarios.size();i++){
+
+        for (int i = 0; i < scenarios.size(); i++) {
             scenariosNames[i] = scenarios.get(i).getName();
         }
         System.out.println(scenariosNames.length);
-        
+
         scenariosModel = new DefaultListModel();
-        for(String s: scenariosNames){
+        for (String s : scenariosNames) {
             scenariosModel.addElement(s);
         }
         listViewSimulation.setModel(scenariosModel);
@@ -151,19 +151,19 @@ public class StartFrame extends javax.swing.JFrame {
 
     private void btnRunSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunSimulationActionPerformed
         SimulatorFrame frame = factory.getFrameForScenario(scenarios.get(listViewSimulation.getSelectedIndex()));
-        frame.setSize(1366,  768);
+        frame.setSize(1366, 768);
         frame.setVisible(true);
     }//GEN-LAST:event_btnRunSimulationActionPerformed
 
     private void btnEditMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditMapActionPerformed
         DesignFrame frame = new DesignFrame();
-        frame.setSize(1366 , 768);
+        frame.setSize(1366, 768);
         frame.setVisible(true);
     }//GEN-LAST:event_btnEditMapActionPerformed
 
     private void btnNewScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewScenarioActionPerformed
         ScenarioCreatorFrame frame = new ScenarioCreatorFrame();
-        frame.setSize(1366 , 768);
+        frame.setSize(1366, 768);
         frame.setVisible(true);
     }//GEN-LAST:event_btnNewScenarioActionPerformed
 
