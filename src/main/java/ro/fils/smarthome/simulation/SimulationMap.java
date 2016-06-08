@@ -102,7 +102,6 @@ public class SimulationMap {
     }
 
     public void addItem(Item item) {
-        System.out.println("#######################Added " + item.getName() + " to map");
         this.items.add(item);
     }
 
@@ -173,8 +172,6 @@ public class SimulationMap {
             AutoTask t = it.next();
             t.progressTask(seconds);
             if (t.getDuration() <= 0.0) {
-                System.out.println(t.getTask().getName() + ", " + t.getTask().getCreatedItems());
-                System.out.println("AM CREAT 1000000: " + t.getTask().getCreatedItems().size());
                 for (String item : t.getTask().getCreatedItems()) {
                     this.addItem(new Item(item, t.getNode()));
                 }

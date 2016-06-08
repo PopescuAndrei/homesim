@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.simulation;
+package ro.fils.smarthome.view.support;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -175,7 +175,6 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
                         repaint();
                         break;
                     } else {
-                        System.out.println("Edge exists!");
                         break;
                     }
                 }

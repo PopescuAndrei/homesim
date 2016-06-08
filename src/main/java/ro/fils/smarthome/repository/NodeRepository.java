@@ -61,9 +61,7 @@ public class NodeRepository {
                 nod.setApplianceTypes(types);
                 nodes.add(nod);
             }
-            System.out.println("Am " + nodes.size() + " noduri");
             ArrayList<Edge> edges = new EdgeRepository().getEdges(nodes);
-            System.out.println("Am " + edges.size() + " muchii");
             for (Node node : nodes) {
                 for (Edge edge : edges) {
                     if (Objects.equals(node.getId(), edge.getA().getId())) {
@@ -118,7 +116,6 @@ public class NodeRepository {
                 ps.setInt(2, node.getPosY());
                 ps.setLong(3, node.getId());
                 ps.executeUpdate();
-                System.out.println("Updated node's location");
             }
             sql = "DELETE from appliances WHERE node_id = ?";
             ps = conn.prepareStatement(sql);
@@ -151,7 +148,6 @@ public class NodeRepository {
             ps.setString(3, app.getType());
             app.setPoses(poseString);
         } catch (SQLException | ClassNotFoundException e) {
-            System.out.println("Failed to update poses?");
             e.printStackTrace();
         }
         return app;
@@ -162,7 +158,6 @@ public class NodeRepository {
         PreparedStatement ps;
         String sql;
         Node node = null;
-        System.out.println(nodeId);
         try {
             conn = DatabaseManager.getConnection();
             sql = "SELECT * FROM nodes WHERE id = ?";

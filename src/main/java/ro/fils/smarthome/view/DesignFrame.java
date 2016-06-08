@@ -17,7 +17,7 @@ import javax.swing.event.ListSelectionEvent;
 import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.repository.NodeRepository;
-import ro.fils.smarthome.simulation.NodePainter;
+import ro.fils.smarthome.view.support.NodePainter;
 import ro.fils.smarthome.tasks.TaskReader;
 
 /**
@@ -281,7 +281,6 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
     public void setActiveNode(Node selectedPoint) throws Exception {
         isStart.addActionListener(this);
         int start = 0;
-        System.out.println(selectedPoint.toString());
         if (selectedPoint.getId() == start) {
             isStart.setSelected(true);
             isStart.setEnabled(false);
@@ -332,7 +331,6 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                     app.getPoses().stream().forEach((pose) -> {
                         sb.append(pose).append(" ");
                     });
-                    System.out.println("POSESSSSSSSSSSSSS: "+ sb);
                     editPoses.setText(sb.toString());
 
                     btnUpdatePoses.addActionListener((ActionEvent ae) -> {

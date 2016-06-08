@@ -5,16 +5,12 @@
  */
 package ro.fils.smarthome.tasks;
 
-import ro.fils.smarthome.tasks.ITask;
-import ro.fils.smarthome.tasks.TaskReader;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import ro.fils.smarthome.model.Need;
 
 /**
  *
@@ -41,7 +37,6 @@ public class TaskReaderTest {
      */
     @Test
     public void testGetTasks() {
-        System.out.println("getTasks");
         Collection<ITask> result = instance.getTasks();
         assertTrue(result.size() > 0);
     }
@@ -51,7 +46,6 @@ public class TaskReaderTest {
      */
     @Test
     public void testGetAppliances() {
-        System.out.println("getAppliances");
         Set<String> result = instance.getAppliances();
         assertTrue(result.size() > 0);
     }

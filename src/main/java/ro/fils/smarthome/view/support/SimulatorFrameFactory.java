@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.view;
+package ro.fils.smarthome.view.support;
 
 import ro.fils.smarthome.model.Scenario;
+import ro.fils.smarthome.view.SimulatorFrame;
 import ro.fils.smarthome.view.SimulatorFrame;
 
 /**

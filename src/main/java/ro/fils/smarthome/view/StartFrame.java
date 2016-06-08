@@ -5,6 +5,8 @@
  */
 package ro.fils.smarthome.view;
 
+import ro.fils.smarthome.view.support.SimulatorFrameFactoryImpl;
+import ro.fils.smarthome.view.support.SimulatorFrameFactory;
 import java.util.List;
 import javax.swing.DefaultListModel;
 import ro.fils.smarthome.model.Scenario;
@@ -25,13 +27,11 @@ public class StartFrame extends javax.swing.JFrame {
         initComponents();
         factory = new SimulatorFrameFactoryImpl();
         scenarios = new ScenarioRepository().getAllScenarios();
-        System.out.println(scenarios.size());
         scenariosNames = new String[scenarios.size()];
 
         for (int i = 0; i < scenarios.size(); i++) {
             scenariosNames[i] = scenarios.get(i).getName();
         }
-        System.out.println(scenariosNames.length);
 
         scenariosModel = new DefaultListModel();
         for (String s : scenariosNames) {

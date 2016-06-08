@@ -40,7 +40,6 @@ public class AgentRepository {
             while (agentsRes.next()) {
                 Agent ag = new Agent(agentsRes.getString("AGENT_NAME"), agentsRes.getString("AVATAR_IMG"), new Point(agentsRes.getInt("LOC_X"), agentsRes.getInt("LOC_Y")), getNeedsForAgent(agentsRes.getInt("ID")));
                 ag.setId(agentsRes.getInt("ID"));
-                System.out.println("AIiiiiiiiiiiici" + ag.getNeeds().get(2));
                 agents.add(ag);
             }
         } catch (SQLException | ClassNotFoundException ex) {

@@ -98,7 +98,6 @@ public class PPlanWrapper {
         for(String s: created){
             pos.add(s);
         }
-        plan.addOperator(t.getName(), precond, neg, pos);
-        //System.out.println(t.name() + ", P" + precond.toString() + ", -" + neg.toString() + ", +" + pos.toString());
+        plan.addOperator(t.getName(), precond, neg, pos);    
     }
 }

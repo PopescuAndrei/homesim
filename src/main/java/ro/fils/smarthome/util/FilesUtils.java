@@ -21,7 +21,6 @@ public class FilesUtils {
         Files.walk(Paths.get(userHomeFolder)).forEach(filePath -> {
             if (Files.isRegularFile(filePath) && filePath.getFileName().toString().endsWith(".txt")) {
                 // just for testing => we should add some extra logic
-                System.out.println(filePath.getFileName());
 //                readFile(userHomeFolder + "\\" + filePath.getFileName().toString());
             }
         });
