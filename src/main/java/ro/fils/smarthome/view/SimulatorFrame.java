@@ -37,7 +37,7 @@ import ro.fils.smarthome.util.support.Time;
  * @author andre
  */
 public class SimulatorFrame extends javax.swing.JFrame {
-
+    
     private SimulationDisplay display;
     private SimulationMap simulationMap;
     private Simulator simulator;
@@ -50,10 +50,9 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private DefaultListModel<String> agentsListModel;
     private String selectedAgentName;
 
-    
     public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, List<Agent> agents, int days) {
         this.selectedAgentName = agents.get(0).getName();
-        
+
         initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agents, days);
 
         initComponents();
@@ -180,6 +179,11 @@ public class SimulatorFrame extends javax.swing.JFrame {
         });
 
         btnStopSimulation.setText("Stop Simulation");
+        btnStopSimulation.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnStopSimulationMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout panelAgentsLayout = new javax.swing.GroupLayout(panelAgents);
         panelAgents.setLayout(panelAgentsLayout);
@@ -393,7 +397,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+            .addComponent(jSplitPane1)
         );
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -407,7 +411,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
             Calendar cal = Calendar.getInstance();
             Date time = cal.getTime();
             String timeOfSimulation = time.toString().replaceAll("\\s", "_").replaceAll(":", "-");
-            simulator.setSensorLogger(new SensorLogger("Simulation_" +timeOfSimulation+ ".txt"));
+            simulator.setSensorLogger(new SensorLogger("Simulation_" + timeOfSimulation + ".txt"));
         } catch (IOException ex) {
             ex.printStackTrace();
             Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -416,6 +420,10 @@ public class SimulatorFrame extends javax.swing.JFrame {
         startTime = System.currentTimeMillis();
         timer.start();
     }//GEN-LAST:event_btnStartSimulationActionPerformed
+
+    private void btnStopSimulationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnStopSimulationMouseClicked
+        stopSimulation();
+    }//GEN-LAST:event_btnStopSimulationMouseClicked
 
     private void initSimulatorTools(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startNodeId, List<Agent> agents, int days) {
         try {
@@ -509,7 +517,10 @@ public class SimulatorFrame extends javax.swing.JFrame {
             updateMenu();
         }
     };
-
+    
+    public void stopSimulation() {
+        timer.stop();
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnStartSimulation;
