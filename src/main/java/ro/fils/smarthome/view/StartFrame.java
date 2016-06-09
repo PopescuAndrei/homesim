@@ -11,17 +11,18 @@ import java.util.List;
 import javax.swing.DefaultListModel;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.ScenarioRepository;
+import ro.fils.smarthome.view.support.Observer;
 
 /**
  *
  * @author andre
  */
-public class StartFrame extends javax.swing.JFrame {
+public class StartFrame extends javax.swing.JFrame implements Observer{
 
     private final SimulatorFrameFactory factory;
-    private final DefaultListModel<String> scenariosModel;
-    private final String[] scenariosNames;
-    private final List<Scenario> scenarios;
+    private DefaultListModel<String> scenariosModel;
+    private String[] scenariosNames;
+    private List<Scenario> scenarios;
 
     public StartFrame() {
         initComponents();
@@ -161,10 +162,25 @@ public class StartFrame extends javax.swing.JFrame {
 
     private void btnNewScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewScenarioActionPerformed
         ScenarioCreatorFrame frame = new ScenarioCreatorFrame();
+        frame.addObserver(this);
         frame.setSize(1366, 768);
         frame.setVisible(true);
     }//GEN-LAST:event_btnNewScenarioActionPerformed
+    
+    public void triggerRefresh(){
+        scenarios = new ScenarioRepository().getAllScenarios();
+        scenariosNames = new String[scenarios.size()];
 
+        for (int i = 0; i < scenarios.size(); i++) {
+            scenariosNames[i] = scenarios.get(i).getName();
+        }
+
+        scenariosModel = new DefaultListModel();
+        for (String s : scenariosNames) {
+            scenariosModel.addElement(s);
+        }
+        listViewSimulation.setModel(scenariosModel);
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnEditMap;
     private javax.swing.JButton btnNewScenario;
@@ -175,4 +191,9 @@ public class StartFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList<String> listViewSimulation;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void update() {
+        triggerRefresh();
+    }
 }

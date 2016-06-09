@@ -9,6 +9,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
@@ -19,12 +20,16 @@ import ro.fils.smarthome.repository.AgentRepository;
 import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.repository.ScenarioRepository;
 import ro.fils.smarthome.util.AgentsUtils;
+import ro.fils.smarthome.view.support.Observer;
+import ro.fils.smarthome.view.support.Subject;
 
 /**
  *
  * @author andre
  */
-public class ScenarioCreatorFrame extends javax.swing.JFrame {
+public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject {
+
+    private List<Observer> observers = new ArrayList<>();
 
     private final AgentRepository agentRepo;
     private final ScenarioRepository scenarioRepo;
@@ -70,6 +75,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         });
 
         disableFields();
+        btnAddAgent.setEnabled(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -619,6 +625,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
             .addComponent(jSplitPane1)
         );
 
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -646,21 +654,28 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         Point currentLocation = nodeRepo.getNodeById(startingNodeId).getLocation();
         List<Need> needs = AgentsUtils.getNeeds(energyValue, hungerValue, bladderValue, hygieneValue, funValue);
 
-        Agent a = new Agent(agentName, avatarImg, currentLocation, needs);
-        boolean result = agentRepo.saveAgentsToScenario(a, scenarioToBeSaved.getId());
-
-        if (result) {
-            agentsDisplayList.add(a);
-            agentsListModel.addElement(a.getName());
-            listViewAgent.setModel(agentsListModel);
-            tfAgentName.setText("");
-            tfStartingPoint.setText("");
-            scenarioRepo.addAgentToScenario(agentRepo.getLastAgentInsertedId(), scenarioRepo.getLastInsertedScenarioId());
-            JOptionPane.showMessageDialog(null, "Agent added to scenario!");
+        if (tfAgentName.getText().isEmpty() || tfAgentName.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Please provide a name for the agent");
+        } else if (tfStartingPoint.getText().isEmpty() || tfStartingPoint.getText() == null) {
+            JOptionPane.showMessageDialog(null, "Please provide a starting point for the agent");
+        } else if (validateCheckBoxes() == false) {
+            JOptionPane.showMessageDialog(null, "Please select an avatar for the agent");
         } else {
-            JOptionPane.showMessageDialog(null, "Agent didn't saved succesfully");
-        }
+            Agent a = new Agent(agentName, avatarImg, currentLocation, needs);
+            boolean result = agentRepo.saveAgentsToScenario(a, scenarioToBeSaved.getId());
 
+            if (result) {
+                agentsDisplayList.add(a);
+                agentsListModel.addElement(a.getName());
+                listViewAgent.setModel(agentsListModel);
+                tfAgentName.setText("");
+                tfStartingPoint.setText("");
+                scenarioRepo.addAgentToScenario(agentRepo.getLastAgentInsertedId(), scenarioRepo.getLastInsertedScenarioId());
+                JOptionPane.showMessageDialog(null, "Agent added to scenario!");
+            } else {
+                JOptionPane.showMessageDialog(null, "Agent didn't saved succesfully");
+            }
+        }
     }//GEN-LAST:event_btnAddAgentActionPerformed
 
     private void btnSaveScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveScenarioActionPerformed
@@ -670,10 +685,18 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         scenarioToBeSaved.setSensorFile(tfSensorFile.getText());
         scenarioToBeSaved.setDays(Integer.parseInt(tfDays.getText()));
         scenarioToBeSaved.setName(tfScenarioName.getText());
-        scenarioToBeSaved.setStartingPoint(Long.parseLong(tfStartingPoint.getText()));
-        scenarioRepo.saveScenario(scenarioToBeSaved);
-        scenarioToBeSaved.setId(scenarioRepo.getLastInsertedScenarioId());
-        btnSaveScenario.setEnabled(false);
+        scenarioToBeSaved.setStartingPoint(1L);
+
+        if (tfScenarioName.getText() != null) {
+            scenarioRepo.saveScenario(scenarioToBeSaved);
+            scenarioToBeSaved.setId(scenarioRepo.getLastInsertedScenarioId());
+            btnSaveScenario.setEnabled(false);
+            btnAddAgent.setEnabled(true);
+            notifyObserver();
+            JOptionPane.showMessageDialog(null, "Scenario saved succesfully! You can add agents for it now!");
+        } else {
+            JOptionPane.showMessageDialog(null, "The name of the scenario cannot be empty!");
+        }
     }//GEN-LAST:event_btnSaveScenarioActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
@@ -760,6 +783,10 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         return path;
     }
 
+    private boolean validateCheckBoxes() {
+        return rBtnAv1.isSelected() || rBtnAv2.isSelected() || rBtnAv3.isSelected() || rBtnAv4.isSelected();
+    }
+
     private void disableFields() {
         tfActivitiesFile.setText("/activities.json");
         tfSensorFile.setText("/sensors.json");
@@ -772,4 +799,22 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         tfDays.setEnabled(false);
         tfWalkingSpeed.setEnabled(false);
     }
+
+    @Override
+    public void addObserver(Observer o) {
+        observers.add(o);
+    }
+
+    @Override
+    public void removeObserver(Observer o) {
+        observers.remove(o);
+    }
+
+    @Override
+    public void notifyObserver() {
+        for (Observer observer : observers) {
+            observer.update();
+        }
+    }
+
 }

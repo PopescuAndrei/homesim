@@ -6,7 +6,6 @@
 package ro.fils.smarthome.view;
 
 import ro.fils.smarthome.view.support.SimulationDisplay;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
