@@ -10,7 +10,6 @@ import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.AgentRepository;
 import ro.fils.smarthome.view.SimulatorFrame;
-import ro.fils.smarthome.view.SimulatorFrame;
 
 /**
  *

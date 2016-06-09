@@ -667,7 +667,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame {
         scenarioToBeSaved = new Scenario();
         scenarioToBeSaved.setHouseFile(tfHomeSchemeFile.getText());
         scenarioToBeSaved.setTaskile(tfActivitiesFile.getText());
-        scenarioToBeSaved.setSensorFile(tfActivitiesFile.getText());
+        scenarioToBeSaved.setSensorFile(tfSensorFile.getText());
         scenarioToBeSaved.setDays(Integer.parseInt(tfDays.getText()));
         scenarioToBeSaved.setName(tfScenarioName.getText());
         scenarioToBeSaved.setStartingPoint(Long.parseLong(tfStartingPoint.getText()));
