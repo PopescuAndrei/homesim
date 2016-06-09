@@ -5,6 +5,8 @@
  */
 package ro.fils.smarthome.view;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import ro.fils.smarthome.view.support.SimulatorFrameFactoryImpl;
 import ro.fils.smarthome.view.support.SimulatorFrameFactory;
 import java.util.List;
@@ -150,6 +152,13 @@ public class StartFrame extends javax.swing.JFrame {
     private void btnRunSimulationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRunSimulationActionPerformed
         SimulatorFrame frame = factory.getFrameForScenario(scenarios.get(listViewSimulation.getSelectedIndex()));
         frame.setSize(1366, 768);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                frame.stopSimulation();
+                frame.dispose();
+            }
+        });
         frame.setVisible(true);
     }//GEN-LAST:event_btnRunSimulationActionPerformed
 
