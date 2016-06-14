@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import ro.fils.smarthome.model.Agent;
 
 /**
  *
@@ -33,7 +32,6 @@ public class FilesUtils {
             Files.walk(Paths.get(userHomeFolder))
                     .forEach(filePath -> {
                         if (Files.isRegularFile(filePath)) {
-                            System.out.println(filePath.toString() + " " +scenarioName);
                             if (filePath.toString().contains(scenarioName)) {
                                 paths.add(filePath.toString());
                             }
@@ -45,8 +43,18 @@ public class FilesUtils {
         return paths;
     }
 
-    public static Map<String, Double> getTraveledKmsForLogFile(String fileName, int scenarioId, String agentNameUI) {
-        Map<String, Double> mapDays = buildMap();
+    public static String getReferenceLogPathForScenario(String scenarioName) {
+        List<String> allLogsFromFolderForScenario = getAllLogsFromFolderForScenario(scenarioName);
+        for (String s : allLogsFromFolderForScenario) {
+            if (s.contains("Reference")) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public static Map<String, Double> getTraveledMetersForLogFile(String fileName, int scenarioId, String agentNameUI) {
+        Map<String, Double> mapDays = buildTravelMetersMap();
         FileReader fr;
         String line;
         Point reference = new Point();
@@ -78,7 +86,38 @@ public class FilesUtils {
         return mapDays;
     }
 
-    private static Map<String, Double> buildMap() {
+    /**
+     * Returns a map with the number of sensor readings if
+     *
+     * @param fileName
+     * @param scenarioId
+     * @param selectedAgent
+     * @return
+     */
+    public static double getSensorReadings(String fileName, int scenarioId, String selectedAgent) {
+        FileReader fr;
+        String line;
+        double sensorCount = 0;
+        try {
+            fr = new FileReader(fileName);
+            BufferedReader br = new BufferedReader(fr);
+            while ((line = br.readLine()) != null) {
+                String[] lineParts = line.split("-");
+                String agentName = lineParts[7];
+                if (agentName.equalsIgnoreCase(selectedAgent)) {
+                    sensorCount += 1;
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return sensorCount;
+    }
+
+    private static Map<String, Double> buildTravelMetersMap() {
         Map<String, Double> map = new HashMap<>();
         map.put("Monday", 0d);
         map.put("Tuesday", 0d);

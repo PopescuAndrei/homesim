@@ -37,24 +37,26 @@ import ro.fils.smarthome.util.support.Time;
  * @author andre
  */
 public class SimulatorFrame extends javax.swing.JFrame {
-    
+
     private SimulationDisplay display;
     private SimulationMap simulationMap;
     private Simulator simulator;
     private Timer timer;
     private long startTime;
     private int days;
+    private int simsPerSec;
     private Collection<Sensor> sensors;
     private ArrayList<Agent> people;
     private TaskReader taskReader;
     private DefaultListModel<String> agentsListModel;
     private String selectedAgentName;
     private String scenarioName;
-    
+
     public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, List<Agent> agents, int simsPerSec) {
         this.setTitle("Test your house");
         this.selectedAgentName = agents.get(0).getName();
-        
+        this.simsPerSec = simsPerSec;
+
         initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agents, simsPerSec);
 
         initComponents();
@@ -432,7 +434,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
             this.people = (ArrayList<Agent>) agents;
             this.taskReader = new TaskReader(taskFile);
             sensors = new SensorReader(sensorsFile).getSensors();
-            simulationMap = new SimulationMap(houseFile, walkingSpeed, startNodeId, people, 43, sensors);
+            simulationMap = new SimulationMap(houseFile, walkingSpeed, startNodeId, people, walkingSpeed, sensors);
             simulator = new Simulator(simulationMap, new TaskManager(taskReader), 3);
             this.days = 7;
 
@@ -503,9 +505,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         public void actionPerformed(ActionEvent ae) {
             BoolWithLog result = simulator.simulationStep();
             if (!result.isMovement()) {
-                //timer.setDelay(fastSpeed);
             } else {
-                //timer.setDelay(slowSpeed);
                 display.update(simulationMap.getPeople(), simulationMap.getSensors());
                 updateMenu();
             }
@@ -513,13 +513,14 @@ public class SimulatorFrame extends javax.swing.JFrame {
                 timer.stop();
                 System.out.println("Elapsed time in milliseconds: " + (System.currentTimeMillis() - startTime));
             }
+
             if (result.getLog() != null) {
                 logArea.append("\n" + result.getLog());
             }
             updateMenu();
         }
     };
-    
+
     public void stopSimulation() {
         timer.stop();
     }
@@ -532,7 +533,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
         this.scenarioName = scenarioName;
     }
 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnStartSimulation;
     private javax.swing.JButton btnStopSimulation;

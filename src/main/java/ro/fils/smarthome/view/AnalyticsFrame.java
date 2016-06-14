@@ -6,23 +6,22 @@
 package ro.fils.smarthome.view;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Font;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.DefaultPieDataset;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.AgentRepository;
@@ -44,7 +43,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
     private List<String> logFileNames;
 
     private DefaultListModel<String> analyticsModel;
-    private DefaultComboBoxModel<String> scenarioComboModel;
+    private final DefaultComboBoxModel<String> scenarioComboModel;
     private DefaultComboBoxModel<String> agentComboModel;
     private DefaultComboBoxModel<String> logComboModel;
 
@@ -75,48 +74,43 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         }
         listViewAnalytics.setModel(analyticsModel);
 
-        listViewAnalytics.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                labelTitle.setText(analyticsNames.get(listViewAnalytics.getSelectedIndex()));
-                switch (listViewAnalytics.getSelectedIndex()) {
-                    case 0:
-                        comboAgents.setEnabled(true);
-                        comboFiles.setEnabled(true);
-                        comboScenarios.setEnabled(true);
-                        break;
-                    case 1:
-                        disableAllCombos();
-                        break;
-                    case 2:
-                        disableAllCombos();
-                        break;
-                    default:
-                        disableAllCombos();
-                        break;
-                }
+        listViewAnalytics.addListSelectionListener((ListSelectionEvent e) -> {
+            labelTitle.setText(analyticsNames.get(listViewAnalytics.getSelectedIndex()));
+            disableAllCombos();
+            switch (listViewAnalytics.getSelectedIndex()) {
+                case 0:
+                    comboAgents.setEnabled(true);
+                    comboFiles.setEnabled(true);
+                    comboScenarios.setEnabled(true);
+                    break;
+                case 1:
+                    comboAgents.setEnabled(true);
+                    comboFiles.setEnabled(true);
+                    comboScenarios.setEnabled(true);
+                    break;
+                case 2:
+                    break;
+                default:
+                    break;
             }
         });
 
-        comboScenarios.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                agentComboModel.removeAllElements();
-                logComboModel.removeAllElements();
+        comboScenarios.addItemListener((ItemEvent e) -> {
+            agentComboModel.removeAllElements();
+            logComboModel.removeAllElements();
 
-                agents = agentRepo.getAgentsForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getId());
-                for (Agent ag : agents) {
-                    agentComboModel.addElement(ag.getName());
-                }
-                comboAgents.setModel(agentComboModel);
-
-                logComboModel.removeAllElements();
-                logFileNames = FilesUtils.getAllLogsFromFolderForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
-                for (String logFile : logFileNames) {
-                    logComboModel.addElement(logFile);
-                }
-                comboFiles.setModel(logComboModel);
+            agents = agentRepo.getAgentsForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getId());
+            for (Agent ag : agents) {
+                agentComboModel.addElement(ag.getName());
             }
+            comboAgents.setModel(agentComboModel);
+
+            logComboModel.removeAllElements();
+            logFileNames = FilesUtils.getAllLogsFromFolderForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
+            for (String logFile : logFileNames) {
+                logComboModel.addElement(logFile);
+            }
+            comboFiles.setModel(logComboModel);
         });
         disableAllCombos();
     }
@@ -311,7 +305,11 @@ public class AnalyticsFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnApplyFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyFiltersActionPerformed
-        buildMetersChart();
+        if (listViewAnalytics.getSelectedIndex() == 0) {
+            buildMetersChart();
+        } else {
+            buildCoverageChart();
+        }
     }//GEN-LAST:event_btnApplyFiltersActionPerformed
 
     ChartPanel initChartPanel;
@@ -352,7 +350,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
         int selectedScenario = scenarios.get(comboScenarios.getSelectedIndex()).getId();
         String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();
-        Map<String, Double> map = FilesUtils.getTraveledKmsForLogFile(selectedLog, selectedScenario, selectedAgent);
+        Map<String, Double> map = FilesUtils.getTraveledMetersForLogFile(selectedLog, selectedScenario, selectedAgent);
         final String MONDAY = "Monday";
         final String TUESDAY = "Tuesday";
         final String WEDNESDAY = "Wednesday";
@@ -384,6 +382,36 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         chartContainer.removeAll();
         chartContainer.add(barChartPanel);
         chartContainer.updateUI();
+    }
 
+    private void buildCoverageChart() {
+        String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
+        String referenceLog = FilesUtils.getReferenceLogPathForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
+        int selectedScenario = scenarios.get(comboScenarios.getSelectedIndex()).getId();
+        String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();
+        double numberOfReadings = FilesUtils.getSensorReadings(selectedLog, selectedScenario, selectedAgent);
+        System.out.println(numberOfReadings);
+        double numberOfReadingsReference = FilesUtils.getSensorReadings(referenceLog, selectedScenario, selectedAgent);
+        System.out.println(numberOfReadingsReference);
+
+        DefaultPieDataset dataSet = new DefaultPieDataset();
+        dataSet.setValue("Number of Readings (Selected Simulation)", numberOfReadings);
+        dataSet.setValue("Number of Readings (Reference Simulation)", numberOfReadingsReference);
+
+        JFreeChart pieChart = ChartFactory.createPieChart("Sensor Coverage",
+                dataSet,
+                true,
+                true,
+                false);
+        ChartPanel pieChartPanel = new ChartPanel(pieChart);
+        PiePlot plot = (PiePlot) pieChart.getPlot();
+        plot.setSimpleLabels(true);
+        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+        plot.setNoDataMessage("No data available");
+        plot.setCircular(false);
+        plot.setLabelGap(0.02);
+        chartContainer.removeAll();
+        chartContainer.add(pieChartPanel);
+        chartContainer.updateUI();
     }
 }

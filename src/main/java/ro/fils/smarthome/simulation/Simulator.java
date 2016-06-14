@@ -65,8 +65,8 @@ public class Simulator {
                 continue;
             }
             if (agent.isMoving()) {
-                    movement = true;
-                    agent.setCurrentLocation(map.moveActor(agent, simsPerSec));
+                movement = true;
+                agent.setCurrentLocation(map.moveActor(agent, simsPerSec));
             } else if (agent.getTargetItem() != null) {
                 agent.progressFetch(1.0 / simsPerSec);
                 Node current = map.getClosestNode(agent.getCurrentLocation());
