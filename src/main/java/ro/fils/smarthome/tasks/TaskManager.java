@@ -54,7 +54,6 @@ public class TaskManager {
             } else {
                 try {
                     Deque<ITask> tusks = PPlanWrapper.getPlan(map, person, availableTasks, person.getGoalTask());
-                    LOG.log(Level.INFO, "######## + {0}", tusks.toString());
                     log = setTaskForAgent(person, tusks.getFirst(), map);
                 } catch (Exception ex) {
                     ArrayList<String> mapItems = new ArrayList<>();
@@ -114,7 +113,7 @@ public class TaskManager {
         if (task.itemExists(agent, map)) {
             moveForItems(agent, task, map);
         } else {
-            log = String.format("%s is doing task %s for %s", agent.getName(),task.toString(),agent.getGoalTask().toString());
+            
             try {
                 Collection<Appliance> apps = map.getAppliances();
                 Collection<String> valids = task.getUsedAppliances();
@@ -149,6 +148,7 @@ public class TaskManager {
                 agent.setPauseTime(1000);
             }
         }
+        log = String.format("%s is doing task %s for %s", agent.getName(), task.toString() ,agent.getGoalTask().toString() + ", ETT: " + agent.getCurrentTask().getDurationSeconds());
         return log;
     }
 

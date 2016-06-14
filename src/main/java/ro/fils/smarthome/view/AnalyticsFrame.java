@@ -17,6 +17,8 @@ import javax.swing.event.ListSelectionEvent;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.PieSectionLabelGenerator;
+import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
@@ -399,6 +401,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         double numberOfReadingsReference = FilesUtils.getSensorReadings(referenceLog, selectedScenario, selectedAgent);
         System.out.println(numberOfReadingsReference);
 
+        PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0} = {2}");
         DefaultPieDataset dataSet = new DefaultPieDataset();
         dataSet.setValue("Number of Readings (Selected Simulation)", numberOfReadings);
         dataSet.setValue("Number of Readings (Reference Simulation)", numberOfReadingsReference);
@@ -410,11 +413,9 @@ public class AnalyticsFrame extends javax.swing.JFrame {
                 false);
         ChartPanel pieChartPanel = new ChartPanel(pieChart);
         PiePlot plot = (PiePlot) pieChart.getPlot();
-        plot.setSimpleLabels(true);
-        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
-        plot.setNoDataMessage("No data available");
-        plot.setCircular(false);
-        plot.setLabelGap(0.02);
+        plot.setExplodePercent("3", 0.25);
+        plot.setLabelGenerator(labelGenerator);
+        plot.setCircular(true);
         chartContainer.removeAll();
         chartContainer.add(pieChartPanel);
         chartContainer.updateUI();
