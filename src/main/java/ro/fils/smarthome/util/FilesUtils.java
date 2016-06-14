@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,6 +117,60 @@ public class FilesUtils {
         }
 
         return sensorCount;
+    }
+
+    public static Map<String, Integer> getMovementStatistics(String fileName, String agentNameUI) {
+        Map<String, Integer> mapSensorsDetectingNoMovement = new HashMap<>();
+        FileReader fr;
+        String line;
+        Point reference = new Point();
+        String sensorRef = "";
+        int time = 0;
+        try {
+            fr = new FileReader(fileName);
+            BufferedReader br = new BufferedReader(fr);
+            while ((line = br.readLine()) != null) {  
+                String[] lineParts = line.split("-");
+                String agentName = lineParts[7];
+                
+                if (agentName.equalsIgnoreCase(agentNameUI)) {
+                    String day = lineParts[3];
+                    String position = lineParts[9];
+                    String currentSensor = lineParts[5];
+                    String[] pointXY = position.substring(1, position.length() - 1).split(",");
+                    Point currentPoint = new Point((int) Double.parseDouble(pointXY[0]), (int) Double.parseDouble(pointXY[1]));
+                    if (reference.getLocation() == null) {
+                        reference.setLocation(Integer.parseInt(pointXY[0]), Integer.parseInt(pointXY[1]));
+                    } else {
+                        double distance = Math.abs(reference.distance(currentPoint));
+                        if (distance == 0.0 && currentSensor.equals(sensorRef)) {
+                            String timeForTask = lineParts[15];
+                            String[] timeForTaskArray = timeForTask.split(":");
+                            time = Integer.parseInt(timeForTaskArray[0]) * 24 * 60 +
+                                    Integer.parseInt(timeForTaskArray[1]) * 60 +
+                                    Integer.parseInt(timeForTaskArray[2]);
+                            
+                        } else {
+                            if (time != 0) {
+                                if (mapSensorsDetectingNoMovement.get(sensorRef) != null) {
+                                    time += mapSensorsDetectingNoMovement.get(sensorRef);
+                                }
+                                mapSensorsDetectingNoMovement.put(sensorRef, time);
+                            }
+                            time = 0;
+                        }
+                        sensorRef = currentSensor;
+                        reference = currentPoint;
+                    }
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return mapSensorsDetectingNoMovement;
     }
 
     private static Map<String, Double> buildTravelMetersMap() {

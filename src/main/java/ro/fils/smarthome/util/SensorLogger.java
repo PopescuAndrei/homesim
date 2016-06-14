@@ -21,6 +21,7 @@ import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.tasks.ITask;
 import ro.fils.smarthome.sensors.Camera;
 import ro.fils.smarthome.sensors.Sensor;
+import ro.fils.smarthome.util.support.Time;
 
 /**
  *
@@ -57,17 +58,7 @@ public class SensorLogger {
 
         sensors.stream().forEach((s) -> {
             s.getSensorAreas().stream().forEach((sa) -> {
-                if (sa.getArea() == null && agent.getApplianceInUse() != null
-                        && !agent.isMoving() && agent.getCurrentTask() != null
-                        && sa.getName().contains(agent.getApplianceInUse().getType())
-                        && (!lastTriggered.containsKey(agent.getApplianceInUse().getName())
-                        || (lastTriggered.get(agent.getApplianceInUse().getName()) != null && currentTime - lastTriggered.get(agent.getApplianceInUse().getName()) >= 60.0))) {
-                    lastTriggered.put(agent.getApplianceInUse().getName(), currentTime);
-                    if (!sa.getLastValue().equals("ON")) {
-                        logSensorReading(agent, s, currentTime, day, weekNumber);
-                        sa.setLastValue("ON");
-                    }
-                } else if (sa.getArea() != null && sa.getArea().contains(agent.getCurrentLocation())) {
+                 if (sa.getArea() != null && sa.getArea().contains(agent.getCurrentLocation())) {
                     if (s instanceof Camera && !agent.isMoving()) {
                         Set<String> poses = agent.getPoseData();
                         if (lastPoses != poses && lastTask != agent.getCurrentTask()) {
@@ -91,15 +82,7 @@ public class SensorLogger {
                             sa.setLastValue("ON");
                         }
                     }
-                } else if (lastTriggered.containsKey(sa.getName()) && currentTime - lastTriggered.get(sa.getName()) >= TRIGGER_INTERVAL) {
-                    if (!sa.getLastValue().equals("OFF")) {
-                        try {
-                            sa.setLastValue("OFF");
-                        } catch (Exception ex) {
-                            LOG.log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
+                } 
             });
         });
     }
@@ -110,7 +93,8 @@ public class SensorLogger {
                     + agent.getName() + "- is in position -("
                     + agent.getCurrentLocation().getX() + ", " + agent.getCurrentLocation().getY() + ")-, -"
                     + (sensor.getPosition() != null ? (int) sensor.getPosition().distance(agent.getCurrentLocation())
-                            + "- distance from the sensor" : "") + ", doing -" + (agent.getGoalTask() == null ? "nothing-" : agent.getGoalTask().getName() + "-") + "\n");
+                            + "- distance from the sensor" : "") + ", doing -" + (agent.getGoalTask() == null ? "nothing-" : agent.getGoalTask().getName() + "-") 
+                               + ", time -"+Time.getHours(currentTime)+":"+Time.getMinutes(currentTime)+":"+Time.getSeconds(currentTime)+"-"+ "\n");
             fileWriter.flush();
         } catch (IOException e) {
 

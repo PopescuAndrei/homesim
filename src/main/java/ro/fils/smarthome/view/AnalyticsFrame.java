@@ -89,6 +89,9 @@ public class AnalyticsFrame extends javax.swing.JFrame {
                     comboScenarios.setEnabled(true);
                     break;
                 case 2:
+                    comboAgents.setEnabled(true);
+                    comboFiles.setEnabled(true);
+                    comboScenarios.setEnabled(true);
                     break;
                 default:
                     break;
@@ -307,8 +310,10 @@ public class AnalyticsFrame extends javax.swing.JFrame {
     private void btnApplyFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyFiltersActionPerformed
         if (listViewAnalytics.getSelectedIndex() == 0) {
             buildMetersChart();
-        } else {
+        } else if (listViewAnalytics.getSelectedIndex() == 1){
             buildCoverageChart();
+        } else {
+            buildMovementDetectChart();
         }
     }//GEN-LAST:event_btnApplyFiltersActionPerformed
 
@@ -399,6 +404,34 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         dataSet.setValue("Number of Readings (Reference Simulation)", numberOfReadingsReference);
 
         JFreeChart pieChart = ChartFactory.createPieChart("Sensor Coverage",
+                dataSet,
+                true,
+                true,
+                false);
+        ChartPanel pieChartPanel = new ChartPanel(pieChart);
+        PiePlot plot = (PiePlot) pieChart.getPlot();
+        plot.setSimpleLabels(true);
+        plot.setLabelFont(new Font("SansSerif", Font.PLAIN, 12));
+        plot.setNoDataMessage("No data available");
+        plot.setCircular(false);
+        plot.setLabelGap(0.02);
+        chartContainer.removeAll();
+        chartContainer.add(pieChartPanel);
+        chartContainer.updateUI();
+    }
+
+    private void buildMovementDetectChart() {
+        String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
+        String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();
+        Map<String, Integer> map = FilesUtils.getMovementStatistics(selectedLog, selectedAgent);
+
+        DefaultPieDataset dataSet = new DefaultPieDataset();
+
+        for (String key : map.keySet()) {
+            dataSet.setValue(key, map.get(key));
+        }
+
+        JFreeChart pieChart = ChartFactory.createPieChart("No Movement Detection",
                 dataSet,
                 true,
                 true,
