@@ -11,6 +11,8 @@ import ro.fils.smarthome.view.support.SimulatorFrameFactoryImpl;
 import ro.fils.smarthome.view.support.SimulatorFrameFactory;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.ScenarioRepository;
 import ro.fils.smarthome.view.support.Observer;
@@ -19,7 +21,7 @@ import ro.fils.smarthome.view.support.Observer;
  *
  * @author andre
  */
-public class StartFrame extends javax.swing.JFrame implements Observer{
+public class StartFrame extends javax.swing.JFrame implements Observer {
 
     private final SimulatorFrameFactory factory;
     private DefaultListModel<String> scenariosModel;
@@ -28,6 +30,7 @@ public class StartFrame extends javax.swing.JFrame implements Observer{
 
     public StartFrame() {
         initComponents();
+        this.setTitle("Welcome to the Smart Home Simulator");
         factory = new SimulatorFrameFactoryImpl();
         scenarios = new ScenarioRepository().getAllScenarios();
         scenariosNames = new String[scenarios.size()];
@@ -41,6 +44,7 @@ public class StartFrame extends javax.swing.JFrame implements Observer{
             scenariosModel.addElement(s);
         }
         listViewSimulation.setModel(scenariosModel);
+        
     }
 
     @SuppressWarnings("unchecked")
@@ -55,6 +59,7 @@ public class StartFrame extends javax.swing.JFrame implements Observer{
         jScrollPane1 = new javax.swing.JScrollPane();
         listViewSimulation = new javax.swing.JList<>();
         btnNewScenario = new javax.swing.JButton();
+        btnAnalytics = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,7 +74,7 @@ public class StartFrame extends javax.swing.JFrame implements Observer{
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -104,6 +109,13 @@ public class StartFrame extends javax.swing.JFrame implements Observer{
             }
         });
 
+        btnAnalytics.setText("Analytics");
+        btnAnalytics.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnalyticsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -113,22 +125,26 @@ public class StartFrame extends javax.swing.JFrame implements Observer{
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnNewScenario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnNewScenario, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEditMap, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnEditMap, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnRunSimulation, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnAnalytics, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnRunSimulation, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEditMap)
                     .addComponent(btnRunSimulation)
-                    .addComponent(btnNewScenario))
+                    .addComponent(btnNewScenario)
+                    .addComponent(btnAnalytics))
                 .addContainerGap())
         );
 
@@ -174,9 +190,29 @@ public class StartFrame extends javax.swing.JFrame implements Observer{
         frame.addObserver(this);
         frame.setSize(1366, 768);
         frame.setVisible(true);
+        frame.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                if (frame.getAgentsDisplayList().isEmpty()) {
+                    int reply = JOptionPane.showConfirmDialog(null,
+                            "Are you sure you want to quit?\nYou won't be able to run the scenario if it has no agents!", "Quit", JOptionPane.YES_NO_OPTION);
+                    if (reply == JOptionPane.YES_OPTION) {
+                        frame.dispose();
+                    }
+                }else{
+                    setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                }
+            }
+        });
     }//GEN-LAST:event_btnNewScenarioActionPerformed
-    
-    public void triggerRefresh(){
+
+    private void btnAnalyticsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnalyticsActionPerformed
+        AnalyticsFrame frame = new AnalyticsFrame();
+        frame.setSize(1366, 768);
+        frame.setVisible(true);
+    }//GEN-LAST:event_btnAnalyticsActionPerformed
+
+    public void triggerRefresh() {
         scenarios = new ScenarioRepository().getAllScenarios();
         scenariosNames = new String[scenarios.size()];
 
@@ -191,6 +227,7 @@ public class StartFrame extends javax.swing.JFrame implements Observer{
         listViewSimulation.setModel(scenariosModel);
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnalytics;
     private javax.swing.JButton btnEditMap;
     private javax.swing.JButton btnNewScenario;
     private javax.swing.JButton btnRunSimulation;

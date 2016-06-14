@@ -51,8 +51,9 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private String selectedAgentName;
 
     public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, List<Agent> agents, int days) {
+        this.setTitle("Test your house");
         this.selectedAgentName = agents.get(0).getName();
-
+        
         initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agents, days);
 
         initComponents();

@@ -29,7 +29,7 @@ import ro.fils.smarthome.view.support.Subject;
  */
 public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject {
 
-    private List<Observer> observers = new ArrayList<>();
+    private final List<Observer> observers = new ArrayList<>();
 
     private final AgentRepository agentRepo;
     private final ScenarioRepository scenarioRepo;
@@ -41,6 +41,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
 
     public ScenarioCreatorFrame() {
         initComponents();
+        this.setTitle("Create a new Scenario");
+        
         labelAvatar1.setHorizontalAlignment(JLabel.CENTER);
         labelAvatar2.setHorizontalAlignment(JLabel.CENTER);
         labelAvatar3.setHorizontalAlignment(JLabel.CENTER);
@@ -76,6 +78,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
 
         disableFields();
         btnAddAgent.setEnabled(false);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
 
     @SuppressWarnings("unchecked")
@@ -815,6 +818,14 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         for (Observer observer : observers) {
             observer.update();
         }
+    }
+
+    public List<Agent> getAgentsDisplayList() {
+        return agentsDisplayList;
+    }
+
+    public void setAgentsDisplayList(List<Agent> agentsDisplayList) {
+        this.agentsDisplayList = agentsDisplayList;
     }
 
 }

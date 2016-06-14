@@ -25,7 +25,7 @@ import ro.fils.smarthome.tasks.TaskReader;
  * @author andre
  */
 public class DesignFrame extends javax.swing.JFrame implements ActionListener {
-
+    
     private NodePainter painter;
     private Node selectedNode;
     private DefaultComboBoxModel comboBoxModel;
@@ -34,10 +34,11 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
     
     public DesignFrame() {
         nodeRepo = new NodeRepository();
+        this.setTitle("Edit the house setup");
         initComponents();
         
     }
-
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -285,14 +286,14 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
             isStart.setSelected(true);
             isStart.setEnabled(false);
         }
-
+        
         selectedNode = selectedPoint;
         TaskReader taskReader = new TaskReader("/activities.json");
         Set<String> objectList = taskReader.getAppliances();
         comboBoxModel = new DefaultComboBoxModel();
         objectList.forEach(o -> comboBoxModel.addElement(o));
         chooser.setModel(comboBoxModel);
-
+        
         btnAddAppliance.addActionListener((ActionEvent ae) -> {
             selectedNode.addAppliance(chooser.getSelectedItem().toString());
             nodeRepo.update(selectedNode);
@@ -302,7 +303,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "You must first select a node");
             }
         });
-
+        
         btnRemoveAppliance.addActionListener((ActionEvent ae) -> {
             selectedNode.removeAppliance(lister.getSelectedValue());
             try {
@@ -311,28 +312,28 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
                 JOptionPane.showMessageDialog(null, "You must first select a node");
             }
         });
-
+        
         Iterator it = selectedPoint.getApplianceTypes().iterator();
         DefaultListModel<String> nodeObjects = new DefaultListModel<>();
         while (it.hasNext()) {
             Appliance obj = (Appliance) it.next();
             nodeObjects.addElement(obj.getType());
         }
-
+        
         lister.setModel(nodeObjects);
         lister.setVisibleRowCount(5);
-
+        
         lister.addListSelectionListener((ListSelectionEvent lse) -> {
             if (!lse.getValueIsAdjusting()) {
                 String selected = lister.getSelectedValue();
-
+                
                 selectedNode.getApplianceTypes().stream().filter((app) -> (app.getType().equals(selected))).forEach((app) -> {
                     StringBuilder sb = new StringBuilder();
                     app.getPoses().stream().forEach((pose) -> {
                         sb.append(pose).append(" ");
                     });
                     editPoses.setText(sb.toString());
-
+                    
                     btnUpdatePoses.addActionListener((ActionEvent ae) -> {
                         nodeRepo.updatePoses(selectedNode, app, editPoses.getText());
                     });
@@ -372,6 +373,6 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-
+        
     }
 }

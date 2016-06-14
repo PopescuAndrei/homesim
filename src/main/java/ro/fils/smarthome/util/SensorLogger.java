@@ -39,7 +39,7 @@ public class SensorLogger {
     private final double TRIGGER_INTERVAL = 5.0;
 
     public SensorLogger(String fileName) throws IOException {
-        String userHomeFolder = System.getProperty("user.home") + "\\Desktop";
+        String userHomeFolder = System.getProperty("user.home") + "\\Desktop\\logs\\";
         this.fileWriter = new BufferedWriter(new FileWriter(new File(userHomeFolder, fileName), true));
         DecimalFormatSymbols dfs = new DecimalFormatSymbols();
         dfs.setDecimalSeparator('.');
@@ -64,7 +64,7 @@ public class SensorLogger {
                         || (lastTriggered.get(agent.getApplianceInUse().getName()) != null && currentTime - lastTriggered.get(agent.getApplianceInUse().getName()) >= 60.0))) {
                     lastTriggered.put(agent.getApplianceInUse().getName(), currentTime);
                     if (!sa.getLastValue().equals("ON")) {
-                        logSensorReading(agent, s);
+                        logSensorReading(agent, s, currentTime);
                         sa.setLastValue("ON");
                     }
                 } else if (sa.getArea() != null && sa.getArea().contains(agent.getCurrentLocation())) {
@@ -78,7 +78,7 @@ public class SensorLogger {
                                         || (lastTriggered.get(sa.getName() + pose) != null
                                         && currentTime - lastTriggered.get(sa.getName() + pose) >= 10.0)) {
                                     lastTriggered.put(sa.getName() + pose, currentTime);
-                                    logSensorReading(agent, s);
+                                    logSensorReading(agent, s, currentTime);
                                 }
                             }
                         }
@@ -87,7 +87,7 @@ public class SensorLogger {
                             || (lastTriggered.get(sa.getName()) != null && currentTime - lastTriggered.get(sa.getName()) >= TRIGGER_INTERVAL)) {
                         lastTriggered.put(sa.getName(), currentTime);
                         if (!sa.getLastValue().equals("ON")) {
-                            logSensorReading(agent, s);
+                            logSensorReading(agent, s, currentTime);
                             sa.setLastValue("ON");
                         }
                     }
@@ -104,13 +104,13 @@ public class SensorLogger {
         });
     }
 
-    public void logSensorReading(Agent agent, Sensor sensor) {
+    public void logSensorReading(Agent agent, Sensor sensor, double currentTime) {
         try {
-            fileWriter.append("Sensor " + sensor.getName() + ": "
-                    + agent.getName() + " is in position ("
-                    + agent.getCurrentLocation().getX() + ", " + agent.getCurrentLocation().getY() + "), "
+            fileWriter.append("[+ " + currentTime + "] Sensor [" + sensor.getName() + "]: ["
+                    + agent.getName() + "] is in position [("
+                    + agent.getCurrentLocation().getX() + ", " + agent.getCurrentLocation().getY() + ")], ["
                     + (sensor.getPosition() != null ? (int) sensor.getPosition().distance(agent.getCurrentLocation())
-                            + " distance from the sensor.\n" : "\n"));
+                            + "] distance from the sensor" : "") + ", doing [" + (agent.getGoalTask()==null? "nothing]":agent.getGoalTask().getName()+"]") + "\n");
             fileWriter.flush();
         } catch (IOException e) {
 
