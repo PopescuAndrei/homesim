@@ -9,6 +9,7 @@ import ro.fils.smarthome.tasks.ITask;
 import java.awt.Image;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,13 +26,13 @@ import ro.fils.smarthome.util.support.Activities_Type;
 public class Agent {
 
     public static final int WANDERER = 1;
-    
+
     private int id;
     private String name;
     private Image avatarImg;
     private double pauseTime;
     private String imagePath;
-    
+
     private Point currentLocation;
     private Deque<Node> route;
     private List<Need> needs;
@@ -44,9 +45,13 @@ public class Agent {
     private ITask goalTask;
     private Appliance applianceInUse;
 
-    public Agent(){
-    
+    double[] chooseFrom = new double[]{1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.7, 2.8, 3.0};
+    double[] chooseFrom2 = new double[]{1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6, 2.7, 2.8, 3.0, 3.2, 3.4, 3.6, 3.8, 4.0};
+
+    public Agent() {
+
     }
+
     public Agent(String name, String avatarImg, Point currentLocation, List<Need> needs) {
         this.name = name;
         this.imagePath = avatarImg;
@@ -65,12 +70,12 @@ public class Agent {
     public void setName(String name) {
         this.name = name;
     }
-    
-    public int getId(){
+
+    public int getId() {
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -81,8 +86,7 @@ public class Agent {
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
     }
-    
-    
+
     public double getPauseTime() {
         return pauseTime;
     }
@@ -135,9 +139,9 @@ public class Agent {
 
         if (currentTask != null) {
             if (currentTask.getType().equals(Activities_Type.Automatic.name())) {
-                this.remainingTaskDuration = 60 * new Random().nextInt(3);
+                this.remainingTaskDuration = 60 * returnRandomValue(chooseFrom);
             } else {
-                this.remainingTaskDuration = currentTask.getDurationSeconds() + (60 * new Random().nextInt(4));
+                this.remainingTaskDuration = currentTask.getDurationSeconds() + (60 * returnRandomValue(chooseFrom2));
             }
         }
     }
@@ -269,5 +273,9 @@ public class Agent {
 
     public void setAvatarImg(Image avatarImg) {
         this.avatarImg = avatarImg;
+    }
+
+    private double returnRandomValue(double[] array) {
+        return array[new Random().nextInt(array.length)];
     }
 }
