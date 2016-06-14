@@ -429,7 +429,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         DefaultPieDataset dataSet = new DefaultPieDataset();
 
         for (String key : map.keySet()) {
-            dataSet.setValue(key, map.get(key)/60);
+            dataSet.setValue(key, map.get(key)/3600);
         }
 
         PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0} = {1}h ({2})");
