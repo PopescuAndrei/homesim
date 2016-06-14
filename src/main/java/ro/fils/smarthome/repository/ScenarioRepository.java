@@ -37,7 +37,7 @@ public class ScenarioRepository {
             while (sRes.next()) {
                 Scenario s = new Scenario();
                 s.setName(sRes.getString("NAME"));
-                s.setDays(sRes.getInt("DAYS"));
+                s.setSimsPerSec(sRes.getInt("SIMS_PER_SEC"));
                 s.setId(sRes.getInt("ID"));
                 s.setHouseFile(sRes.getString("HOUSE_FILE"));
                 s.setSensorFile(sRes.getString("SENSOR_FILE"));
@@ -65,7 +65,7 @@ public class ScenarioRepository {
             ResultSet sRes = ps.executeQuery();
             s = new Scenario();
             while (sRes.next()) {
-                s.setDays(sRes.getInt("DAYS"));
+                s.setSimsPerSec(sRes.getInt("SIMS_PER_SEC"));
                 s.setId(sRes.getInt("ID"));
                 s.setHouseFile(sRes.getString("HOUSE_FILE"));
                 s.setSensorFile(sRes.getString("SENSOR_FILE"));
@@ -85,31 +85,31 @@ public class ScenarioRepository {
         String sql;
         try {
             conn = DatabaseManager.getConnection();
-            sql = "INSERT INTO SCENARIOS (NAME,ACTIVITIES_FILE,HOUSE_FILE,SENSOR_FILE,STARTING_POINT,DAYS,WALKING_SPEED) VALUES (?,?,?,?,?,?,?)";
+            sql = "INSERT INTO SCENARIOS (NAME,ACTIVITIES_FILE,HOUSE_FILE,SENSOR_FILE,STARTING_POINT,SIMS_PER_SEC,WALKING_SPEED) VALUES (?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(sql);
             ps.setString(1, s.getName());
             ps.setString(2, s.getTaskile());
             ps.setString(3, s.getHouseFile());
             ps.setString(4, s.getSensorFile());
             ps.setLong(5, s.getStartingPoint());
-            ps.setInt(6, s.getDays());
-            ps.setInt(7, s.getDays());
+            ps.setInt(6, s.getSimsPerSec());
+            ps.setInt(7, s.getWalking_speed());
             ps.execute();
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(ScenarioRepository.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public int getLastInsertedScenarioId(){
+
+    public int getLastInsertedScenarioId() {
         Connection conn;
         Statement st;
         String sql = "SELECT MAX(id) AS id FROM scenarios";
         int id = 0;
-        try{
+        try {
             conn = DatabaseManager.getConnection();
             st = conn.createStatement();
             ResultSet rs = st.executeQuery(sql);
-            while(rs.next()){
+            while (rs.next()) {
                 id = rs.getInt("ID");
             }
         } catch (SQLException | ClassNotFoundException ex) {
@@ -122,7 +122,7 @@ public class ScenarioRepository {
         Connection conn;
         PreparedStatement ps;
         String sql = "INSERT INTO SCENARIOS_AGENTS(SCENARIO_ID, AGENT_ID) VALUES (?,?)";
-        try{
+        try {
             conn = DatabaseManager.getConnection();
             ps = conn.prepareStatement(sql);
             ps.setInt(1, lastInsertedScenarioId);

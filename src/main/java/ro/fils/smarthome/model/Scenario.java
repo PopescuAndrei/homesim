@@ -10,32 +10,30 @@ package ro.fils.smarthome.model;
  * @author andre
  */
 public class Scenario {
-    
+
     private int id;
     private String name;
     private String taskile;
     private String sensorFile;
     private String houseFile;
     private Long startingPoint;
-    private int days;
+    private int simsPerSec;
     private int walking_speed;
 
     public Scenario() {
     }
 
-    
-    public Scenario(int id, String name, String taskile, String sensorFile, String houseFile, Long startingPoint, int days, int walking_speed) {
+    public Scenario(int id, String name, String taskile, String sensorFile, String houseFile, Long startingPoint, int simsPerSec, int walking_speed) {
         this.id = id;
         this.name = name;
         this.taskile = taskile;
         this.sensorFile = sensorFile;
         this.houseFile = houseFile;
         this.startingPoint = startingPoint;
-        this.days = days;
+        this.simsPerSec = simsPerSec;
         this.walking_speed = walking_speed;
     }
 
-    
     public int getId() {
         return id;
     }
@@ -84,12 +82,12 @@ public class Scenario {
         this.startingPoint = startingPoint;
     }
 
-    public int getDays() {
-        return days;
+    public int getSimsPerSec() {
+        return simsPerSec;
     }
 
-    public void setDays(int days) {
-        this.days = days;
+    public void setSimsPerSec(int simsPerSec) {
+        this.simsPerSec = simsPerSec;
     }
 
     public int getWalking_speed() {
@@ -99,7 +97,5 @@ public class Scenario {
     public void setWalking_speed(int walking_speed) {
         this.walking_speed = walking_speed;
     }
-    
-    
-    
+
 }

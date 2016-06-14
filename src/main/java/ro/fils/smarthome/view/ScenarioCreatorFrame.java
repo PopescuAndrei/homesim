@@ -108,6 +108,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         btnActivitiesBrowse = new javax.swing.JButton();
         labelScenarioName = new javax.swing.JLabel();
         tfScenarioName = new javax.swing.JTextField();
+        labelSims = new javax.swing.JLabel();
+        tfSimsPerSec = new javax.swing.JTextField();
         rightPanel = new javax.swing.JPanel();
         panelAgentTitle = new javax.swing.JPanel();
         labelNewAgent = new javax.swing.JLabel();
@@ -178,7 +180,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         agentsListPanelLayout.setVerticalGroup(
             agentsListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(agentsListPanelLayout.createSequentialGroup()
-                .addComponent(scrollPanelAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                .addComponent(scrollPanelAgent, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -202,6 +204,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
             newHomeLabelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
+
+        tfDays.setText("7");
 
         labelActivitiesFile.setText("Activities File :");
 
@@ -234,6 +238,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
 
         labelScenarioName.setText("Scenario Name :");
 
+        labelSims.setText("Simulation/second: ");
+
         javax.swing.GroupLayout leftPanelLayout = new javax.swing.GroupLayout(leftPanel);
         leftPanel.setLayout(leftPanelLayout);
         leftPanelLayout.setHorizontalGroup(
@@ -244,34 +250,37 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(agentsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(leftPanelLayout.createSequentialGroup()
-                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(labelScenarioName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(labelDays, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(labelWalkingSpeed, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(labelActivitiesFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(labelSensorFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(labelHomeSchemeFile, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(labelSims, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelScenarioName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelDays, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelWalkingSpeed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelActivitiesFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelSensorFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(labelHomeSchemeFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
                         .addGap(10, 10, 10)
-                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(leftPanelLayout.createSequentialGroup()
-                                .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnHomeBrowse))
-                            .addComponent(tfScenarioName, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfWalkingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(leftPanelLayout.createSequentialGroup()
-                                .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(leftPanelLayout.createSequentialGroup()
-                                        .addComponent(tfActivitiesFile, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                    .addGroup(leftPanelLayout.createSequentialGroup()
-                                        .addComponent(tfSensorFile)
-                                        .addGap(4, 4, 4)))
-                                .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(btnSensorBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(btnActivitiesBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                        .addGap(0, 6, Short.MAX_VALUE)))
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(leftPanelLayout.createSequentialGroup()
+                                    .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnHomeBrowse))
+                                .addComponent(tfScenarioName, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfWalkingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(tfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(leftPanelLayout.createSequentialGroup()
+                                    .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(leftPanelLayout.createSequentialGroup()
+                                            .addComponent(tfActivitiesFile, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                                        .addGroup(leftPanelLayout.createSequentialGroup()
+                                            .addComponent(tfSensorFile)
+                                            .addGap(4, 4, 4)))
+                                    .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(btnSensorBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(btnActivitiesBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(tfSimsPerSec, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 20, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         leftPanelLayout.setVerticalGroup(
@@ -284,6 +293,11 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
                     .addComponent(tfScenarioName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(leftPanelLayout.createSequentialGroup()
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnHomeBrowse))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(leftPanelLayout.createSequentialGroup()
                         .addComponent(labelHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -305,12 +319,11 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
                             .addComponent(labelDays, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(tfDays))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(agentsListPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(leftPanelLayout.createSequentialGroup()
                         .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnHomeBrowse))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(labelSims)
+                            .addComponent(tfSimsPerSec, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(11, 11, 11)))
+                .addComponent(agentsListPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -686,7 +699,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         scenarioToBeSaved.setHouseFile(tfHomeSchemeFile.getText());
         scenarioToBeSaved.setTaskile(tfActivitiesFile.getText());
         scenarioToBeSaved.setSensorFile(tfSensorFile.getText());
-        scenarioToBeSaved.setDays(Integer.parseInt(tfDays.getText()));
+        scenarioToBeSaved.setSimsPerSec(Integer.parseInt(tfSimsPerSec.getText()));
+        scenarioToBeSaved.setWalking_speed(Integer.parseInt(tfWalkingSpeed.getText()));
         scenarioToBeSaved.setName(tfScenarioName.getText());
         scenarioToBeSaved.setStartingPoint(1L);
 
@@ -739,6 +753,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
     private javax.swing.JLabel labelNewAgent;
     private javax.swing.JLabel labelScenarioName;
     private javax.swing.JLabel labelSensorFile;
+    private javax.swing.JLabel labelSims;
     private javax.swing.JLabel labelStartingPoint;
     private javax.swing.JLabel labelWalkingSpeed;
     private javax.swing.JPanel leftPanel;
@@ -763,6 +778,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
     private javax.swing.JTextField tfHomeSchemeFile;
     private javax.swing.JTextField tfScenarioName;
     private javax.swing.JTextField tfSensorFile;
+    private javax.swing.JTextField tfSimsPerSec;
     private javax.swing.JTextField tfStartingPoint;
     private javax.swing.JTextField tfWalkingSpeed;
     private javax.swing.JLabel valueBladder;
@@ -794,7 +810,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         tfActivitiesFile.setText("/activities.json");
         tfSensorFile.setText("/sensors.json");
         tfHomeSchemeFile.setText("/environment.jpg");
-        tfDays.setText(30 + "");
+        tfDays.setText(7+ "");
         tfWalkingSpeed.setText(30 + "");
         tfActivitiesFile.setEnabled(false);
         tfSensorFile.setEnabled(false);

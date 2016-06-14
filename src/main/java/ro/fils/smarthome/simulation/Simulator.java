@@ -110,7 +110,7 @@ public class Simulator {
             } else {
                 log = taskManager.findTask(agent, map, currentTime);
             }
-            sensorlogger.log(agent, map.getSensors(), currentTime);
+            sensorlogger.log(agent, map.getSensors(), currentTime, time.getDayName(currentTime), time.getNumberFormatted(time.getHours(currentTime)));
             agent.passTime(1.0 / simsPerSec);
 
         }

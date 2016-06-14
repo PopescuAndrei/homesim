@@ -5,9 +5,29 @@
  */
 package ro.fils.smarthome.view;
 
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
+import ro.fils.smarthome.model.Agent;
+import ro.fils.smarthome.model.Scenario;
+import ro.fils.smarthome.repository.AgentRepository;
+import ro.fils.smarthome.repository.ScenarioRepository;
+import ro.fils.smarthome.util.FilesUtils;
 
 /**
  *
@@ -15,19 +35,90 @@ import javax.swing.DefaultListModel;
  */
 public class AnalyticsFrame extends javax.swing.JFrame {
 
+    private List<Scenario> scenarios;
+    private List<Agent> agents;
+
     private List<String> analyticsNames;
+    private List<String> scenarioNames;
+    private List<String> agentNames;
+    private List<String> logFileNames;
+
     private DefaultListModel<String> analyticsModel;
+    private DefaultComboBoxModel<String> scenarioComboModel;
+    private DefaultComboBoxModel<String> agentComboModel;
+    private DefaultComboBoxModel<String> logComboModel;
+
+    private ScenarioRepository scenarioRepo;
+    private AgentRepository agentRepo;
+
     public AnalyticsFrame() {
         initComponents();
         this.setTitle("Analytics");
-        
+
+        scenarioRepo = new ScenarioRepository();
+        agentRepo = new AgentRepository();
+
         analyticsNames = buildList();
         analyticsModel = new DefaultListModel<>();
-        
-        for(String name : analyticsNames){
+        scenarioComboModel = new DefaultComboBoxModel<>();
+        agentComboModel = new DefaultComboBoxModel<>();
+        logComboModel = new DefaultComboBoxModel<>();
+
+        scenarios = scenarioRepo.getAllScenarios();
+        for (Scenario s : scenarios) {
+            scenarioComboModel.addElement(s.getName());
+        }
+        comboScenarios.setModel(scenarioComboModel);
+
+        for (String name : analyticsNames) {
             analyticsModel.addElement(name);
         }
         listViewAnalytics.setModel(analyticsModel);
+
+        listViewAnalytics.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                labelTitle.setText(analyticsNames.get(listViewAnalytics.getSelectedIndex()));
+                switch (listViewAnalytics.getSelectedIndex()) {
+                    case 0:
+                        comboAgents.setEnabled(true);
+                        comboFiles.setEnabled(true);
+                        comboScenarios.setEnabled(true);
+                        break;
+                    case 1:
+                        disableAllCombos();
+                        break;
+                    case 2:
+                        disableAllCombos();
+                        break;
+                    default:
+                        disableAllCombos();
+                        break;
+                }
+            }
+        });
+
+        comboScenarios.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                agentComboModel.removeAllElements();
+                logComboModel.removeAllElements();
+
+                agents = agentRepo.getAgentsForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getId());
+                for (Agent ag : agents) {
+                    agentComboModel.addElement(ag.getName());
+                }
+                comboAgents.setModel(agentComboModel);
+
+                logComboModel.removeAllElements();
+                logFileNames = FilesUtils.getAllLogsFromFolderForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
+                for (String logFile : logFileNames) {
+                    logComboModel.addElement(logFile);
+                }
+                comboFiles.setModel(logComboModel);
+            }
+        });
+        disableAllCombos();
     }
 
     /**
@@ -44,6 +135,17 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         listViewAnalytics = new javax.swing.JList<>();
         rightPanel = new javax.swing.JPanel();
+        panelTitle = new javax.swing.JPanel();
+        labelTitle = new javax.swing.JLabel();
+        panelCombos = new javax.swing.JPanel();
+        labelScenario = new javax.swing.JLabel();
+        labelAgent = new javax.swing.JLabel();
+        labelLogs = new javax.swing.JLabel();
+        comboScenarios = new javax.swing.JComboBox<>();
+        comboAgents = new javax.swing.JComboBox<>();
+        comboFiles = new javax.swing.JComboBox<>();
+        btnApplyFilters = new javax.swing.JButton();
+        chartContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -80,15 +182,116 @@ public class AnalyticsFrame extends javax.swing.JFrame {
 
         rightPanel.setBackground(new java.awt.Color(250, 250, 250));
 
+        panelTitle.setBackground(new java.awt.Color(0, 188, 212));
+
+        labelTitle.setBackground(new java.awt.Color(255, 255, 255));
+        labelTitle.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        labelTitle.setForeground(new java.awt.Color(255, 255, 255));
+        labelTitle.setText("Title");
+
+        javax.swing.GroupLayout panelTitleLayout = new javax.swing.GroupLayout(panelTitle);
+        panelTitle.setLayout(panelTitleLayout);
+        panelTitleLayout.setHorizontalGroup(
+            panelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTitleLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        panelTitleLayout.setVerticalGroup(
+            panelTitleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTitleLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(labelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        panelCombos.setBackground(new java.awt.Color(200, 200, 200));
+
+        labelScenario.setText("Scenario :");
+
+        labelAgent.setText("Agent :");
+
+        labelLogs.setText("Log File :");
+
+        comboScenarios.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        comboAgents.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        comboFiles.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnApplyFilters.setText("Apply Filters");
+        btnApplyFilters.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApplyFiltersActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelCombosLayout = new javax.swing.GroupLayout(panelCombos);
+        panelCombos.setLayout(panelCombosLayout);
+        panelCombosLayout.setHorizontalGroup(
+            panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelCombosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnApplyFilters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(panelCombosLayout.createSequentialGroup()
+                        .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(labelScenario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(labelAgent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(labelLogs))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboFiles, 0, 379, Short.MAX_VALUE)
+                            .addComponent(comboScenarios, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(comboAgents, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
+        );
+        panelCombosLayout.setVerticalGroup(
+            panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelCombosLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelScenario)
+                    .addComponent(comboScenarios, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelAgent)
+                    .addComponent(comboAgents, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(labelLogs)
+                    .addComponent(comboFiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnApplyFilters)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        chartContainer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Chart", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(0, 188, 212))); // NOI18N
+        chartContainer.setLayout(new javax.swing.BoxLayout(chartContainer, javax.swing.BoxLayout.LINE_AXIS));
+
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
         rightPanelLayout.setHorizontalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 477, Short.MAX_VALUE)
+            .addComponent(panelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, rightPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(chartContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panelCombos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         rightPanelLayout.setVerticalGroup(
             rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(rightPanelLayout.createSequentialGroup()
+                .addComponent(panelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelCombos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chartContainer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         mainSplitPanel.setRightComponent(rightPanel);
@@ -107,19 +310,80 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnApplyFiltersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyFiltersActionPerformed
+        buildMetersChart();
+    }//GEN-LAST:event_btnApplyFiltersActionPerformed
+
+    ChartPanel initChartPanel;
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnApplyFilters;
+    private javax.swing.JPanel chartContainer;
+    private javax.swing.JComboBox<String> comboAgents;
+    private javax.swing.JComboBox<String> comboFiles;
+    private javax.swing.JComboBox<String> comboScenarios;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel labelAgent;
+    private javax.swing.JLabel labelLogs;
+    private javax.swing.JLabel labelScenario;
+    private javax.swing.JLabel labelTitle;
     private javax.swing.JPanel leftPanel;
     private javax.swing.JList<String> listViewAnalytics;
     private javax.swing.JSplitPane mainSplitPanel;
+    private javax.swing.JPanel panelCombos;
+    private javax.swing.JPanel panelTitle;
     private javax.swing.JPanel rightPanel;
     // End of variables declaration//GEN-END:variables
 
-    private List<String> buildList(){
+    private List<String> buildList() {
         List<String> list = new ArrayList<>();
-        list.add("A1");
-        list.add("A2");
-        
+        list.add("Traveled Meters by Day");
+        list.add("Sensor Coverage");
+        list.add("Cucu");
         return list;
+    }
+
+    private void disableAllCombos() {
+        comboAgents.setEnabled(false);
+        comboFiles.setEnabled(false);
+        comboScenarios.setEnabled(false);
+    }
+
+    private void buildMetersChart() {
+        String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
+        int selectedScenario = scenarios.get(comboScenarios.getSelectedIndex()).getId();
+        String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();
+        Map<String, Double> map = FilesUtils.getTraveledKmsForLogFile(selectedLog, selectedScenario, selectedAgent);
+        final String MONDAY = "Monday";
+        final String TUESDAY = "Tuesday";
+        final String WEDNESDAY = "Wednesday";
+        final String THURSDAY = "Thursday";
+        final String FRIDAY = "Friday";
+        final String SATURDAY = "Saturday";
+        final String SUNDAY = "Sunday";
+
+        DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
+        dataSet.addValue(map.get(MONDAY), "Week Day", MONDAY);
+        dataSet.addValue(map.get(TUESDAY), "Week Day", TUESDAY);
+        dataSet.addValue(map.get(WEDNESDAY), "Week Day", WEDNESDAY);
+        dataSet.addValue(map.get(THURSDAY), "Week Day", THURSDAY);
+        dataSet.addValue(map.get(FRIDAY), "Week Day", FRIDAY);
+        dataSet.addValue(map.get(SATURDAY), "Week Day", SATURDAY);
+        dataSet.addValue(map.get(SUNDAY), "Week Day", SUNDAY);
+
+        JFreeChart traveledMetersChart = ChartFactory.createBarChart("TraveledKms",
+                "Week Day",
+                "Distance [m]",
+                dataSet,
+                PlotOrientation.VERTICAL,
+                true,
+                true,
+                false);
+        CategoryPlot plot = (CategoryPlot) traveledMetersChart.getPlot();
+        plot.setRangeGridlinePaint(Color.BLACK);
+        ChartPanel barChartPanel = new ChartPanel(traveledMetersChart);
+        chartContainer.removeAll();
+        chartContainer.add(barChartPanel);
+        chartContainer.updateUI();
+
     }
 }

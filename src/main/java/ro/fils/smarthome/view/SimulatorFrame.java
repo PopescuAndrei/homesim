@@ -49,12 +49,13 @@ public class SimulatorFrame extends javax.swing.JFrame {
     private TaskReader taskReader;
     private DefaultListModel<String> agentsListModel;
     private String selectedAgentName;
-
-    public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, List<Agent> agents, int days) {
+    private String scenarioName;
+    
+    public SimulatorFrame(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startingPoint, List<Agent> agents, int simsPerSec) {
         this.setTitle("Test your house");
         this.selectedAgentName = agents.get(0).getName();
         
-        initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agents, days);
+        initSimulatorTools(taskFile, sensorsFile, houseFile, walkingSpeed, startingPoint, agents, simsPerSec);
 
         initComponents();
         agentsListModel = new DefaultListModel();
@@ -412,7 +413,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
             Calendar cal = Calendar.getInstance();
             Date time = cal.getTime();
             String timeOfSimulation = time.toString().replaceAll("\\s", "_").replaceAll(":", "-");
-            simulator.setSensorLogger(new SensorLogger("Simulation_" + timeOfSimulation + ".txt"));
+            simulator.setSensorLogger(new SensorLogger(this.scenarioName + "_" + timeOfSimulation + ".txt"));
         } catch (IOException ex) {
             ex.printStackTrace();
             Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -426,14 +427,14 @@ public class SimulatorFrame extends javax.swing.JFrame {
         stopSimulation();
     }//GEN-LAST:event_btnStopSimulationMouseClicked
 
-    private void initSimulatorTools(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startNodeId, List<Agent> agents, int days) {
+    private void initSimulatorTools(String taskFile, String sensorsFile, String houseFile, int walkingSpeed, Long startNodeId, List<Agent> agents, int simsPerSec) {
         try {
             this.people = (ArrayList<Agent>) agents;
             this.taskReader = new TaskReader(taskFile);
             sensors = new SensorReader(sensorsFile).getSensors();
             simulationMap = new SimulationMap(houseFile, walkingSpeed, startNodeId, people, 43, sensors);
             simulator = new Simulator(simulationMap, new TaskManager(taskReader), 3);
-            this.days = days;
+            this.days = 7;
 
         } catch (Exception e) {
             Logger.getLogger(SimulatorFrame.class.getName()).log(Level.SEVERE, null, e);
@@ -523,6 +524,15 @@ public class SimulatorFrame extends javax.swing.JFrame {
         timer.stop();
     }
 
+    public String getScenarioName() {
+        return scenarioName;
+    }
+
+    public void setScenarioName(String scenarioName) {
+        this.scenarioName = scenarioName;
+    }
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnStartSimulation;
     private javax.swing.JButton btnStopSimulation;

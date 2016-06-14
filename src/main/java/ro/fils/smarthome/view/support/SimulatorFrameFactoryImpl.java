@@ -27,6 +27,8 @@ public class SimulatorFrameFactoryImpl implements SimulatorFrameFactory {
 
     protected SimulatorFrame buildSimulatorFrame(Scenario s) {
         List<Agent> agents = new AgentRepository().getAgentsForScenario(s.getId());
-        return new SimulatorFrame(s.getTaskile(), s.getSensorFile(), s.getHouseFile(), s.getWalking_speed(), s.getStartingPoint(), agents, s.getDays());
+        SimulatorFrame frame = new SimulatorFrame(s.getTaskile(), s.getSensorFile(), s.getHouseFile(), s.getWalking_speed(), s.getStartingPoint(), agents, s.getSimsPerSec());
+        frame.setScenarioName(s.getName());
+        return frame;
     }
 }

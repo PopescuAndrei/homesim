@@ -53,7 +53,7 @@ public class SensorLogger {
         lastTask = null;
     }
 
-    public void log(Agent agent, Collection<Sensor> sensors, double currentTime) {
+    public void log(Agent agent, Collection<Sensor> sensors, double currentTime, String day, String weekNumber) {
 
         sensors.stream().forEach((s) -> {
             s.getSensorAreas().stream().forEach((sa) -> {
@@ -64,7 +64,7 @@ public class SensorLogger {
                         || (lastTriggered.get(agent.getApplianceInUse().getName()) != null && currentTime - lastTriggered.get(agent.getApplianceInUse().getName()) >= 60.0))) {
                     lastTriggered.put(agent.getApplianceInUse().getName(), currentTime);
                     if (!sa.getLastValue().equals("ON")) {
-                        logSensorReading(agent, s, currentTime);
+                        logSensorReading(agent, s, currentTime, day, weekNumber);
                         sa.setLastValue("ON");
                     }
                 } else if (sa.getArea() != null && sa.getArea().contains(agent.getCurrentLocation())) {
@@ -78,7 +78,7 @@ public class SensorLogger {
                                         || (lastTriggered.get(sa.getName() + pose) != null
                                         && currentTime - lastTriggered.get(sa.getName() + pose) >= 10.0)) {
                                     lastTriggered.put(sa.getName() + pose, currentTime);
-                                    logSensorReading(agent, s, currentTime);
+                                    logSensorReading(agent, s, currentTime, day, weekNumber);
                                 }
                             }
                         }
@@ -87,7 +87,7 @@ public class SensorLogger {
                             || (lastTriggered.get(sa.getName()) != null && currentTime - lastTriggered.get(sa.getName()) >= TRIGGER_INTERVAL)) {
                         lastTriggered.put(sa.getName(), currentTime);
                         if (!sa.getLastValue().equals("ON")) {
-                            logSensorReading(agent, s, currentTime);
+                            logSensorReading(agent, s, currentTime, day, weekNumber);
                             sa.setLastValue("ON");
                         }
                     }
@@ -104,13 +104,13 @@ public class SensorLogger {
         });
     }
 
-    public void logSensorReading(Agent agent, Sensor sensor, double currentTime) {
+    public void logSensorReading(Agent agent, Sensor sensor, double currentTime, String day, String weekNumber) {
         try {
-            fileWriter.append("Sensor -" + sensor.getName() + "-: -"
+            fileWriter.append("Week Number : -" + weekNumber + "- Day: -" + day +"- Sensor -" + sensor.getName() + "-: -"
                     + agent.getName() + "- is in position -("
                     + agent.getCurrentLocation().getX() + ", " + agent.getCurrentLocation().getY() + ")-, -"
                     + (sensor.getPosition() != null ? (int) sensor.getPosition().distance(agent.getCurrentLocation())
-                            + "- distance from the sensor" : "") + ", doing -" + (agent.getGoalTask()==null? "nothing-":agent.getGoalTask().getName()+"-") + "\n");
+                            + "- distance from the sensor" : "") + ", doing -" + (agent.getGoalTask() == null ? "nothing-" : agent.getGoalTask().getName() + "-") + "\n");
             fileWriter.flush();
         } catch (IOException e) {
 
