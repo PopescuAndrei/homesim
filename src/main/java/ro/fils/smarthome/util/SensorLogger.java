@@ -106,11 +106,11 @@ public class SensorLogger {
 
     public void logSensorReading(Agent agent, Sensor sensor, double currentTime) {
         try {
-            fileWriter.append("[+ " + currentTime + "] Sensor [" + sensor.getName() + "]: ["
-                    + agent.getName() + "] is in position [("
-                    + agent.getCurrentLocation().getX() + ", " + agent.getCurrentLocation().getY() + ")], ["
+            fileWriter.append("Sensor -" + sensor.getName() + "-: -"
+                    + agent.getName() + "- is in position -("
+                    + agent.getCurrentLocation().getX() + ", " + agent.getCurrentLocation().getY() + ")-, -"
                     + (sensor.getPosition() != null ? (int) sensor.getPosition().distance(agent.getCurrentLocation())
-                            + "] distance from the sensor" : "") + ", doing [" + (agent.getGoalTask()==null? "nothing]":agent.getGoalTask().getName()+"]") + "\n");
+                            + "- distance from the sensor" : "") + ", doing -" + (agent.getGoalTask()==null? "nothing-":agent.getGoalTask().getName()+"-") + "\n");
             fileWriter.flush();
         } catch (IOException e) {
 
