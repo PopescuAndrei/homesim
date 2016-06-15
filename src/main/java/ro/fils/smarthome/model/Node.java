@@ -34,8 +34,8 @@ public class Node implements AStarNode {
     public Node() {
 
     }
-    
-    public Node(Long id, Point p){
+
+    public Node(Long id, Point p) {
         this.id = id;
         posX = (int) p.getX();
         posY = (int) p.getY();
@@ -85,7 +85,6 @@ public class Node implements AStarNode {
         this.id = id;
     }
 
-    
     @Override
     public <T extends AStarNode> Collection<T> getNeighbors() {
         return (Collection<T>) neighbors;
@@ -104,11 +103,15 @@ public class Node implements AStarNode {
      * @param applianceType
      */
     public void addAppliance(String applianceType) {
+        if (applianceTypes == null) {
+            applianceTypes = new ArrayList<>();
+        }
+
         if (applianceTypes.add(new Appliance(applianceType, this))) {
             new NodeRepository().update(this);
         }
     }
-    
+
     /**
      *
      * @param type
@@ -143,8 +146,7 @@ public class Node implements AStarNode {
 
     @Override
     public String toString() {
-        return "Node{id=" + id + ", posX=" + posX + ", posY=" + posY +  ", room=" + room + '}';
+        return "Node{id=" + id + ", posX=" + posX + ", posY=" + posY + ", room=" + room + '}';
     }
 
-    
 }

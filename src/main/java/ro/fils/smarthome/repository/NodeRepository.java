@@ -107,6 +107,7 @@ public class NodeRepository {
                 ps = conn.prepareStatement(sql);
                 ps.setInt(1, node.getPosX());
                 ps.setInt(2, node.getPosY());
+                ps.execute();
                 node.setId(DatabaseManager.getLastId(conn));
                 return node;
             } else {

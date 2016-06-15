@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,10 +127,10 @@ public class FilesUtils {
         try {
             fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
-            while ((line = br.readLine()) != null) {  
+            while ((line = br.readLine()) != null) {
                 String[] lineParts = line.split("-");
                 String agentName = lineParts[7];
-                
+
                 if (agentName.equalsIgnoreCase(agentNameUI)) {
                     String day = lineParts[3];
                     String position = lineParts[9];
@@ -149,8 +147,8 @@ public class FilesUtils {
                             time = Integer.parseInt(timeForTaskArray[0]) * 24 * 60 +
                                     Integer.parseInt(timeForTaskArray[1]) * 60 +
                                     Integer.parseInt(timeForTaskArray[2]);
-                            
-                        } else {
+
+                            } else {
                             if (time != 0) {
                                 if (mapSensorsDetectingNoMovement.get(sensorRef) != null) {
                                     time += mapSensorsDetectingNoMovement.get(sensorRef);
