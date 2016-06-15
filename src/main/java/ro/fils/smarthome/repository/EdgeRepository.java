@@ -55,6 +55,7 @@ public class EdgeRepository {
                 PreparedStatement stm = conn.prepareStatement("INSERT INTO edges (a_id,b_id) VALUES(?,?)");
                 stm.setLong(1, edge.getA().getId());
                 stm.setLong(0, edge.getB().getId());
+                stm.execute();
             }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(EdgeRepository.class.getName()).log(Level.SEVERE, null, ex);
@@ -81,6 +82,7 @@ public class EdgeRepository {
             if (edge.getId() == -1) {
                 ps.setLong(1,edge.getA().getId());
                 ps.setLong(2, edge.getB().getId());
+                ps.executeUpdate();
                 edge.setId(DatabaseManager.getLastId(conn));
             }
         } catch (SQLException | ClassNotFoundException e) {
