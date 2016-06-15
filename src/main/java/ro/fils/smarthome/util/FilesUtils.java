@@ -117,13 +117,14 @@ public class FilesUtils {
         return sensorCount;
     }
 
-    public static Map<String, Integer> getMovementStatistics(String fileName, String agentNameUI) {
+    public static Map<String, Integer> getMovementStatistics(String fileName, String agentNameUI, String choosenDay) {
         Map<String, Integer> mapSensorsDetectingNoMovement = new HashMap<>();
         FileReader fr;
         String line;
         Point reference = new Point();
         String sensorRef = "";
         int time = 0;
+        String timeRef = "-";
         try {
             fr = new FileReader(fileName);
             BufferedReader br = new BufferedReader(fr);
@@ -133,32 +134,40 @@ public class FilesUtils {
 
                 if (agentName.equalsIgnoreCase(agentNameUI)) {
                     String day = lineParts[3];
-                    String position = lineParts[9];
-                    String currentSensor = lineParts[5];
-                    String[] pointXY = position.substring(1, position.length() - 1).split(",");
-                    Point currentPoint = new Point((int) Double.parseDouble(pointXY[0]), (int) Double.parseDouble(pointXY[1]));
-                    if (reference.getLocation() == null) {
-                        reference.setLocation(Integer.parseInt(pointXY[0]), Integer.parseInt(pointXY[1]));
-                    } else {
-                        double distance = Math.abs(reference.distance(currentPoint));
-                        if (distance == 0.0 && currentSensor.equals(sensorRef)) {
-                            String timeForTask = lineParts[15];
-                            String[] timeForTaskArray = timeForTask.split(":");
-                            time = Integer.parseInt(timeForTaskArray[0]) * 24 * 60 +
-                                    Integer.parseInt(timeForTaskArray[1]) * 60 +
-                                    Integer.parseInt(timeForTaskArray[2]);
-
+                    if (choosenDay.equals(day)) {
+                        String position = lineParts[9];
+                        String currentSensor = lineParts[5];
+                        String[] pointXY = position.substring(1, position.length() - 1).split(",");
+                        Point currentPoint = new Point((int) Double.parseDouble(pointXY[0]), (int) Double.parseDouble(pointXY[1]));
+                        if (reference.getLocation() == null) {
+                            reference.setLocation(Integer.parseInt(pointXY[0]), Integer.parseInt(pointXY[1]));
+                        } else {
+                            double distance = Math.abs(reference.distance(currentPoint));
+                            if (distance == 0.0 && currentSensor.equals(sensorRef)) {
+                                timeRef = lineParts[15];
                             } else {
-                            if (time != 0) {
-                                if (mapSensorsDetectingNoMovement.get(sensorRef) != null) {
-                                    time += mapSensorsDetectingNoMovement.get(sensorRef);
+                                if (!timeRef.equals("-")) {
+                                    String currentTime = lineParts[15];
+                                    String[] splitCurrentTime = currentTime.split(":");
+                                    String[] splitTimeRef = timeRef.split(":");
+
+                                    time = (Integer.parseInt(splitCurrentTime[0]) - Integer.parseInt(splitTimeRef[0])) * 3600
+                                            + (Integer.parseInt(splitCurrentTime[1]) - Integer.parseInt(splitTimeRef[1])) * 60
+                                            + (Integer.parseInt(splitCurrentTime[2]) - Integer.parseInt(splitTimeRef[2]));
                                 }
-                                mapSensorsDetectingNoMovement.put(sensorRef, time);
+
+                                if (time != 0) {
+                                    if (mapSensorsDetectingNoMovement.get(sensorRef) != null) {
+                                        time += mapSensorsDetectingNoMovement.get(sensorRef);
+                                    }
+                                    mapSensorsDetectingNoMovement.put(sensorRef, time);
+                                }
+                              
                             }
+                            sensorRef = currentSensor;
+                            reference = currentPoint;
                             time = 0;
                         }
-                        sensorRef = currentSensor;
-                        reference = currentPoint;
                     }
                 }
             }

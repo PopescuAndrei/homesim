@@ -59,7 +59,7 @@ public class SensorLogger {
         sensors.stream().forEach((s) -> {
             s.getSensorAreas().stream().forEach((sa) -> {
                  if (sa.getArea() != null && sa.getArea().contains(agent.getCurrentLocation())) {
-                    if (s instanceof Camera && !agent.isMoving()) {
+                    if (s instanceof Camera) {
                         Set<String> poses = agent.getPoseData();
                         if (lastPoses != poses && lastTask != agent.getCurrentTask()) {
                             lastPoses = poses;
