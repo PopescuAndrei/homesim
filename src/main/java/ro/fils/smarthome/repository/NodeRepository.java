@@ -147,6 +147,7 @@ public class NodeRepository {
             ps.setString(1, poseString);
             ps.setLong(2, node.getId());
             ps.setString(3, app.getType());
+            ps.executeUpdate();
             app.setPoses(poseString);
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
