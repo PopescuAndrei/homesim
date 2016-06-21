@@ -40,7 +40,7 @@ public class EdgeRepository {
                         b = current;
                     }
                 }
-                edges.add(new Edge(rs.getLong("id"), a, b));
+                edges.add(new Edge(rs.getInt("id"), a, b));
             }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(EdgeRepository.class.getName()).log(Level.SEVERE, null, ex);

@@ -168,7 +168,7 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
             for (Node point : points) {
                 if (arg0.getX() > point.getLocation().x - 4 && arg0.getX() < point.getLocation().x + 4
                         && arg0.getY() > point.getLocation().y - 4 && arg0.getY() < point.getLocation().y + 4) {
-                    Edge edg = new Edge(-1L, point, selectedPoint);
+                    Edge edg = new Edge(-1, point, selectedPoint);
                     if (!edg.exists(edges, point, selectedPoint)) {
                         edg = edgeRepo.update(edg);
                         edges.add(edg);
@@ -193,7 +193,7 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
         } else if (arg0.getButton() == MouseEvent.BUTTON3 && selectedPoint == null) {
             try {
                 Node nod = new Node();
-                nod.setId(-1L);
+                nod.setId(-1);
                 nod.setPosX(arg0.getX());
                 nod.setPosY(arg0.getY());
                 nod = nodeRepo.update(nod);

@@ -15,7 +15,7 @@ public class Scenario {
     private String name;
     private String taskile;
     private String sensorFile;
-    private String houseFile;
+    private int houseId;
     private Long startingPoint;
     private int simsPerSec;
     private int walking_speed;
@@ -23,12 +23,12 @@ public class Scenario {
     public Scenario() {
     }
 
-    public Scenario(int id, String name, String taskile, String sensorFile, String houseFile, Long startingPoint, int simsPerSec, int walking_speed) {
+    public Scenario(int id, String name, String taskile, String sensorFile, int houseId, Long startingPoint, int simsPerSec, int walking_speed) {
         this.id = id;
         this.name = name;
         this.taskile = taskile;
         this.sensorFile = sensorFile;
-        this.houseFile = houseFile;
+        this.houseId = houseId;
         this.startingPoint = startingPoint;
         this.simsPerSec = simsPerSec;
         this.walking_speed = walking_speed;
@@ -66,12 +66,12 @@ public class Scenario {
         this.sensorFile = sensorFile;
     }
 
-    public String getHouseFile() {
-        return houseFile;
+    public int getHouseId() {
+        return houseId;
     }
 
-    public void setHouseFile(String houseFile) {
-        this.houseFile = houseFile;
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
     }
 
     public Long getStartingPoint() {

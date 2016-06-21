@@ -9,6 +9,7 @@ import java.util.List;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.AgentRepository;
+import ro.fils.smarthome.repository.HouseRepository;
 import ro.fils.smarthome.view.SimulatorFrame;
 
 /**
@@ -16,7 +17,9 @@ import ro.fils.smarthome.view.SimulatorFrame;
  * @author andre
  */
 public class SimulatorFrameFactoryImpl implements SimulatorFrameFactory {
-
+    
+    HouseRepository houseRepo = new HouseRepository();
+    
     public SimulatorFrameFactoryImpl() {
     }
 
@@ -27,7 +30,7 @@ public class SimulatorFrameFactoryImpl implements SimulatorFrameFactory {
 
     protected SimulatorFrame buildSimulatorFrame(Scenario s) {
         List<Agent> agents = new AgentRepository().getAgentsForScenario(s.getId());
-        SimulatorFrame frame = new SimulatorFrame(s.getTaskile(), s.getSensorFile(), s.getHouseFile(), s.getWalking_speed(), s.getStartingPoint(), agents, s.getSimsPerSec());
+        SimulatorFrame frame = new SimulatorFrame(s.getTaskile(), s.getSensorFile(), houseRepo.getHouseFileByHouseId(s.getHouseId()), s.getWalking_speed(), s.getStartingPoint(), agents, s.getSimsPerSec());
         frame.setScenarioName(s.getName());
         return frame;
     }

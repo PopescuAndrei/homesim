@@ -13,12 +13,12 @@ import java.util.ArrayList;
  */
 public class Edge{
 
-    private Long id;
+    private int id;
     private Node a;
     private Node b;
     private double cachedLength = -1.0;
 
-    public Edge(Long id, Node a, Node b) {
+    public Edge(int id, Node a, Node b) {
         this.id = id;
         this.a = a;
         this.b = b;
@@ -40,11 +40,11 @@ public class Edge{
         this.b = b;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
     

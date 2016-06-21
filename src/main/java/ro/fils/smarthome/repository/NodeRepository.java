@@ -40,8 +40,10 @@ public class NodeRepository {
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
-                Node nod = new Node(rs.getLong("id"),
+                Node nod = new Node(rs.getInt("id"),
                         new Point(rs.getInt("posX"), rs.getInt("posY")));
+                nod.setHouseId(rs.getInt("house_id"));
+                
                 ArrayList<Appliance> types = new ArrayList<>();
 
                 sql = "SELECT * FROM appliances WHERE node_id = ?";
@@ -103,10 +105,11 @@ public class NodeRepository {
         try {
             conn = DatabaseManager.getConnection();
             if (node.getId() == -1) {
-                sql = "INSERT INTO nodes (posX, posY) VALUES (?,?)";
+                sql = "INSERT INTO nodes (posX, posY, house_id) VALUES (?,?, ?)";
                 ps = conn.prepareStatement(sql);
                 ps.setInt(1, node.getPosX());
                 ps.setInt(2, node.getPosY());
+                ps.setInt(3, node.getHouseId());
                 ps.execute();
                 node.setId(DatabaseManager.getLastId(conn));
                 return node;
@@ -167,8 +170,10 @@ public class NodeRepository {
             ps.setLong(1, nodeId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Node nod = new Node(rs.getLong("id"),
+                Node nod = new Node(rs.getInt("id"),
                         new Point(rs.getInt("posX"), rs.getInt("posY")));
+                nod.setHouseId(rs.getInt("house_id"));
+                
                 ArrayList<Appliance> types = new ArrayList<>();
 
                 sql = "SELECT * FROM appliances WHERE node_id = ?";

@@ -78,14 +78,14 @@ public class DatabaseManager {
      * @param conn the connection to the database
      * @return the last inserted Id
      */
-    public static Long getLastId(Connection conn) {
-        Long lastId = null;
+    public static int getLastId(Connection conn) {
+        int lastId = -1;
         PreparedStatement getLastInsertId;
         try {
             getLastInsertId = conn.prepareStatement("SELECT LAST_INSERT_ID()");
             ResultSet rs = getLastInsertId.executeQuery();
             if (rs.next()) {
-                lastId = rs.getLong("last_insert_id()");
+                lastId = rs.getInt("last_insert_id()");
             }
         } catch (SQLException ex) {
             Logger.getLogger(DatabaseManager.class.getName()).log(Level.SEVERE, null, ex);

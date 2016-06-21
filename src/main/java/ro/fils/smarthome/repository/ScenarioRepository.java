@@ -39,7 +39,7 @@ public class ScenarioRepository {
                 s.setName(sRes.getString("NAME"));
                 s.setSimsPerSec(sRes.getInt("SIMS_PER_SEC"));
                 s.setId(sRes.getInt("ID"));
-                s.setHouseFile(sRes.getString("HOUSE_FILE"));
+                s.setHouseId(sRes.getInt("HOUSE_ID"));
                 s.setSensorFile(sRes.getString("SENSOR_FILE"));
                 s.setTaskile(sRes.getString("ACTIVITIES_FILE"));
                 s.setStartingPoint(sRes.getLong("STARTING_POINT"));
@@ -59,7 +59,7 @@ public class ScenarioRepository {
         Scenario s = null;
         try {
             conn = DatabaseManager.getConnection();
-            sql = "SELECT * FROM scenarios WHERE name = ?";
+            sql = "SELECT * FROM scenarios INNER JOIN HOUSES ON scenarios.house_id = houses.id WHERE name = ?";
             ps = conn.prepareStatement(sql);
             ps.setString(1, scenarioName);
             ResultSet sRes = ps.executeQuery();
@@ -67,7 +67,7 @@ public class ScenarioRepository {
             while (sRes.next()) {
                 s.setSimsPerSec(sRes.getInt("SIMS_PER_SEC"));
                 s.setId(sRes.getInt("ID"));
-                s.setHouseFile(sRes.getString("HOUSE_FILE"));
+                s.setHouseId(sRes.getInt("HOUSE_ID"));
                 s.setSensorFile(sRes.getString("SENSOR_FILE"));
                 s.setTaskile(sRes.getString("ACTIVITIES_FILE"));
                 s.setStartingPoint(sRes.getLong("STARTING_POINT"));
@@ -85,11 +85,11 @@ public class ScenarioRepository {
         String sql;
         try {
             conn = DatabaseManager.getConnection();
-            sql = "INSERT INTO SCENARIOS (NAME,ACTIVITIES_FILE,HOUSE_FILE,SENSOR_FILE,STARTING_POINT,SIMS_PER_SEC,WALKING_SPEED) VALUES (?,?,?,?,?,?,?)";
+            sql = "INSERT INTO SCENARIOS (NAME,ACTIVITIES_FILE,HOUSE_ID,SENSOR_FILE,STARTING_POINT,SIMS_PER_SEC,WALKING_SPEED) VALUES (?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(sql);
             ps.setString(1, s.getName());
             ps.setString(2, s.getTaskile());
-            ps.setString(3, s.getHouseFile());
+            ps.setInt(3, s.getHouseId());
             ps.setString(4, s.getSensorFile());
             ps.setLong(5, s.getStartingPoint());
             ps.setInt(6, s.getSimsPerSec());

@@ -17,6 +17,7 @@ import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.AgentRepository;
+import ro.fils.smarthome.repository.HouseRepository;
 import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.repository.ScenarioRepository;
 import ro.fils.smarthome.util.AgentsUtils;
@@ -34,7 +35,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
     private final AgentRepository agentRepo;
     private final ScenarioRepository scenarioRepo;
     private final NodeRepository nodeRepo;
-
+    private final HouseRepository houseRepo;
+    
     private Scenario scenarioToBeSaved;
     List<Agent> agentsDisplayList;
     DefaultListModel<String> agentsListModel;
@@ -51,7 +53,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         agentRepo = new AgentRepository();
         scenarioRepo = new ScenarioRepository();
         nodeRepo = new NodeRepository();
-
+        houseRepo = new HouseRepository();
+        
         agentsDisplayList = new ArrayList<>();
         agentsListModel = new DefaultListModel<>();
         listViewAgent.setModel(agentsListModel);
@@ -696,7 +699,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
 
     private void btnSaveScenarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveScenarioActionPerformed
         scenarioToBeSaved = new Scenario();
-        scenarioToBeSaved.setHouseFile(tfHomeSchemeFile.getText());
+        scenarioToBeSaved.setHouseId(houseRepo.getHouseByFileName(tfHomeSchemeFile.getText()).getId());
         scenarioToBeSaved.setTaskile(tfActivitiesFile.getText());
         scenarioToBeSaved.setSensorFile(tfSensorFile.getText());
         scenarioToBeSaved.setSimsPerSec(Integer.parseInt(tfSimsPerSec.getText()));

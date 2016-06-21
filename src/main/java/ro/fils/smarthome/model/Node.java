@@ -12,8 +12,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import ro.fils.smarthome.simulation.AStarNode;
-import ro.fils.smarthome.model.Appliance;
-import ro.fils.smarthome.model.Room;
 import ro.fils.smarthome.repository.NodeRepository;
 
 /**
@@ -22,20 +20,19 @@ import ro.fils.smarthome.repository.NodeRepository;
  */
 public class Node implements AStarNode {
 
-    private Long id;
+    private int id;
     private int posX;
     private int posY;
-
+    private int houseId;
+    
     private List<Appliance> applianceTypes;
     private final Collection<Node> neighbors = new ArrayList<>();
-
-    private Room room;
 
     public Node() {
 
     }
 
-    public Node(Long id, Point p) {
+    public Node(int id, Point p) {
         this.id = id;
         posX = (int) p.getX();
         posY = (int) p.getY();
@@ -69,19 +66,11 @@ public class Node implements AStarNode {
         return new Point(getPosX(), getPosY());
     }
 
-    public Room getRoom() {
-        return room;
-    }
-
-    public void setRoom(Room r) {
-        this.room = r;
-    }
-
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -90,6 +79,15 @@ public class Node implements AStarNode {
         return (Collection<T>) neighbors;
     }
 
+    public int getHouseId() {
+        return houseId;
+    }
+
+    public void setHouseId(int houseId) {
+        this.houseId = houseId;
+    }
+
+    
     public void addNeighbor(Node node) {
         for (Node n : neighbors) {
             if (Objects.equals(n.getId(), node.getId())) {
@@ -146,7 +144,7 @@ public class Node implements AStarNode {
 
     @Override
     public String toString() {
-        return "Node{id=" + id + ", posX=" + posX + ", posY=" + posY + ", room=" + room + '}';
+        return "Node{id=" + id + ", posX=" + posX + ", posY=" + posY + "}";
     }
 
 }

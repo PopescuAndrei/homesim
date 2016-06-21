@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.util.DatabaseManager;
