@@ -5,6 +5,7 @@
  */
 package ro.fils.smarthome.tasks;
 
+import ro.fils.smarthome.parsers.TaskReader;
 import java.util.Collection;
 import java.util.Set;
 import org.junit.AfterClass;

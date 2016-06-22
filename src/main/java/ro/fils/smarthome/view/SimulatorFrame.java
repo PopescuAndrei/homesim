@@ -24,11 +24,11 @@ import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.util.support.BoolWithLog;
 import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.sensors.Sensor;
-import ro.fils.smarthome.sensors.SensorReader;
+import ro.fils.smarthome.parsers.SensorReader;
 import ro.fils.smarthome.simulation.SimulationMap;
 import ro.fils.smarthome.simulation.Simulator;
-import ro.fils.smarthome.tasks.TaskManager;
-import ro.fils.smarthome.tasks.TaskReader;
+import ro.fils.smarthome.util.TaskManager;
+import ro.fils.smarthome.parsers.TaskReader;
 import ro.fils.smarthome.util.SensorLogger;
 import ro.fils.smarthome.util.support.Time;
 

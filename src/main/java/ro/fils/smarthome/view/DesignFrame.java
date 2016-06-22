@@ -18,7 +18,7 @@ import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.view.support.NodePainter;
-import ro.fils.smarthome.tasks.TaskReader;
+import ro.fils.smarthome.parsers.TaskReader;
 
 /**
  *

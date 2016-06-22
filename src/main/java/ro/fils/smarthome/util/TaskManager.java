@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.tasks;
+package ro.fils.smarthome.util;
 
+import ro.fils.smarthome.parsers.TaskReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
@@ -19,9 +20,9 @@ import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Appliance;
 import ro.fils.smarthome.model.Need;
 import ro.fils.smarthome.model.Node;
-import ro.fils.smarthome.util.PPlanWrapper;
 import ro.fils.smarthome.simulation.SimulationMap;
 import ro.fils.smarthome.model.Item;
+import ro.fils.smarthome.tasks.ITask;
 
 /**
  *

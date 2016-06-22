@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ro.fils.smarthome.util;
+package ro.fils.smarthome.parsers;
 
 import java.awt.Point;
 import java.io.BufferedReader;
@@ -23,7 +23,10 @@ import java.util.logging.Logger;
  *
  * @author Silvia
  */
-public class FilesUtils {
+public class LogReader {
+    
+    private static final double PIXEL_TO_MM_RATIO = 25.4;
+    private static final double IMAGE_SCALE = 100;
 
     public static List<String> getAllLogsFromFolderForScenario(String scenarioName) {
         String userHomeFolder = System.getProperty("user.home") + "\\Desktop\\logs\\";
@@ -38,7 +41,7 @@ public class FilesUtils {
                         }
                     });
         } catch (IOException ex) {
-            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogReader.class.getName()).log(Level.SEVERE, null, ex);
         }
         return paths;
     }
@@ -77,12 +80,15 @@ public class FilesUtils {
                     }
                 }
             }
+            
+            for (Map.Entry<String, Double> entry : mapDays.entrySet()) {
+                mapDays.put(entry.getKey(), ((((entry.getValue() * PIXEL_TO_MM_RATIO)/96)/1000) * IMAGE_SCALE));
+            }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogReader.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogReader.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return mapDays;
     }
 
@@ -109,9 +115,9 @@ public class FilesUtils {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogReader.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogReader.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return sensorCount;
@@ -162,7 +168,7 @@ public class FilesUtils {
                                     }
                                     mapSensorsDetectingNoMovement.put(sensorRef, time);
                                 }
-                              
+
                             }
                             sensorRef = currentSensor;
                             reference = currentPoint;
@@ -172,9 +178,9 @@ public class FilesUtils {
                 }
             }
         } catch (FileNotFoundException ex) {
-            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogReader.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            Logger.getLogger(FilesUtils.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(LogReader.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return mapSensorsDetectingNoMovement;

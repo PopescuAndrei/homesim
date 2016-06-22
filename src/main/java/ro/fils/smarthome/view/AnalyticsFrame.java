@@ -28,7 +28,7 @@ import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.AgentRepository;
 import ro.fils.smarthome.repository.ScenarioRepository;
-import ro.fils.smarthome.util.FilesUtils;
+import ro.fils.smarthome.parsers.LogReader;
 
 /**
  *
@@ -123,7 +123,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
             comboAgents.setModel(agentComboModel);
 
             logComboModel.removeAllElements();
-            logFileNames = FilesUtils.getAllLogsFromFolderForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
+            logFileNames = LogReader.getAllLogsFromFolderForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
             for (String logFile : logFileNames) {
                 logComboModel.addElement(logFile);
             }
@@ -385,7 +385,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
         int selectedScenario = scenarios.get(comboScenarios.getSelectedIndex()).getId();
         String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();
-        Map<String, Double> map = FilesUtils.getTraveledMetersForLogFile(selectedLog, selectedScenario, selectedAgent);
+        Map<String, Double> map = LogReader.getTraveledMetersForLogFile(selectedLog, selectedScenario, selectedAgent);
         final String MONDAY = "Monday";
         final String TUESDAY = "Tuesday";
         final String WEDNESDAY = "Wednesday";
@@ -421,12 +421,12 @@ public class AnalyticsFrame extends javax.swing.JFrame {
 
     private void buildCoverageChart() {
         String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
-        String referenceLog = FilesUtils.getReferenceLogPathForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
+        String referenceLog = LogReader.getReferenceLogPathForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
         int selectedScenario = scenarios.get(comboScenarios.getSelectedIndex()).getId();
         String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();
-        double numberOfReadings = FilesUtils.getSensorReadings(selectedLog, selectedScenario, selectedAgent);
+        double numberOfReadings = LogReader.getSensorReadings(selectedLog, selectedScenario, selectedAgent);
         System.out.println(numberOfReadings);
-        double numberOfReadingsReference = FilesUtils.getSensorReadings(referenceLog, selectedScenario, selectedAgent);
+        double numberOfReadingsReference = LogReader.getSensorReadings(referenceLog, selectedScenario, selectedAgent);
         System.out.println(numberOfReadingsReference);
 
         PieSectionLabelGenerator labelGenerator = new StandardPieSectionLabelGenerator("{0} = {2}");
@@ -453,7 +453,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
         String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();
         String choosenDay = weekDays[comboDay.getSelectedIndex()];
-        Map<String, Integer> map = FilesUtils.getMovementStatistics(selectedLog, selectedAgent, choosenDay);
+        Map<String, Integer> map = LogReader.getMovementStatistics(selectedLog, selectedAgent, choosenDay);
 
         DefaultPieDataset dataSet = new DefaultPieDataset();
 

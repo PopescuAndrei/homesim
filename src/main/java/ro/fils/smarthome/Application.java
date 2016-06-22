@@ -1,7 +1,7 @@
 package ro.fils.smarthome;
 
 import java.util.Map;
-import ro.fils.smarthome.util.FilesUtils;
+import ro.fils.smarthome.parsers.LogReader;
 import ro.fils.smarthome.view.StartFrame;
 
 public class Application {

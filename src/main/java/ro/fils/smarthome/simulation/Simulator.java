@@ -15,7 +15,7 @@ import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.util.SensorLogger;
 import ro.fils.smarthome.util.support.Activities_Type;
 import ro.fils.smarthome.util.support.BoolWithLog;
-import ro.fils.smarthome.tasks.TaskManager;
+import ro.fils.smarthome.util.TaskManager;
 
 /**
  *
