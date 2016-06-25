@@ -4,15 +4,10 @@
     <groupId>ro.fils</groupId>
     <artifactId>smarthome</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-
+    
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-        
-        <!-- versions io.spring.platform bom, 2.0.4 Release !-->
-        <spring.data.version>1.9.2.RELEASE</spring.data.version>
-        <spring.integration.version>4.2.4.RELEASE</spring.integration.version>
-        <hibernate.version>4.3.11.Final</hibernate.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -65,7 +60,6 @@
                 </includes>
             </resource>
         </resources>
-
         <finalName>Smart Sim</finalName>
     </build>
 </project>

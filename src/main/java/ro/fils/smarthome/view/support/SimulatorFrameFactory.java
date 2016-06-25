@@ -7,7 +7,6 @@ package ro.fils.smarthome.view.support;
 
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.view.SimulatorFrame;
-import ro.fils.smarthome.view.SimulatorFrame;
 
 /**
  *
