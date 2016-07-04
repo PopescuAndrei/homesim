@@ -73,34 +73,14 @@
                                   <Component id="labelHomeSchemeFile" alignment="0" pref="100" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="10" pref="10" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <Component id="tfHomeSchemeFile" min="-2" pref="126" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="btnHomeBrowse" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="tfScenarioName" alignment="0" min="-2" pref="199" max="-2" attributes="0"/>
-                                      <Component id="tfWalkingSpeed" min="-2" pref="198" max="-2" attributes="0"/>
-                                      <Component id="tfDays" alignment="0" min="-2" pref="198" max="-2" attributes="0"/>
-                                      <Group type="102" alignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                              <Group type="102" attributes="0">
-                                                  <Component id="tfActivitiesFile" pref="124" max="32767" attributes="0"/>
-                                                  <EmptySpace max="-2" attributes="0"/>
-                                              </Group>
-                                              <Group type="102" attributes="0">
-                                                  <Component id="tfSensorFile" max="32767" attributes="0"/>
-                                                  <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
-                                              </Group>
-                                          </Group>
-                                          <Group type="103" groupAlignment="0" attributes="0">
-                                              <Component id="btnSensorBrowse" max="32767" attributes="0"/>
-                                              <Component id="btnActivitiesBrowse" max="32767" attributes="0"/>
-                                          </Group>
-                                      </Group>
-                                  </Group>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="tfScenarioName" alignment="0" pref="199" max="32767" attributes="0"/>
+                                  <Component id="tfWalkingSpeed" min="-2" pref="198" max="-2" attributes="0"/>
+                                  <Component id="tfDays" alignment="0" min="-2" pref="198" max="-2" attributes="0"/>
+                                  <Component id="tfActivitiesFile" pref="199" max="32767" attributes="0"/>
                                   <Component id="tfSimsPerSec" min="-2" pref="198" max="-2" attributes="0"/>
+                                  <Component id="tfHomeSchemeFile" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="tfSensorFile" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="0" pref="20" max="32767" attributes="0"/>
                           </Group>
@@ -121,10 +101,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="tfHomeSchemeFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnHomeBrowse" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="tfHomeSchemeFile" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
@@ -133,13 +110,11 @@
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="tfSensorFile" alignment="3" min="-2" max="-2" attributes="0"/>
                                   <Component id="labelSensorFile" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
-                                  <Component id="btnSensorBrowse" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="labelActivitiesFile" alignment="3" min="-2" pref="26" max="-2" attributes="0"/>
                                   <Component id="tfActivitiesFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="btnActivitiesBrowse" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
@@ -311,30 +286,6 @@
             </Component>
             <Component class="javax.swing.JTextField" name="tfActivitiesFile">
             </Component>
-            <Component class="javax.swing.JButton" name="btnHomeBrowse">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Browse"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnHomeBrowseActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btnSensorBrowse">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Browse"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSensorBrowseActionPerformed"/>
-              </Events>
-            </Component>
-            <Component class="javax.swing.JButton" name="btnActivitiesBrowse">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Browse"/>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnActivitiesBrowseActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JLabel" name="labelScenarioName">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Scenario Name :"/>
@@ -381,8 +332,8 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="tfStartingPoint" pref="282" max="32767" attributes="0"/>
                                   <Component id="tfAgentName" max="32767" attributes="0"/>
+                                  <Component id="comboNodes" pref="365" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -404,7 +355,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="labelStartingPoint" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="tfStartingPoint" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="comboNodes" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panelNeeds" min="-2" max="-2" attributes="0"/>
@@ -622,10 +573,8 @@
             </Component>
             <Component class="javax.swing.JLabel" name="labelStartingPoint">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Starting Point (default 1L): "/>
+                <Property name="text" type="java.lang.String" value="Starting Point:"/>
               </Properties>
-            </Component>
-            <Component class="javax.swing.JTextField" name="tfStartingPoint">
             </Component>
             <Container class="javax.swing.JPanel" name="panelNeeds">
               <Properties>
@@ -869,6 +818,24 @@
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnCancelActionPerformed"/>
               </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="comboNodes">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="4">
+                    <StringItem index="0" value="Item 1"/>
+                    <StringItem index="1" value="Item 2"/>
+                    <StringItem index="2" value="Item 3"/>
+                    <StringItem index="3" value="Item 4"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="comboNodesActionPerformed"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>

@@ -8,6 +8,7 @@ package ro.fils.smarthome.view;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,6 +16,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ChangeEvent;
 import ro.fils.smarthome.model.Agent;
 import ro.fils.smarthome.model.Need;
+import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.model.Scenario;
 import ro.fils.smarthome.repository.AgentRepository;
 import ro.fils.smarthome.repository.HouseRepository;
@@ -39,8 +41,10 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
     
     private Scenario scenarioToBeSaved;
     List<Agent> agentsDisplayList;
+    List<Node> startingPointsDisplayList;
     DefaultListModel<String> agentsListModel;
-
+    DefaultComboBoxModel<String> startingPointsListModel;
+    
     public ScenarioCreatorFrame() {
         initComponents();
         this.setTitle("Create a new Scenario");
@@ -59,6 +63,11 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         agentsListModel = new DefaultListModel<>();
         listViewAgent.setModel(agentsListModel);
 
+        startingPointsDisplayList = nodeRepo.getNodes();
+        startingPointsListModel = new DefaultComboBoxModel<>();
+        nodeRepo.getNodes().stream().forEach(n -> startingPointsListModel.addElement("Point(" + n.getPosX() + " ," + n.getPosY() + ")"));
+        comboNodes.setModel(startingPointsListModel);
+        
         sliderBladder.addChangeListener((ChangeEvent e) -> {
             valueBladder.setText(new Double(sliderBladder.getValue()) / 10 + "");
         });
@@ -79,7 +88,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
             valueFun.setText(new Double(sliderFun.getValue()) / 10 + "");
         });
 
-        disableFields();
+        initFields();
         btnAddAgent.setEnabled(false);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
@@ -106,9 +115,6 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         tfHomeSchemeFile = new javax.swing.JTextField();
         tfSensorFile = new javax.swing.JTextField();
         tfActivitiesFile = new javax.swing.JTextField();
-        btnHomeBrowse = new javax.swing.JButton();
-        btnSensorBrowse = new javax.swing.JButton();
-        btnActivitiesBrowse = new javax.swing.JButton();
         labelScenarioName = new javax.swing.JLabel();
         tfScenarioName = new javax.swing.JTextField();
         labelSims = new javax.swing.JLabel();
@@ -128,7 +134,6 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         labelAgentName = new javax.swing.JLabel();
         tfAgentName = new javax.swing.JTextField();
         labelStartingPoint = new javax.swing.JLabel();
-        tfStartingPoint = new javax.swing.JTextField();
         panelNeeds = new javax.swing.JPanel();
         sliderEnergy = new javax.swing.JSlider();
         sliderHunger = new javax.swing.JSlider();
@@ -148,6 +153,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         btnAddAgent = new javax.swing.JButton();
         btnSaveScenario = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
+        comboNodes = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -218,27 +224,6 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
             }
         });
 
-        btnHomeBrowse.setText("Browse");
-        btnHomeBrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnHomeBrowseActionPerformed(evt);
-            }
-        });
-
-        btnSensorBrowse.setText("Browse");
-        btnSensorBrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSensorBrowseActionPerformed(evt);
-            }
-        });
-
-        btnActivitiesBrowse.setText("Browse");
-        btnActivitiesBrowse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnActivitiesBrowseActionPerformed(evt);
-            }
-        });
-
         labelScenarioName.setText("Scenario Name :");
 
         labelSims.setText("Simulation/second: ");
@@ -262,27 +247,14 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
                             .addComponent(labelSensorFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(labelHomeSchemeFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
                         .addGap(10, 10, 10)
-                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(leftPanelLayout.createSequentialGroup()
-                                    .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnHomeBrowse))
-                                .addComponent(tfScenarioName, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(tfWalkingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(tfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(leftPanelLayout.createSequentialGroup()
-                                    .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addGroup(leftPanelLayout.createSequentialGroup()
-                                            .addComponent(tfActivitiesFile, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                                        .addGroup(leftPanelLayout.createSequentialGroup()
-                                            .addComponent(tfSensorFile)
-                                            .addGap(4, 4, 4)))
-                                    .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(btnSensorBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnActivitiesBrowse, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                            .addComponent(tfSimsPerSec, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(tfScenarioName, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                            .addComponent(tfWalkingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfDays, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfActivitiesFile, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE)
+                            .addComponent(tfSimsPerSec, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfHomeSchemeFile)
+                            .addComponent(tfSensorFile))
                         .addGap(0, 20, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -297,22 +269,18 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(leftPanelLayout.createSequentialGroup()
-                        .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnHomeBrowse))
+                        .addComponent(tfHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(leftPanelLayout.createSequentialGroup()
                         .addComponent(labelHomeSchemeFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(tfSensorFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelSensorFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSensorBrowse))
+                            .addComponent(labelSensorFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(labelActivitiesFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(tfActivitiesFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnActivitiesBrowse))
+                            .addComponent(tfActivitiesFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(labelWalkingSpeed, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -427,7 +395,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
 
         labelAgentName.setText("Agent Name:");
 
-        labelStartingPoint.setText("Starting Point (default 1L): ");
+        labelStartingPoint.setText("Starting Point:");
 
         panelNeeds.setBackground(new java.awt.Color(250, 250, 250));
         panelNeeds.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Agent's Needs", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(0, 188, 212))); // NOI18N
@@ -581,6 +549,13 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
             }
         });
 
+        comboNodes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboNodes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboNodesActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout rightPanelLayout = new javax.swing.GroupLayout(rightPanel);
         rightPanel.setLayout(rightPanelLayout);
         rightPanelLayout.setHorizontalGroup(
@@ -603,8 +578,8 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
                             .addComponent(labelStartingPoint, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(tfStartingPoint, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
-                            .addComponent(tfAgentName))))
+                            .addComponent(tfAgentName)
+                            .addComponent(comboNodes, 0, 365, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         rightPanelLayout.setVerticalGroup(
@@ -620,7 +595,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(rightPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelStartingPoint)
-                    .addComponent(tfStartingPoint, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(comboNodes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelNeeds, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -649,18 +624,6 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnHomeBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeBrowseActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnHomeBrowseActionPerformed
-
-    private void btnSensorBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSensorBrowseActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSensorBrowseActionPerformed
-
-    private void btnActivitiesBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActivitiesBrowseActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnActivitiesBrowseActionPerformed
-
     private void btnAddAgentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAgentActionPerformed
         String agentName = tfAgentName.getText();
         String avatarImg = getSelectedAvatarPath();
@@ -669,15 +632,14 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         double bladderValue = Double.valueOf(valueBladder.getText());
         double hygieneValue = Double.valueOf(valueHygiene.getText());
         double funValue = Double.valueOf(valueFun.getText());
-        Long startingNodeId = Long.parseLong(tfStartingPoint.getText());
+        Long startingNodeId = Long.valueOf(startingPointsDisplayList.get(comboNodes.getSelectedIndex()).getId());
+        
         Point currentLocation = nodeRepo.getNodeById(startingNodeId).getLocation();
         List<Need> needs = AgentsUtils.getNeeds(energyValue, hungerValue, bladderValue, hygieneValue, funValue);
 
         if (tfAgentName.getText().isEmpty() || tfAgentName.getText() == null) {
             JOptionPane.showMessageDialog(null, "Please provide a name for the agent");
-        } else if (tfStartingPoint.getText().isEmpty() || tfStartingPoint.getText() == null) {
-            JOptionPane.showMessageDialog(null, "Please provide a starting point for the agent");
-        } else if (validateCheckBoxes() == false) {
+        }else if (validateCheckBoxes() == false) {
             JOptionPane.showMessageDialog(null, "Please select an avatar for the agent");
         } else {
             Agent a = new Agent(agentName, avatarImg, currentLocation, needs);
@@ -688,7 +650,6 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
                 agentsListModel.addElement(a.getName());
                 listViewAgent.setModel(agentsListModel);
                 tfAgentName.setText("");
-                tfStartingPoint.setText("");
                 scenarioRepo.addAgentToScenario(agentRepo.getLastAgentInsertedId(), scenarioRepo.getLastInsertedScenarioId());
                 JOptionPane.showMessageDialog(null, "Agent added to scenario!");
             } else {
@@ -728,16 +689,18 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         // TODO add your handling code here:
     }//GEN-LAST:event_tfHomeSchemeFileActionPerformed
 
+    private void comboNodesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboNodesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboNodesActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel agentsListPanel;
     private javax.swing.JPanel avatarPanel;
-    private javax.swing.JButton btnActivitiesBrowse;
     private javax.swing.JButton btnAddAgent;
     private javax.swing.JButton btnCancel;
     private javax.swing.ButtonGroup btnGroupAvatar;
-    private javax.swing.JButton btnHomeBrowse;
     private javax.swing.JButton btnSaveScenario;
-    private javax.swing.JButton btnSensorBrowse;
+    private javax.swing.JComboBox<String> comboNodes;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JLabel labelActivitiesFile;
@@ -782,7 +745,6 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
     private javax.swing.JTextField tfScenarioName;
     private javax.swing.JTextField tfSensorFile;
     private javax.swing.JTextField tfSimsPerSec;
-    private javax.swing.JTextField tfStartingPoint;
     private javax.swing.JTextField tfWalkingSpeed;
     private javax.swing.JLabel valueBladder;
     private javax.swing.JLabel valueEnergy;
@@ -809,17 +771,12 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         return rBtnAv1.isSelected() || rBtnAv2.isSelected() || rBtnAv3.isSelected() || rBtnAv4.isSelected();
     }
 
-    private void disableFields() {
+    private void initFields() {
         tfActivitiesFile.setText("/activities.json");
         tfSensorFile.setText("/sensors.json");
         tfHomeSchemeFile.setText("/environment.jpg");
         tfDays.setText(7+ "");
         tfWalkingSpeed.setText(30 + "");
-        tfActivitiesFile.setEnabled(false);
-        tfSensorFile.setEnabled(false);
-        tfHomeSchemeFile.setEnabled(false);
-        tfDays.setEnabled(false);
-        tfWalkingSpeed.setEnabled(false);
     }
 
     @Override

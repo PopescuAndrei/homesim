@@ -6,7 +6,6 @@
 package ro.fils.smarthome.view;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.util.ArrayList;
 import java.util.List;
