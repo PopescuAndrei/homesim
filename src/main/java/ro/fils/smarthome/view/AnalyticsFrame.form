@@ -28,7 +28,7 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="mainSplitPanel" alignment="0" max="32767" attributes="0"/>
+          <Component id="mainSplitPanel" alignment="0" pref="509" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -66,7 +66,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="428" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="485" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -141,7 +141,8 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="panelCombos" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="chartContainer" pref="251" max="32767" attributes="0"/>
+                      <Component id="chartContainer" pref="254" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -205,19 +206,23 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="btnApplyFilters" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                      <Component id="labelDay" alignment="0" max="32767" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
-                                              <Component id="labelScenario" max="32767" attributes="0"/>
-                                              <Component id="labelAgent" max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                          <Component id="labelDay" alignment="0" max="32767" attributes="0"/>
+                                          <Group type="103" groupAlignment="0" attributes="0">
+                                              <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                                                  <Component id="labelScenario" max="32767" attributes="0"/>
+                                                  <Component id="labelAgent" max="32767" attributes="0"/>
+                                              </Group>
+                                              <Component id="labelLogs" alignment="0" min="-2" max="-2" attributes="0"/>
                                           </Group>
-                                          <Component id="labelLogs" alignment="0" min="-2" max="-2" attributes="0"/>
                                       </Group>
+                                      <Component id="refLog" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="comboRefLog" max="32767" attributes="0"/>
                                       <Component id="comboFiles" pref="379" max="32767" attributes="0"/>
                                       <Component id="comboScenarios" max="32767" attributes="0"/>
                                       <Component id="comboAgents" max="32767" attributes="0"/>
@@ -247,14 +252,19 @@
                               <Component id="labelLogs" min="-2" max="-2" attributes="0"/>
                               <Component id="comboFiles" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="refLog" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="comboRefLog" alignment="3" min="-2" max="-2" attributes="0"/>
+                          </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="labelDay" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="comboDay" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
+                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="btnApplyFilters" min="-2" pref="23" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -334,6 +344,26 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JComboBox" name="comboDay">
+                  <Properties>
+                    <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                      <StringArray count="4">
+                        <StringItem index="0" value="Item 1"/>
+                        <StringItem index="1" value="Item 2"/>
+                        <StringItem index="2" value="Item 3"/>
+                        <StringItem index="3" value="Item 4"/>
+                      </StringArray>
+                    </Property>
+                  </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+                  </AuxValues>
+                </Component>
+                <Component class="javax.swing.JLabel" name="refLog">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" value="Ref Log :"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JComboBox" name="comboRefLog">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="4">

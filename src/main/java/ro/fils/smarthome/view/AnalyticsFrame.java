@@ -42,11 +42,13 @@ public class AnalyticsFrame extends javax.swing.JFrame {
     private List<String> scenarioNames;
     private List<String> agentNames;
     private List<String> logFileNames;
+    private List<String> referenceFileNames;
 
     private DefaultListModel<String> analyticsModel;
     private final DefaultComboBoxModel<String> scenarioComboModel;
     private DefaultComboBoxModel<String> agentComboModel;
     private DefaultComboBoxModel<String> logComboModel;
+    private DefaultComboBoxModel<String> refLogComboModel;
     private DefaultComboBoxModel<String> dayComboModel;
 
     private ScenarioRepository scenarioRepo;
@@ -65,6 +67,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         scenarioComboModel = new DefaultComboBoxModel<>();
         agentComboModel = new DefaultComboBoxModel<>();
         logComboModel = new DefaultComboBoxModel<>();
+        refLogComboModel = new DefaultComboBoxModel<>();
         dayComboModel = new DefaultComboBoxModel<>();
 
         scenarios = scenarioRepo.getAllScenarios();
@@ -72,7 +75,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
             scenarioComboModel.addElement(s.getName());
         }
         comboScenarios.setModel(scenarioComboModel);
-
+        
         for (String name : analyticsNames) {
             analyticsModel.addElement(name);
         }
@@ -93,18 +96,21 @@ public class AnalyticsFrame extends javax.swing.JFrame {
                     comboFiles.setEnabled(true);
                     comboScenarios.setEnabled(true);
                     comboDay.setEnabled(false);
+                    comboRefLog.setEnabled(false);
                     break;
                 case 1:
                     comboAgents.setEnabled(true);
                     comboFiles.setEnabled(true);
                     comboScenarios.setEnabled(true);
                     comboDay.setEnabled(false);
+                    comboRefLog.setEnabled(true);
                     break;
                 case 2:
                     comboAgents.setEnabled(true);
                     comboFiles.setEnabled(true);
                     comboScenarios.setEnabled(true);
                     comboDay.setEnabled(true);
+                    comboRefLog.setEnabled(false);
                     break;
                 default:
                     break;
@@ -114,6 +120,8 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         comboScenarios.addItemListener((ItemEvent e) -> {
             agentComboModel.removeAllElements();
             logComboModel.removeAllElements();
+            refLogComboModel.removeAllElements();
+           
 
             agents = agentRepo.getAgentsForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getId());
             for (Agent ag : agents) {
@@ -127,6 +135,14 @@ public class AnalyticsFrame extends javax.swing.JFrame {
                 logComboModel.addElement(logFile);
             }
             comboFiles.setModel(logComboModel);
+            
+            
+            refLogComboModel.removeAllElements();
+            referenceFileNames = LogReader.getAllLogsFromFolderForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
+            for (String logFile : referenceFileNames) {
+                refLogComboModel.addElement(logFile);
+            }
+            comboRefLog.setModel(refLogComboModel);
         });
         disableAllCombos();
     }
@@ -157,6 +173,8 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         btnApplyFilters = new javax.swing.JButton();
         labelDay = new javax.swing.JLabel();
         comboDay = new javax.swing.JComboBox<>();
+        refLog = new javax.swing.JLabel();
+        comboRefLog = new javax.swing.JComboBox<>();
         chartContainer = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -186,7 +204,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
             leftPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(leftPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -243,6 +261,10 @@ public class AnalyticsFrame extends javax.swing.JFrame {
 
         comboDay.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
+        refLog.setText("Ref Log :");
+
+        comboRefLog.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout panelCombosLayout = new javax.swing.GroupLayout(panelCombos);
         panelCombos.setLayout(panelCombosLayout);
         panelCombosLayout.setHorizontalGroup(
@@ -252,15 +274,18 @@ public class AnalyticsFrame extends javax.swing.JFrame {
                 .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnApplyFilters, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(panelCombosLayout.createSequentialGroup()
-                        .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(labelDay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(labelScenario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(labelAgent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addComponent(labelLogs)))
+                        .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(labelDay, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(labelScenario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(labelAgent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(labelLogs)))
+                            .addComponent(refLog))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(comboRefLog, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(comboFiles, 0, 379, Short.MAX_VALUE)
                             .addComponent(comboScenarios, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(comboAgents, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -282,13 +307,17 @@ public class AnalyticsFrame extends javax.swing.JFrame {
                 .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelLogs)
                     .addComponent(comboFiles, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(refLog)
+                    .addComponent(comboRefLog, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(panelCombosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelDay)
                     .addComponent(comboDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnApplyFilters, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(23, 23, 23))
         );
 
         chartContainer.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Chart", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12), new java.awt.Color(0, 188, 212))); // NOI18N
@@ -314,7 +343,8 @@ public class AnalyticsFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panelCombos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chartContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                .addComponent(chartContainer, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         mainSplitPanel.setRightComponent(rightPanel);
@@ -327,7 +357,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainSplitPanel)
+            .addComponent(mainSplitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
         );
 
         pack();
@@ -350,6 +380,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> comboAgents;
     private javax.swing.JComboBox<String> comboDay;
     private javax.swing.JComboBox<String> comboFiles;
+    private javax.swing.JComboBox<String> comboRefLog;
     private javax.swing.JComboBox<String> comboScenarios;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel labelAgent;
@@ -362,6 +393,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
     private javax.swing.JSplitPane mainSplitPanel;
     private javax.swing.JPanel panelCombos;
     private javax.swing.JPanel panelTitle;
+    private javax.swing.JLabel refLog;
     private javax.swing.JPanel rightPanel;
     // End of variables declaration//GEN-END:variables
 
@@ -378,6 +410,7 @@ public class AnalyticsFrame extends javax.swing.JFrame {
         comboFiles.setEnabled(false);
         comboScenarios.setEnabled(false);
         comboDay.setEnabled(false);
+        comboRefLog.setEnabled(false);
     }
 
     private void buildMetersChart() {
@@ -420,7 +453,8 @@ public class AnalyticsFrame extends javax.swing.JFrame {
 
     private void buildCoverageChart() {
         String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
-        String referenceLog = LogReader.getReferenceLogPathForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
+//        String referenceLog = LogReader.getReferenceLogPathForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
+        String referenceLog = logFileNames.get(comboRefLog.getSelectedIndex());
         int selectedScenario = scenarios.get(comboScenarios.getSelectedIndex()).getId();
         String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();
         double numberOfReadings = LogReader.getSensorReadings(selectedLog, selectedScenario, selectedAgent);
