@@ -29,6 +29,7 @@ import ro.fils.smarthome.simulation.SimulationMap;
 import ro.fils.smarthome.simulation.Simulator;
 import ro.fils.smarthome.util.TaskManager;
 import ro.fils.smarthome.parsers.TaskReader;
+import ro.fils.smarthome.repository.HouseRepository;
 import ro.fils.smarthome.util.SensorLogger;
 import ro.fils.smarthome.util.support.Time;
 
@@ -434,7 +435,7 @@ public class SimulatorFrame extends javax.swing.JFrame {
             this.people = (ArrayList<Agent>) agents;
             this.taskReader = new TaskReader(taskFile);
             sensors = new SensorReader(sensorsFile).getSensors();
-            simulationMap = new SimulationMap(houseFile, walkingSpeed, startNodeId, people, walkingSpeed, sensors);
+            simulationMap = new SimulationMap(new HouseRepository().getHouseByFileName(houseFile), walkingSpeed, startNodeId, people, walkingSpeed, sensors);
             simulator = new Simulator(simulationMap, new TaskManager(taskReader), 3);
             this.days = 7;
 

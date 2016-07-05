@@ -453,7 +453,6 @@ public class AnalyticsFrame extends javax.swing.JFrame {
 
     private void buildCoverageChart() {
         String selectedLog = logFileNames.get(comboFiles.getSelectedIndex());
-//        String referenceLog = LogReader.getReferenceLogPathForScenario(scenarios.get(comboScenarios.getSelectedIndex()).getName());
         String referenceLog = logFileNames.get(comboRefLog.getSelectedIndex());
         int selectedScenario = scenarios.get(comboScenarios.getSelectedIndex()).getId();
         String selectedAgent = agents.get(comboAgents.getSelectedIndex()).getName();

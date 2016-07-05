@@ -7,13 +7,17 @@ package ro.fils.smarthome.view;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
 import ro.fils.smarthome.view.support.SimulatorFrameFactoryImpl;
 import ro.fils.smarthome.view.support.SimulatorFrameFactory;
 import java.util.List;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import ro.fils.smarthome.model.House;
 import ro.fils.smarthome.model.Scenario;
+import ro.fils.smarthome.repository.HouseRepository;
 import ro.fils.smarthome.repository.ScenarioRepository;
 import ro.fils.smarthome.view.support.Observer;
 
@@ -27,23 +31,31 @@ public class StartFrame extends javax.swing.JFrame implements Observer {
     private DefaultListModel<String> scenariosModel;
     private String[] scenariosNames;
     private List<Scenario> scenarios;
-
+    private final List<House> houses;
+    private DefaultComboBoxModel<String> housesNamesModel;
+            
     public StartFrame() {
         initComponents();
         this.setTitle("Welcome to the Smart Home Simulator");
         factory = new SimulatorFrameFactoryImpl();
         scenarios = new ScenarioRepository().getAllScenarios();
+        houses = new HouseRepository().getAllHouses();
+        
         scenariosNames = new String[scenarios.size()];
 
         for (int i = 0; i < scenarios.size(); i++) {
             scenariosNames[i] = scenarios.get(i).getName();
         }
-
+        
         scenariosModel = new DefaultListModel();
         for (String s : scenariosNames) {
             scenariosModel.addElement(s);
         }
         listViewSimulation.setModel(scenariosModel);
+        
+        housesNamesModel = new DefaultComboBoxModel<>();
+        houses.stream().forEach(h -> housesNamesModel.addElement(h.getPath()));
+        comboMap.setModel(housesNamesModel);
         
     }
 
@@ -60,6 +72,8 @@ public class StartFrame extends javax.swing.JFrame implements Observer {
         listViewSimulation = new javax.swing.JList<>();
         btnNewScenario = new javax.swing.JButton();
         btnAnalytics = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        comboMap = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -116,6 +130,10 @@ public class StartFrame extends javax.swing.JFrame implements Observer {
             }
         });
 
+        jLabel2.setText("Map for edit :");
+
+        comboMap.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -125,27 +143,37 @@ public class StartFrame extends javax.swing.JFrame implements Observer {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(btnNewScenario, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnEditMap, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnAnalytics, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(comboMap, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(btnNewScenario, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnAnalytics, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnRunSimulation, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnEditMap, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRunSimulation, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 252, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnNewScenario)
+                    .addComponent(btnAnalytics)
+                    .addComponent(btnRunSimulation))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEditMap)
-                    .addComponent(btnRunSimulation)
-                    .addComponent(btnNewScenario)
-                    .addComponent(btnAnalytics))
-                .addContainerGap())
+                    .addComponent(jLabel2)
+                    .addComponent(comboMap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -180,7 +208,7 @@ public class StartFrame extends javax.swing.JFrame implements Observer {
     }//GEN-LAST:event_btnRunSimulationActionPerformed
 
     private void btnEditMapActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditMapActionPerformed
-        DesignFrame frame = new DesignFrame();
+        DesignFrame frame = new DesignFrame(houses.get(comboMap.getSelectedIndex()));
         frame.setSize(1366, 768);
         frame.setVisible(true);
     }//GEN-LAST:event_btnEditMapActionPerformed
@@ -231,7 +259,9 @@ public class StartFrame extends javax.swing.JFrame implements Observer {
     private javax.swing.JButton btnEditMap;
     private javax.swing.JButton btnNewScenario;
     private javax.swing.JButton btnRunSimulation;
+    private javax.swing.JComboBox<String> comboMap;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;

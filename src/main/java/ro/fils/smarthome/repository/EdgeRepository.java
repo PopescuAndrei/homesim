@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ro.fils.smarthome.model.Edge;
+import ro.fils.smarthome.model.House;
 import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.util.DatabaseManager;
 
@@ -23,7 +24,7 @@ import ro.fils.smarthome.util.DatabaseManager;
  */
 public class EdgeRepository {
 
-    public ArrayList<Edge> getEdges(ArrayList<Node> nodes) {
+    public ArrayList<Edge> getEdges(ArrayList<Node> nodes, int houseId) {
         ArrayList<Edge> edges = null;
         try {
             Connection conn = DatabaseManager.getConnection();
@@ -40,7 +41,15 @@ public class EdgeRepository {
                         b = current;
                     }
                 }
-                edges.add(new Edge(rs.getInt("id"), a, b));
+                if (a != null) {
+                    if (a.getHouseId() == houseId) {
+                        edges.add(new Edge(rs.getInt("id"), a, b));
+                    }
+                } else if (b != null) {
+                    if (b.getHouseId() == houseId) {
+                        edges.add(new Edge(rs.getInt("id"), a, b));
+                    }
+                }
             }
         } catch (SQLException | ClassNotFoundException ex) {
             Logger.getLogger(EdgeRepository.class.getName()).log(Level.SEVERE, null, ex);
@@ -80,7 +89,7 @@ public class EdgeRepository {
             String sql = "INSERT INTO edges(a_id, b_id) VALUES (?,?)";
             PreparedStatement ps = conn.prepareStatement(sql);
             if (edge.getId() == -1) {
-                ps.setLong(1,edge.getA().getId());
+                ps.setLong(1, edge.getA().getId());
                 ps.setLong(2, edge.getB().getId());
                 ps.executeUpdate();
                 edge.setId(DatabaseManager.getLastId(conn));
@@ -90,6 +99,5 @@ public class EdgeRepository {
         }
         return edge;
     }
-    
-    
+
 }

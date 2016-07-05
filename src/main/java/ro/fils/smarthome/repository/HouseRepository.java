@@ -9,6 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import ro.fils.smarthome.model.House;
@@ -30,7 +33,7 @@ public class HouseRepository {
             ps = conn.prepareStatement(sql);
             ps.setInt(1, houseId);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 return rs.getString("PATH");
             }
         } catch (SQLException | ClassNotFoundException ex) {
@@ -38,7 +41,29 @@ public class HouseRepository {
         }
         return null;
     }
-    
+
+    public List<House> getAllHouses() {
+        List<House> houses = new ArrayList<>();
+        Connection conn;
+        Statement st;
+        String sql;
+        try {
+            conn = DatabaseManager.getConnection();
+            sql = "SELECT * FROM HOUSES";
+            st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            while (rs.next()) {
+                House h = new House();
+                h.setId(rs.getInt("ID"));
+                h.setPath(rs.getString("PATH"));
+                houses.add(h);
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            Logger.getLogger(HouseRepository.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return houses;
+    }
+
     public House getHouseByFileName(String path) {
         Connection conn;
         PreparedStatement ps;
@@ -50,7 +75,7 @@ public class HouseRepository {
             ps = conn.prepareStatement(sql);
             ps.setString(1, path);
             ResultSet rs = ps.executeQuery();
-            while(rs.next()){
+            while (rs.next()) {
                 h = new House();
                 h.setId(rs.getInt("ID"));
                 h.setPath(rs.getString("PATH"));
@@ -60,8 +85,8 @@ public class HouseRepository {
         }
         return h;
     }
-    
-     public void saveHouse(House house) {
+
+    public void saveHouse(House house) {
         Connection conn;
         PreparedStatement ps;
         String sql;

@@ -29,14 +29,14 @@ import ro.fils.smarthome.util.DatabaseManager;
  */
 public class NodeRepository {
 
-    public ArrayList<Node> getNodes() {
+    public ArrayList<Node> getNodesByHouseId(int houseId) {
         Connection conn;
         PreparedStatement ps;
         String sql;
         ArrayList<Node> nodes = new ArrayList<>();
         try {
             conn = DatabaseManager.getConnection();
-            sql = "SELECT * FROM nodes";
+            sql = "SELECT * FROM nodes WHERE HOUSE_ID = " + houseId;
             Statement st = conn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
@@ -63,7 +63,7 @@ public class NodeRepository {
                 nod.setApplianceTypes(types);
                 nodes.add(nod);
             }
-            ArrayList<Edge> edges = new EdgeRepository().getEdges(nodes);
+            ArrayList<Edge> edges = new EdgeRepository().getEdges(nodes, houseId);
             for (Node node : nodes) {
                 for (Edge edge : edges) {
                     if (Objects.equals(node.getId(), edge.getA().getId())) {

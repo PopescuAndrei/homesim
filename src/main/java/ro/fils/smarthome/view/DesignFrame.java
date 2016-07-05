@@ -15,6 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import ro.fils.smarthome.model.Appliance;
+import ro.fils.smarthome.model.House;
 import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.repository.NodeRepository;
 import ro.fils.smarthome.view.support.NodePainter;
@@ -31,9 +32,11 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
     private DefaultComboBoxModel comboBoxModel;
     private DefaultListModel<String> listModel;
     private final NodeRepository nodeRepo;
+    private House h;
     
-    public DesignFrame() {
+    public DesignFrame(House h) {
         nodeRepo = new NodeRepository();
+        this.h = h;
         this.setTitle("Edit the house setup");
         initComponents();
         
@@ -87,7 +90,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
 
         jSplitPane1.setLeftComponent(leftPanel);
         try{
-            painter = new NodePainter(this, "environment.png");
+            painter = new NodePainter(this, h);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -313,7 +316,7 @@ public class DesignFrame extends javax.swing.JFrame implements ActionListener {
             }
         });
         
-        Iterator it = selectedPoint.getApplianceTypes().iterator();
+        Iterator it = selectedNode.getApplianceTypes().iterator();
         DefaultListModel<String> nodeObjects = new DefaultListModel<>();
         while (it.hasNext()) {
             Appliance obj = (Appliance) it.next();

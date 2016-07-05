@@ -1,8 +1,23 @@
 {
     "Sensors": [
         {
+            "Name": "KitchenCamera",
+            "Position": [290, 415],
+            "Type": "Camera",
+            "Direction": 290,
+            "FieldOfView": 57,
+            "Range": [100, 250]
+        }, {
+            "Name": "HallCamera",
+            "Position": [277, 503],
+            "Type": "Camera",
+            "Direction": 210,
+            "FieldOfView": 57,
+            "Range": [75, 250],
+            "Confine": [[277, 498], [277, 712], [116, 712], [116, 634], [170, 634], [170, 540], [225, 540], [223, 491]]
+        }, {
             "Name": "BathCamera",
-            "Position": [120, 400],
+            "Position": [159, 452],
             "Type": "Camera",
             "Direction": 215,
             "FieldOfView": 57,
@@ -14,27 +29,32 @@
                     "Edge": [46, 638],
                     "Direction": "Northwest"
                 }]
-        },{
+        }, {
+            "Name": "KitchenTableOMS",
+            "Position": [122, 267],
+            "Type": "MotionSensor",
+            "Radius": 60
+        }, {
             "Name": "KitchenOMS",
             "Position": [120, 366],
             "Type": "MotionSensor",
-            "Radius": 40
+            "Radius": 60
         }, {
             "Name": "Bedroom 1 roofMS",
-            "Position": [402, 647],
+            "Position": [392, 647],
             "Type": "MotionSensor",
-            "Radius": 40
+            "Radius": 60
         }, {
             "Name": "Bedroom 2 roofMS",
-            "Position": [320, 483],
+            "Position": [395, 483],
             "Type": "MotionSensor",
-            "Radius": 40,
+            "Radius": 60,
             "Confine": [[312, 443], [467, 443], [467, 531], [310, 531]]
         }, {
             "Name": "LivingroomOMS",
-            "Position": [330, 310],
+            "Position": [379, 301],
             "Type": "MotionSensor",
-            "FieldOfView": 100,
+            "FieldOfView": 150,
             "Direction": 270,
             "Range": 300,
             "Exclude": [{
@@ -52,11 +72,25 @@
                 }]
         }, {
             "Name": "PC roomMS",
-            "Position": [400, 357],
+            "Position": [424, 357],
             "Type": "MotionSensor",
-            "Radius": 20,
+            "Radius": 60,
             "Exclude": [{
                     "Edge": [380, 425],
+                    "Direction": "Northwest"
+                }]
+        }, {
+            "Name": "BathroomOMS",
+            "Position": [158, 623],
+            "Type": "MotionSensor",
+            "FieldOfView": 80,
+            "Direction": 320,
+            "Range": 500,
+            "Exclude": [{
+                    "Edge": [224, 455],
+                    "Direction": "Northwest"
+                }, {
+                    "Edge": [46, 638],
                     "Direction": "Northwest"
                 }]
         }, {

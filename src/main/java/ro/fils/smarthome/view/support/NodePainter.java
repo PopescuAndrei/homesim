@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import ro.fils.smarthome.model.Edge;
+import ro.fils.smarthome.model.House;
 import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.repository.EdgeRepository;
 import ro.fils.smarthome.repository.NodeRepository;
@@ -41,7 +42,8 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
     Node selectedPoint;
     Node hoveredPoint;
     DesignFrame simFrame;
-
+    
+    private House h;
     private final ArrayList<Node> points;
     private final Image image;
     ArrayList<Edge> edges;
@@ -49,15 +51,16 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
     private final NodeRepository nodeRepo;
     private final EdgeRepository edgeRepo;
 
-    public NodePainter(DesignFrame frame, String imgFile) {
+    public NodePainter(DesignFrame frame, House h) {
         this.simFrame = frame;
+        this.h = h;
         nodeRepo = new NodeRepository();
         edgeRepo = new EdgeRepository();
 
-        image = new ImageIcon(getClass().getResource("/environment.jpg").getPath()).getImage();
+        image = new ImageIcon(getClass().getResource(h.getPath()).getPath()).getImage();
         initFrame(image);
-        points = (ArrayList<Node>) nodeRepo.getNodes();
-        edges = (ArrayList<Edge>) edgeRepo.getEdges(points);
+        points = (ArrayList<Node>) nodeRepo.getNodesByHouseId(h.getId());
+        edges = (ArrayList<Edge>) edgeRepo.getEdges(points, h.getId());
         repaint();
     }
 
@@ -196,6 +199,7 @@ public class NodePainter extends JPanel implements MouseListener, MouseMotionLis
                 nod.setId(-1);
                 nod.setPosX(arg0.getX());
                 nod.setPosY(arg0.getY());
+                nod.setHouseId(h.getId());
                 nod = nodeRepo.update(nod);
                 points.add(nod);
             } catch (Exception e) {

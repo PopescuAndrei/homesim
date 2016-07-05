@@ -17,6 +17,7 @@ import ro.fils.smarthome.tasks.ITask;
 import ro.fils.smarthome.model.Item;
 import ro.fils.smarthome.model.Node;
 import ro.fils.smarthome.model.Agent;
+import ro.fils.smarthome.model.House;
 import ro.fils.smarthome.sensors.Sensor;
 import ro.fils.smarthome.util.support.Const;
 import ro.fils.smarthome.repository.NodeRepository;
@@ -41,9 +42,9 @@ public class SimulationMap {
     private final Collection<AutoTask> runningTasks;
     private final NodeRepository nodeRepo = new NodeRepository();
 
-    public SimulationMap(String mapName, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter, Collection<Sensor> sensors) {
+    public SimulationMap(House h, int walkingSpeed, Long startNodeId, Collection<Agent> people, int dotsPerMeter, Collection<Sensor> sensors) {
 
-        this.mapName = mapName;
+        this.mapName = h.getPath();
         this.people = people;
         this.sensors = sensors;
         this.walkingSpeedPerSec = walkingSpeed;
@@ -51,7 +52,7 @@ public class SimulationMap {
         this.startNodeId = startNodeId;
 
         //Cred ca asta era eroarea, oricum, sunt pe calea cea buna
-        this.nodes = (ArrayList<Node>) nodeRepo.getNodes();
+        this.nodes = (ArrayList<Node>) nodeRepo.getNodesByHouseId(h.getId());
         objects = new ArrayList<>();
         for (Node node : nodes) {
             if (Objects.equals(node.getId(), startNodeId)) {

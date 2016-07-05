@@ -47,6 +47,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
     
     public ScenarioCreatorFrame() {
         initComponents();
+        initFields();
         this.setTitle("Create a new Scenario");
         
         labelAvatar1.setHorizontalAlignment(JLabel.CENTER);
@@ -63,9 +64,9 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
         agentsListModel = new DefaultListModel<>();
         listViewAgent.setModel(agentsListModel);
 
-        startingPointsDisplayList = nodeRepo.getNodes();
         startingPointsListModel = new DefaultComboBoxModel<>();
-        nodeRepo.getNodes().stream().forEach(n -> startingPointsListModel.addElement("Point(" + n.getPosX() + " ," + n.getPosY() + ")"));
+        startingPointsDisplayList = nodeRepo.getNodesByHouseId(houseRepo.getHouseByFileName(tfHomeSchemeFile.getText()).getId());
+        startingPointsDisplayList.stream().forEach(n -> startingPointsListModel.addElement("Point(" + n.getPosX() + " ," + n.getPosY() + ")"));
         comboNodes.setModel(startingPointsListModel);
         
         sliderBladder.addChangeListener((ChangeEvent e) -> {
@@ -88,7 +89,7 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
             valueFun.setText(new Double(sliderFun.getValue()) / 10 + "");
         });
 
-        initFields();
+        
         btnAddAgent.setEnabled(false);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
     }
@@ -674,6 +675,10 @@ public class ScenarioCreatorFrame extends javax.swing.JFrame implements Subject 
             btnSaveScenario.setEnabled(false);
             btnAddAgent.setEnabled(true);
             notifyObserver();
+            startingPointsDisplayList = nodeRepo.getNodesByHouseId(houseRepo.getHouseByFileName(tfHomeSchemeFile.getText()).getId());
+            startingPointsListModel.removeAllElements();
+            startingPointsDisplayList.stream().forEach(n -> startingPointsListModel.addElement("Point(" + n.getPosX() + " ," + n.getPosY() + ")"));
+            comboNodes.setModel(startingPointsListModel);
             JOptionPane.showMessageDialog(null, "Scenario saved succesfully! You can add agents for it now!");
         } else {
             JOptionPane.showMessageDialog(null, "The name of the scenario cannot be empty!");
